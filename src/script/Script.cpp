@@ -1827,11 +1827,15 @@ STACKED_EVENT eventstack[MAX_EVENT_STACK];
 
 void ARX_SCRIPT_EventStackInit()
 {
+	LogDebug("EventStack Init");
+
 	ARX_SCRIPT_EventStackClear( false ); // Clear everything in the stack
 }
+
 void ARX_SCRIPT_EventStackClear( bool check_exist )
 {
 	LogDebug("Event Stack Clear");
+
 	for (long i = 0; i < MAX_EVENT_STACK; i++)
 	{
 		if ( check_exist ) // If we're not blatantly clearing everything
@@ -2140,6 +2144,8 @@ void ARX_SCRIPT_Timer_Clear_By_IO(INTERACTIVE_OBJ * io)
 long MAX_TIMER_SCRIPT = 0;
 void ARX_SCRIPT_Timer_FirstInit(long number)
 {
+	LogDebug("Timer Init");
+
 	if (number < 100) number = 100;
 
 	MAX_TIMER_SCRIPT = number;

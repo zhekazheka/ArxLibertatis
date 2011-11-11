@@ -342,7 +342,6 @@ float FrameDiff=0;
 float GLOBAL_LIGHT_FACTOR=0.85f;
 
 float IN_FRONT_DIVIDER_ITEMS	=0.7505f;
-long USE_NEW_SKILLS=1;
 
 long USE_LIGHT_OPTIM	=1;
 // set to 0 for dev mode
@@ -741,7 +740,7 @@ int main(int argc, char ** argv) {
 	InitInter(10);
 
 	memset(&player,0,sizeof(ARXCHARACTER));
-	ARX_PLAYER_InitPlayer();
+	player.Init();
 
 	CleanInventory();
 
@@ -1782,10 +1781,10 @@ void SetEditMode(long ed, const bool stop_sound) {
 
 	if (!DONT_ERASE_PLAYER)
 	{
-		if(!FINAL_RELEASE)
-			ARX_PLAYER_MakePowerfullHero();
+		if (!FINAL_RELEASE)
+			player.hero_generate_powerful();
 		else
-			ARX_PLAYER_MakeFreshHero();
+			player.hero_generate_fresh();
 	}
 }
 
@@ -2007,7 +2006,7 @@ void FirstFrameProc() {
 	{
 		ARX_TIME_Init();
 
-		if (!DONT_ERASE_PLAYER) ARX_PLAYER_InitPlayer();
+		if (!DONT_ERASE_PLAYER) player.Init();
 
 		SLID_VALUE=0.f;
 	}
@@ -2019,10 +2018,10 @@ void FirstFrameProc() {
 
 		if (!DONT_ERASE_PLAYER)
 		{
-			if(!FINAL_RELEASE)
-				ARX_PLAYER_MakePowerfullHero();
+			if (!FINAL_RELEASE)
+				player.hero_generate_powerful();
 			else
-				ARX_PLAYER_MakeFreshHero();
+				player.hero_generate_fresh();
 		}
 	}
 

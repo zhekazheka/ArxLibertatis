@@ -630,6 +630,8 @@ void ARX_INTERFACE_NoteInit()
 
 	QuestBook.curpage=0;
 	QuestBook_Cache_nbQuests = -42;
+
+	LogDebug("Note Init");
 }
 
 //-----------------------------------------------------------------------------
@@ -5149,7 +5151,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 			if (!found2) LastRune=-1;
 
 			// Now Draws Spells for this level...
-			ARX_PLAYER_ComputePlayerFullStats();
+			player.ComputeFullStats();
 
 			float posx=0;
 			float posy=0;
@@ -5937,7 +5939,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 		std::string tex;
 		Color color(0, 0, 0);
 
-		ARX_PLAYER_ComputePlayerFullStats();
+		player.ComputeFullStats();
 
 		std::stringstream ss;
 		ss << ITC.Level << " " << std::setw(3) << (int)player.level;
@@ -6039,7 +6041,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 					ARX_EQUIPMENT_IdentifyAll();
 				}
 
-				ARX_PLAYER_ComputePlayerFullStats();
+				player.ComputeFullStats();
 			}
 
 			if (CheckSkillClick(516,230,&player.skill.casting,		ITC.Get("ic_casting"),&player.old.casting))

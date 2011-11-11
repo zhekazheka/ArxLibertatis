@@ -842,12 +842,11 @@ bool ARX_Menu_Render()
 
 					if (bQuickGenFirstClick)
 					{
-						ARX_PLAYER_MakeAverageHero();
+						player.hero_generate_average();
 						bQuickGenFirstClick = false;
-					}
-					else
+					}	else
 					{
-						ARX_PLAYER_QuickGeneration();
+						player.hero_generate_random();
 					}
 
 					player.skin = checked_range_cast<char>(iSkin);

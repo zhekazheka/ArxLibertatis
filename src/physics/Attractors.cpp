@@ -59,6 +59,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 #include "graphics/Math.h"
 #include "scene/Interactive.h"
+#include "io/log/Logger.h"
 
 struct ARX_SPECIAL_ATTRACTOR {
 	long	ionum;  // -1 == not defined
@@ -70,6 +71,7 @@ static const size_t MAX_ATTRACTORS = 16;
 static ARX_SPECIAL_ATTRACTOR attractors[MAX_ATTRACTORS];
 
 void ARX_SPECIAL_ATTRACTORS_Reset() {
+	LogDebug("Attractors Init");
 	for(size_t i = 0; i < MAX_ATTRACTORS; i++) {
 		attractors[i].ionum = -1;
 	}

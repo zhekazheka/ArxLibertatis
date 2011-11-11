@@ -120,7 +120,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 using std::vector;
 
-extern long		USE_NEW_SKILLS;
 extern long		ARX_CONVERSATION;
 extern long		HERO_SHOW_1ST;
 extern long		REQUEST_SPEECH_SKIP;
@@ -574,268 +573,91 @@ void ARX_PLAYER_Remove_Invisibility() {
 	}
 }
 
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Stealth(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Stealth Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Stealth(long type)
+// TODO really strange thing here is full is used in only some of the stats
+float arx::character::get_stealth(bool modified)
 {
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.stealth + (player.attribute.dexterity * 2);
-
-		return (float)player.skill.stealth + player.mod.skill.stealth + (player.full.attribute.dexterity * 2);
-	}
-
-	if (type == 0)
-		return (float)player.skill.stealth + (player.attribute.dexterity + player.attribute.mind);
-
-	return (float)player.skill.stealth + player.mod.skill.stealth + (player.full.attribute.dexterity + player.full.attribute.mind);
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Mecanism(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Mecanism Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Mecanism(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.mecanism
-			       + (player.attribute.dexterity + player.attribute.mind);
-
-		return (float)player.skill.mecanism + player.mod.skill.mecanism
-		       + (player.full.attribute.dexterity + player.full.attribute.mind);
-	}
-
-	if (type == 0)
-		return (float)player.skill.mecanism
-		       + (player.attribute.dexterity + player.attribute.mind);
-
-	return (float)player.skill.mecanism + player.mod.skill.mecanism
-	       + (player.full.attribute.dexterity + player.full.attribute.mind);
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Intuition(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Intuition Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Intuition(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.intuition
-			       + (player.attribute.mind * 2);
-
-		return (float)player.skill.intuition + player.mod.skill.intuition
-		       + (player.full.attribute.mind * 2);
-	}
-
-	if (type == 0)
-		return (float)player.skill.intuition
-		       + (player.attribute.dexterity + player.attribute.mind);
-
-	return (float)player.skill.intuition + player.mod.skill.intuition
-	       + (player.full.attribute.dexterity + player.full.attribute.mind);
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Etheral_Link(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Etheral Link Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Etheral_Link(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.etheral_link
-			       + player.attribute.mind * 2.f;
-
-		return (float)player.skill.etheral_link + player.mod.skill.etheral_link
-		       + player.full.attribute.mind * 2.f;
-	}
-
-	if (type == 0)
-		return (float)player.skill.etheral_link
-		       + player.attribute.mind * 2.f;
-
-	return (float)player.skill.etheral_link + player.mod.skill.etheral_link
-	       + player.full.attribute.mind * 2.f;
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Object_Knowledge(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Object Knowledge Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Object_Knowledge(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.object_knowledge
-			       + ((player.attribute.mind * 3.f + player.attribute.dexterity + player.attribute.strength) * ( 1.0f / 2 ));
-
-		return (float)player.skill.object_knowledge + player.mod.skill.object_knowledge
-		       + ((player.attribute.mind * 3.f + player.attribute.dexterity + player.attribute.strength) * ( 1.0f / 2 ));
-	}
-
-	if (type == 0)
-		return (float)player.skill.object_knowledge
-		       + player.attribute.mind * 2.f;
-
-	return (float)player.skill.object_knowledge + player.mod.skill.object_knowledge
-	       + player.full.attribute.mind * 2.f;
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Casting(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Casting Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Casting(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.casting
-			       + player.attribute.mind * 2.f ;
-
-		return (float)player.skill.casting + player.mod.skill.casting
-		       + player.full.attribute.mind * 2.f ;
-	}
-
-	if (type == 0)
-		return (float)player.skill.casting
-		       + player.attribute.mind * 2.f ;
-
-	return (float)player.skill.casting + player.mod.skill.casting
-	       + player.full.attribute.mind * 2.f ;
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Projectile(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Projectile Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Projectile(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return (float)player.skill.projectile
-			       + player.attribute.dexterity * 2.f + player.attribute.strength;
-
-		return (float)player.skill.projectile + player.mod.skill.projectile
-		       + player.attribute.dexterity * 2.f + player.attribute.strength;
-	}
-
-	if (type == 0)
-		return (float)player.skill.projectile
-		       + player.attribute.dexterity * 2.f;
-
-	return (float)player.skill.projectile + player.mod.skill.projectile
-	       + player.full.attribute.dexterity * 2.f;
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Close_Combat(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Close Combat Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Close_Combat(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return
-			    (float)player.skill.close_combat
-			    + (player.attribute.dexterity + player.attribute.strength * 2);
-
-		return
-		    (float)player.skill.close_combat + player.mod.skill.close_combat
-		    + (player.full.attribute.dexterity + player.full.attribute.strength * 2);
-	}
-
-	if (type == 0)
-		return
-		    (float)player.skill.close_combat
-		    + (player.attribute.dexterity + player.attribute.strength);
-
-	return
-	    (float)player.skill.close_combat + player.mod.skill.close_combat
-	    + (player.full.attribute.dexterity + player.full.attribute.strength);
-}
-//*************************************************************************************
-// float ARX_PLAYER_Get_Skill_Defense(long type)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns player Defense Skill level (Plain (type==0) or Modified (type==1))
-//*************************************************************************************
-float ARX_PLAYER_Get_Skill_Defense(long type)
-{
-	if (USE_NEW_SKILLS)
-	{
-		if (type == 0)
-			return
-			    (float)player.skill.defense
-			    + (player.attribute.constitution * 3);
-
-		return
-		    (float)player.skill.defense + player.mod.skill.defense
-		    + (player.full.attribute.constitution * 3);
-	}
-
-	if (type == 0)
-		return
-		    (float)player.skill.defense
-		    + (player.attribute.dexterity + player.attribute.constitution);
-
-	return
-	    (float)player.skill.defense + player.mod.skill.defense
-	    + (player.full.attribute.dexterity + player.full.attribute.constitution);
+	return	skill.stealth + 
+					full.attribute.dexterity * 2.0f +
+					(modified ? mod.skill.stealth : 0.0f);
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_ComputePlayerStats()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Compute secondary attributes for player
-//*************************************************************************************
-static void ARX_PLAYER_ComputePlayerStats() {
-	
-	player.stat.maxlife = (float)player.attribute.constitution * (float)(player.level + 2);
-	player.stat.maxmana = (float)player.attribute.mind * (float)(player.level + 1);
-	float t = ARX_PLAYER_Get_Skill_Defense(0);
+float arx::character::get_mecanism(bool modified)
+{
+	return	skill.mecanism + 
+					full.attribute.mind +
+					full.attribute.dexterity +
+					(modified ? mod.skill.mecanism : 0.0f);
+}
 
+float arx::character::get_intuition(bool modified)
+{
+	return	skill.intuition + 
+					full.attribute.mind * 2.0f +
+					(modified ? mod.skill.intuition : 0.0f);
+}
 
-	float fCalc = t * ( 1.0f / 10 ) - 1 ;
-	player.armor_class = checked_range_cast<unsigned char>(fCalc);
+float arx::character::get_etheral_link(bool modified)
+{
+	return	skill.etheral_link + 
+					full.attribute.mind * 2.0f +
+					(modified ? mod.skill.etheral_link : 0.0f);
+}
 
+float arx::character::get_object_knowledge(bool modified)
+{
+	return	skill.object_knowledge + 
+					attribute.mind * 3.0f +
+					attribute.dexterity + 
+					attribute.strength * (1.0f / 2.0f) +
+					(modified ? mod.skill.object_knowledge : 0.0f);
+}
 
-	if (player.armor_class < 1) player.armor_class = 1;
+float arx::character::get_casting(bool modified)
+{
+	return	skill.casting + 
+					(full.attribute.mind * 2.0f) +
+					(modified ? mod.skill.casting : 0.0f);
+}
 
-	player.damages = 100;
-	player.resist_magic = (unsigned char)(float)(player.attribute.mind * 2.f
-	                      * (1.f + (ARX_PLAYER_Get_Skill_Casting(0)) * ( 1.0f / 200 )));
+float arx::character::get_projectile(bool modified)
+{
+	return	skill.projectile + 
+					full.attribute.strength +
+					full.attribute.dexterity * 2.0f +
+					(modified ? mod.skill.projectile : 0.0f);
+}
 
-	fCalc = player.attribute.constitution * 2 + ((ARX_PLAYER_Get_Skill_Defense(1) * ( 1.0f / 4 )));
-	player.resist_poison = checked_range_cast<unsigned char>(fCalc);
+float arx::character::get_close_combat(bool modified)
+{
+	return	skill.close_combat + 
+					full.attribute.dexterity + 
+					full.attribute.strength * 2.0f +
+					(modified ? mod.skill.close_combat : 0.0f);
+}
 
+float arx::character::get_defense(bool modified)
+{
+	return	skill.defense + 
+					full.attribute.constitution * 3.0f +
+					(modified ? mod.skill.defense : 0.0f);
+}
 
-	player.damages = (player.attribute.strength - 10) * ( 1.0f / 2 );
+// Compute secondary attributes for player
+void arx::character::ComputeStats() 
+{
+	stat.maxlife = attribute.constitution * (level + 2);
+	stat.maxmana = attribute.mind * (level + 1);
 
-	if (player.damages < 1.f) player.damages = 1.f;
+	float fCalc = get_defense() * (1.0f / 10.0f) - 1;
+	armor_class = max((unsigned char)1, checked_range_cast<unsigned char>(fCalc));
 
-	player.aimtime = 1500;
+	damages = 100;
+	resist_magic = (unsigned char)(float)(attribute.mind * 2.f * (1.f + (get_casting()) * (1.0f / 200.0f)));
+
+	fCalc = player.attribute.constitution * 2 + ((player.get_defense(true) * (1.0f / 4.0f)));
+	resist_poison = checked_range_cast<unsigned char>(fCalc);
+	damages = max(1.0f, (player.attribute.strength - 10) * (1.0f / 2.0f));
+	aimtime = 1500;
 }
 
 extern float ARX_EQUIPMENT_ApplyPercent(INTERACTIVE_OBJ * io, long ident, float trueval);
@@ -849,102 +671,75 @@ extern long SPECIAL_PNUX;
 //   Compute FULL versions of player stats including Equiped Items
 //   and spells, and any other effect altering them.
 //*************************************************************************************
-void ARX_PLAYER_ComputePlayerFullStats()
+void arx::character::ComputeFullStats()
 {
-	ARX_PLAYER_ComputePlayerStats();
+	ComputeStats();
 
-	player.mod.stat = 0.0f;
-	player.mod.attribute = 0.0f;
-	player.mod.skill = 0.0f;
-	player.mod.armor_class = 0.0f;
-	player.mod.resist_magic = 0.0f;
-	player.mod.resist_poison = 0.0f;
-	player.mod.critical_hit = 0.0f;
-	player.mod.damages = 0.0f;
+	mod.stat					= 0.0f;
+	mod.attribute			= 0.0f;
+	mod.skill					= 0.0f;
+	mod.armor_class		= 0.0f;
+	mod.resist_magic	= 0.0f;
+	mod.resist_poison = 0.0f;
+	mod.critical_hit	= 0.0f;
+	mod.damages				= 0.0f;
 
 	ARX_EQUIPMENT_IdentifyAll();
 
-	player.full.weapon_type = ARX_EQUIPMENT_GetPlayerWeaponType();
+	full.weapon_type = ARX_EQUIPMENT_GetPlayerWeaponType();
 
-	INTERACTIVE_OBJ * io = inter.iobj[0];
-	// Check for Equipment Modificators to Attributes
-	player.mod.attribute.strength = ARX_EQUIPMENT_Apply(
-	                                    io, IO_EQUIPITEM_ELEMENT_STRENGTH, player.attribute.strength);
-	player.mod.attribute.dexterity = ARX_EQUIPMENT_Apply(
-	                                     io, IO_EQUIPITEM_ELEMENT_DEXTERITY, player.attribute.dexterity);
-	player.mod.attribute.constitution = ARX_EQUIPMENT_Apply(
-	                                        io, IO_EQUIPITEM_ELEMENT_CONSTITUTION, player.attribute.constitution);
-	player.mod.attribute.mind = ARX_EQUIPMENT_Apply(
-	                                io, IO_EQUIPITEM_ELEMENT_MIND, player.attribute.mind);
-	player.mod.armor_class = ARX_EQUIPMENT_Apply(
-	                             io, IO_EQUIPITEM_ELEMENT_Armor_Class, player.armor_class);
-
-	// Check for Equipment Modificators to Skills
-	player.mod.skill.stealth = ARX_EQUIPMENT_Apply(
-	                               io, IO_EQUIPITEM_ELEMENT_Stealth, ARX_PLAYER_Get_Skill_Stealth(0));
-	player.mod.skill.mecanism = ARX_EQUIPMENT_Apply(
-	                                io, IO_EQUIPITEM_ELEMENT_Mecanism, ARX_PLAYER_Get_Skill_Mecanism(0));
-	player.mod.skill.intuition = ARX_EQUIPMENT_Apply(
-	                                 io, IO_EQUIPITEM_ELEMENT_Intuition, ARX_PLAYER_Get_Skill_Intuition(0));
-	player.mod.skill.etheral_link = ARX_EQUIPMENT_Apply(
-	                                    io, IO_EQUIPITEM_ELEMENT_Etheral_Link, ARX_PLAYER_Get_Skill_Etheral_Link(0));
-	player.mod.skill.object_knowledge = ARX_EQUIPMENT_Apply(
-	                                        io, IO_EQUIPITEM_ELEMENT_Object_Knowledge, ARX_PLAYER_Get_Skill_Object_Knowledge(0));
-	player.mod.skill.casting = ARX_EQUIPMENT_Apply(
-	                               io, IO_EQUIPITEM_ELEMENT_Casting, ARX_PLAYER_Get_Skill_Casting(0));
-	player.mod.skill.projectile = ARX_EQUIPMENT_Apply(
-	                                  io, IO_EQUIPITEM_ELEMENT_Projectile, ARX_PLAYER_Get_Skill_Projectile(0));
-	player.mod.skill.close_combat = ARX_EQUIPMENT_Apply(
-	                                    io, IO_EQUIPITEM_ELEMENT_Close_Combat, ARX_PLAYER_Get_Skill_Close_Combat(0));
-	player.mod.skill.defense = ARX_EQUIPMENT_Apply(
-	                               io, IO_EQUIPITEM_ELEMENT_Defense, ARX_PLAYER_Get_Skill_Defense(0));
-
-	player.mod.resist_magic = ARX_EQUIPMENT_Apply(
-	                              io, IO_EQUIPITEM_ELEMENT_Resist_Magic, player.resist_magic);
-	player.mod.resist_poison = ARX_EQUIPMENT_Apply(
-	                               io, IO_EQUIPITEM_ELEMENT_Resist_Poison, player.resist_poison);
-	player.mod.critical_hit = ARX_EQUIPMENT_Apply(
-	                              io, IO_EQUIPITEM_ELEMENT_Critical_Hit, player.critical_hit);
-	player.mod.damages = ARX_EQUIPMENT_Apply(
-	                         io, IO_EQUIPITEM_ELEMENT_Damages, 0);
-
+	// Check for Equipment Modulators
+	INTERACTIVE_OBJ *io = inter.iobj[0];
+	mod.attribute.strength			= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_STRENGTH,					attribute.strength);
+	mod.attribute.dexterity			= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_DEXTERITY,					attribute.dexterity);
+	mod.attribute.constitution	= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_CONSTITUTION,			attribute.constitution);
+	mod.attribute.mind					= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_MIND,							attribute.mind);
+	mod.armor_class							= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Armor_Class,				armor_class);
+	mod.skill.stealth						= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Stealth,						get_stealth());
+	mod.skill.mecanism					= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Mecanism,					get_mecanism());
+	mod.skill.intuition					= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Intuition,					get_intuition());
+	mod.skill.etheral_link			= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Etheral_Link,			get_etheral_link());
+	mod.skill.object_knowledge	= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Object_Knowledge,	get_object_knowledge());
+	mod.skill.casting						= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Casting,						get_casting());
+	mod.skill.projectile				= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Projectile,				get_projectile());
+	mod.skill.close_combat			= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Close_Combat,			get_close_combat());
+	mod.skill.defense						= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Defense,						get_defense());
+	mod.resist_magic						= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Resist_Magic,			resist_magic);
+	mod.resist_poison						= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Resist_Poison,			resist_poison);
+	mod.critical_hit						= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Critical_Hit,			critical_hit);
+	mod.damages									= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_Damages,						0);
 
 	//CHECK OVERFLOW
 	float fFullAimTime	= ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_AimTime, 0);
-	float fCalcHandicap	= (player.full.attribute.dexterity - 10.f) * 20.f;
+	float fCalcHandicap	= (full.attribute.dexterity - 10.f) * 20.f;
 
 	//CAST
-	player.full.aimtime = checked_range_cast<long>(fFullAimTime);
-
-	if (player.full.aimtime <= 0) player.full.aimtime = player.aimtime;
-
-	player.full.aimtime -= checked_range_cast<long>(fCalcHandicap);
-
-
-	if (player.full.aimtime <= 1500) player.full.aimtime = 1500;
+	full.aimtime = checked_range_cast<long>(fFullAimTime);
+	if (full.aimtime <= 0) full.aimtime = aimtime;
+	full.aimtime -= checked_range_cast<long>(fCalcHandicap);
+	if (full.aimtime <= 1500) full.aimtime = 1500;
 
 	// PERCENTILE.....
-	player.mod.attribute.strength += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_STRENGTH, player.attribute.strength + player.mod.attribute.strength);
-	player.mod.attribute.dexterity += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_DEXTERITY, player.attribute.dexterity + player.mod.attribute.dexterity);
-	player.mod.attribute.constitution += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_CONSTITUTION, player.attribute.constitution + player.mod.attribute.constitution);
-	player.mod.attribute.mind += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_MIND, player.attribute.mind + player.mod.attribute.mind);
-	player.mod.armor_class += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Armor_Class, player.armor_class + player.mod.armor_class);
-
-	// Check for Equipment Modificators to Skills
-	player.mod.skill.stealth += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Stealth, ARX_PLAYER_Get_Skill_Stealth(1));
-	player.mod.skill.mecanism += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Mecanism, ARX_PLAYER_Get_Skill_Mecanism(1));
-	player.mod.skill.intuition += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Intuition, ARX_PLAYER_Get_Skill_Intuition(1));
-	player.mod.skill.etheral_link += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Etheral_Link, ARX_PLAYER_Get_Skill_Etheral_Link(1));
-	player.mod.skill.object_knowledge += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Object_Knowledge, ARX_PLAYER_Get_Skill_Object_Knowledge(1));
-	player.mod.skill.casting += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Casting, ARX_PLAYER_Get_Skill_Casting(1));
-	player.mod.skill.projectile += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Projectile, ARX_PLAYER_Get_Skill_Projectile(1));
-	player.mod.skill.close_combat += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Close_Combat, ARX_PLAYER_Get_Skill_Close_Combat(1));
-	player.mod.skill.defense += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Defense, ARX_PLAYER_Get_Skill_Defense(1));
-	player.mod.resist_magic += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Resist_Magic, player.resist_magic + player.mod.resist_magic);
-	player.mod.resist_poison += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Resist_Poison, player.resist_poison + player.mod.resist_poison);
-	player.mod.critical_hit += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Critical_Hit, player.critical_hit + player.mod.critical_hit);
-	player.mod.damages += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Damages, player.damages);
-	//player.full.AimTime=ARX_EQUIPMENT_ApplyPercent(io,IO_EQUIPITEM_ELEMENT_AimTime,0);
+	// Check for Equipment modulators
+	mod.attribute.strength			+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_STRENGTH,					attribute.strength + mod.attribute.strength);
+	mod.attribute.dexterity			+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_DEXTERITY,					attribute.dexterity + mod.attribute.dexterity);
+	mod.attribute.constitution	+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_CONSTITUTION,			attribute.constitution + mod.attribute.constitution);
+	mod.attribute.mind					+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_MIND,							attribute.mind + mod.attribute.mind);
+	mod.armor_class							+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Armor_Class,				armor_class + mod.armor_class);
+	mod.skill.stealth						+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Stealth,						get_stealth(true));
+	mod.skill.mecanism					+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Mecanism,					get_mecanism(true));
+	mod.skill.intuition					+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Intuition,					get_intuition(true));
+	mod.skill.etheral_link			+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Etheral_Link,			get_etheral_link(true));
+	mod.skill.object_knowledge	+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Object_Knowledge,	get_object_knowledge(true));
+	mod.skill.casting						+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Casting,						get_casting(true));
+	mod.skill.projectile				+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Projectile,				get_projectile(true));
+	mod.skill.close_combat			+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Close_Combat,			get_close_combat(true));
+	mod.skill.defense						+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Defense,						get_defense(true));
+	mod.resist_magic						+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Resist_Magic,			resist_magic + mod.resist_magic);
+	mod.resist_poison						+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Resist_Poison,			resist_poison + mod.resist_poison);
+	mod.critical_hit						+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Critical_Hit,			critical_hit + mod.critical_hit);
+	mod.damages									+= ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Damages,						damages);
+	//full.AimTime								= ARX_EQUIPMENT_ApplyPercent(io,IO_EQUIPITEM_ELEMENT_AimTime,0);
 
 	// Check for Spell Modificators
 	if (inter.iobj[0])
@@ -957,22 +752,22 @@ void ARX_PLAYER_ComputePlayerFullStats()
 				switch (spells[n].type)
 				{
 					case SPELL_ARMOR:
-						player.mod.armor_class += spells[n].caster_level;
+						mod.armor_class += spells[n].caster_level;
 						break;
 					case SPELL_LOWER_ARMOR:
-						player.mod.armor_class -= spells[n].caster_level;
+						mod.armor_class -= spells[n].caster_level;
 						break;
 					case SPELL_CURSE:
-						player.mod.attribute.strength -= spells[n].caster_level;
-						player.mod.attribute.constitution -= spells[n].caster_level;
-						player.mod.attribute.dexterity -= spells[n].caster_level;
-						player.mod.attribute.mind -= spells[n].caster_level;
+						mod.attribute.strength -= spells[n].caster_level;
+						mod.attribute.constitution -= spells[n].caster_level;
+						mod.attribute.dexterity -= spells[n].caster_level;
+						mod.attribute.mind -= spells[n].caster_level;
 						break;
 					case SPELL_BLESS:
-						player.mod.attribute.strength += spells[n].caster_level;
-						player.mod.attribute.dexterity += spells[n].caster_level;
-						player.mod.attribute.constitution += spells[n].caster_level;
-						player.mod.attribute.mind += spells[n].caster_level;
+						mod.attribute.strength += spells[n].caster_level;
+						mod.attribute.dexterity += spells[n].caster_level;
+						mod.attribute.constitution += spells[n].caster_level;
+						mod.attribute.mind += spells[n].caster_level;
 						break;
 					default: break;
 				}
@@ -981,131 +776,127 @@ void ARX_PLAYER_ComputePlayerFullStats()
 
 	if (cur_mr == 3)
 	{
-		player.mod.attribute.strength += 1;
-		player.mod.attribute.mind += 10;
-		player.mod.attribute.constitution += 1;
-		player.mod.attribute.dexterity += 10;
-		player.mod.skill.stealth += 5;
-		player.mod.skill.mecanism += 5;
-		player.mod.skill.intuition += 100;
-		player.mod.skill.etheral_link += 100;
-		player.mod.skill.object_knowledge += 100;
-		player.mod.skill.casting += 5;
-		player.mod.skill.projectile += 5;
-		player.mod.skill.close_combat += 5;
-		player.mod.skill.defense += 100;
-		player.mod.resist_magic += 100;
-		player.mod.resist_poison += 100;
-		player.mod.critical_hit += 5;
-		player.mod.damages += 2;
-		player.mod.armor_class += 100;
-		player.full.aimtime = 100;
+		mod.attribute.strength			+= 1.0f;
+		mod.attribute.mind					+= 10.0f;
+		mod.attribute.constitution	+= 1.0f;
+		mod.attribute.dexterity			+= 10.0f;
+		mod.skill.stealth						+= 5.0f;
+		mod.skill.mecanism					+= 5.0f;
+		mod.skill.intuition					+= 100.0f;
+		mod.skill.etheral_link			+= 100.0f;
+		mod.skill.object_knowledge	+= 100.0f;
+		mod.skill.casting						+= 5.0f;
+		mod.skill.projectile				+= 5.0f;
+		mod.skill.close_combat			+= 5.0f;
+		mod.skill.defense						+= 100.0f;
+		mod.resist_magic						+= 100.0f;
+		mod.resist_poison						+= 100.0f;
+		mod.critical_hit						+= 5.0f;
+		mod.damages									+= 2.0f;
+		mod.armor_class							+= 100.0f;
+		full.aimtime								= 100.0f;
 	}
 
 	if (sp_max)
 	{
-		player.mod.attribute			+= 5.0f;
-		player.mod.skill					+= 50.0f;
-		player.mod.resist_magic		+= 10.0f;
-		player.mod.resist_poison	+= 10.0f;
-		player.mod.critical_hit		+= 50.0f;
-		player.mod.damages				+= 10.0f;
-		player.mod.armor_class		+= 20.0f;
-		player.full.aimtime				= 100;
+		mod.attribute			+= 5.0f;
+		mod.skill					+= 50.0f;
+		mod.resist_magic	+= 10.0f;
+		mod.resist_poison	+= 10.0f;
+		mod.critical_hit	+= 50.0f;
+		mod.damages				+= 10.0f;
+		mod.armor_class		+= 20.0f;
+		full.aimtime			= 100.0f;
 	}
 
 	if (SPECIAL_PNUX)
 	{
-		player.mod.attribute.strength += (long)(float)(rnd() * 5.f);
-		player.mod.attribute.mind += (long)(float)(rnd() * 5.f);
-		player.mod.attribute.constitution += (long)(float)(rnd() * 5.f);
-		player.mod.attribute.dexterity += (long)(float)(rnd() * 5.f);
-		player.mod.skill.stealth += (long)(float)(rnd() * 20.f);
-		player.mod.skill.mecanism += (long)(float)(rnd() * 20.f);
-		player.mod.skill.intuition += (long)(float)(rnd() * 20.f);
-		player.mod.skill.etheral_link += (long)(float)(rnd() * 20.f);
-		player.mod.skill.object_knowledge += (long)(float)(rnd() * 20.f);
-		player.mod.skill.casting += (long)(float)(rnd() * 20.f);
-		player.mod.skill.projectile += (long)(float)(rnd() * 20.f);
-		player.mod.skill.close_combat += (long)(float)(rnd() * 20.f);
-		player.mod.skill.defense += (long)(float)(rnd() * 30.f);
-		player.mod.resist_magic += (long)(float)(rnd() * 20.f);
-		player.mod.resist_poison += (long)(float)(rnd() * 20.f);
-		player.mod.critical_hit += (long)(float)(rnd() * 20.f);
-		player.mod.damages += (long)(float)(rnd() * 20.f);
-		player.mod.armor_class += (long)(float)(rnd() * 20.f);
+		mod.attribute.strength			+= (long)(rnd() * 5.0f);
+		mod.attribute.mind					+= (long)(rnd() * 5.0f);
+		mod.attribute.constitution	+= (long)(rnd() * 5.0f);
+		mod.attribute.dexterity			+= (long)(rnd() * 5.0f);
+		mod.skill.stealth						+= (long)(rnd() * 20.0f);
+		mod.skill.mecanism					+= (long)(rnd() * 20.0f);
+		mod.skill.intuition					+= (long)(rnd() * 20.0f);
+		mod.skill.etheral_link			+= (long)(rnd() * 20.0f);
+		mod.skill.object_knowledge	+= (long)(rnd() * 20.0f);
+		mod.skill.casting						+= (long)(rnd() * 20.0f);
+		mod.skill.projectile				+= (long)(rnd() * 20.0f);
+		mod.skill.close_combat			+= (long)(rnd() * 20.0f);
+		mod.skill.defense						+= (long)(rnd() * 30.0f);
+		mod.resist_magic						+= (long)(rnd() * 20.0f);
+		mod.resist_poison						+= (long)(rnd() * 20.0f);
+		mod.critical_hit						+= (long)(rnd() * 20.0f);
+		mod.damages									+= (long)(rnd() * 20.0f);
+		mod.armor_class							+= (long)(rnd() * 20.0f);
 	}
 
 	if (cur_rf == 3)
 	{
-		player.mod.attribute.mind += 10;
-		player.mod.skill.casting += 100;
-		player.mod.skill.etheral_link += 100;
-		player.mod.skill.object_knowledge += 100;
-		player.mod.resist_magic += 20;
-		player.mod.resist_poison += 20;
-		player.mod.damages += 1;
-		player.mod.armor_class += 5;
+		mod.attribute.mind					+= 10.0f;
+		mod.skill.casting						+= 100.0f;
+		mod.skill.etheral_link			+= 100.0f;
+		mod.skill.object_knowledge	+= 100.0f;
+		mod.resist_magic						+= 20.0f;
+		mod.resist_poison						+= 20.0f;
+		mod.damages									+= 1.0f;
+		mod.armor_class							+= 5.0f;
 	}
 
-	player.full.armor_class							= max(0.0f, player.armor_class + player.mod.armor_class);
-	player.full.attribute.strength			= max(0.0f, player.attribute.strength + player.mod.attribute.strength);
-	player.full.attribute.mind					= max(0.0f, player.attribute.mind + player.mod.attribute.mind);
-	player.full.attribute.constitution	= max(0.0f, player.attribute.constitution + player.mod.attribute.constitution);
-	player.full.attribute.dexterity			= max(0.0f, player.attribute.dexterity + player.mod.attribute.dexterity);
+	full.armor_class						= max(0.0f, armor_class + mod.armor_class);
+	full.attribute.strength			= max(0.0f, attribute.strength + mod.attribute.strength);
+	full.attribute.mind					= max(0.0f, attribute.mind + mod.attribute.mind);
+	full.attribute.constitution	= max(0.0f, attribute.constitution + mod.attribute.constitution);
+	full.attribute.dexterity		= max(0.0f, attribute.dexterity + mod.attribute.dexterity);
 
-	player.full.skill.stealth						= ARX_PLAYER_Get_Skill_Stealth(1);
-	player.full.skill.mecanism					= ARX_PLAYER_Get_Skill_Mecanism(1);
-	player.full.skill.intuition					= ARX_PLAYER_Get_Skill_Intuition(1);
-	player.full.skill.etheral_link			= ARX_PLAYER_Get_Skill_Etheral_Link(1);
-	player.full.skill.object_knowledge	= ARX_PLAYER_Get_Skill_Object_Knowledge(1);
-	player.full.skill.casting						= ARX_PLAYER_Get_Skill_Casting(1);
-	player.full.skill.projectile				= ARX_PLAYER_Get_Skill_Projectile(1);
-	player.full.skill.close_combat			= ARX_PLAYER_Get_Skill_Close_Combat(1);
-	player.full.skill.defense						= ARX_PLAYER_Get_Skill_Defense(1);
+	full.skill.stealth					= get_stealth(true);
+	full.skill.mecanism					= get_mecanism(true);
+	full.skill.intuition				= get_intuition(true);
+	full.skill.etheral_link			= get_etheral_link(true);
+	full.skill.object_knowledge	= get_object_knowledge(true);
+	full.skill.casting					= get_casting(true);
+	full.skill.projectile				= get_projectile(true);
+	full.skill.close_combat			= get_close_combat(true);
+	full.skill.defense					= get_defense(true);
 
-	player.full.resist_magic						= max(0.0f, player.resist_magic + player.mod.resist_magic);
-	player.full.resist_poison						= max(0.0f, player.resist_poison + player.mod.resist_poison);
+	full.resist_magic						= max(0.0f, resist_magic + mod.resist_magic);
+	full.resist_poison					= max(0.0f, resist_poison + mod.resist_poison);
 
-	player.full.critical_hit						= max(0.0f, player.critical_hit + player.mod.critical_hit);
+	full.critical_hit						= max(0.0f, critical_hit + mod.critical_hit);
 
-	player.full.damages									= max(1.0f, player.damages + player.mod.damages + player.full.skill.close_combat * 1E-1f);
+	full.damages								= max(1.0f, damages + mod.damages + full.skill.close_combat * 1E-1f);
 
-	player.full.stat.life								= player.stat.life;
-	player.full.stat.mana								= player.stat.mana;
-	player.full.stat.maxlife						= (float)player.full.attribute.constitution * (float)(player.level + 2) + player.mod.stat.maxlife;
-	player.stat.life										= std::min(player.stat.life, player.full.stat.maxlife);
-	player.full.stat.maxmana						= (float)player.full.attribute.mind * (float)(player.level + 1) + player.mod.stat.maxmana;
-	player.stat.mana										= std::min(player.stat.mana, player.full.stat.maxmana);
+	full.stat.life							= stat.life;
+	full.stat.mana							= stat.mana;
+	full.stat.maxlife						= full.attribute.constitution * (level + 2.0f) + mod.stat.maxlife;
+	stat.life										= std::min(stat.life, full.stat.maxlife);
+	full.stat.maxmana						= full.attribute.mind * (level + 1.0f) + mod.stat.maxmana;
+	stat.mana										= std::min(stat.mana, full.stat.maxmana);
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_MakeFreshHero()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Creates a Fresh hero
-//*************************************************************************************
-void ARX_PLAYER_MakeFreshHero()
+// Creates a Fresh hero
+void arx::character::hero_generate_fresh()
 {
-	player.attribute = 6.0f;
-	player.skill = 0.0f;
-	player.old = 0.0f;
+	attribute = 6.0f;
+	skill = 0.0f;
+	old = 0.0f;
 
-	player.redistribute.attribute = 16;
-	player.redistribute.skill = 18;
+	redistribute.attribute = 16;
+	redistribute.skill = 18;
 
-	player.level = 0;
-	player.xp = 0;
-	player.poison = 0.f;
-	player.hunger = 100.f;
-	player.skin = 0;
-	player.bag = 1;
+	level = 0;
+	xp = 0;
+	poison = 0.f;
+	hunger = 100.f;
+	skin = 0;
+	bag = 1;
 
-	ARX_PLAYER_ComputePlayerStats();
-	player.rune_flags = 0;
+	ComputeStats();
+	rune_flags = 0;
 
-	player.SpellToMemorize.bSpell = false;
+	SpellToMemorize.bSpell = false;
 }
+
 char SKIN_MOD = 0;
 char QUICK_MOD = 0;
 
@@ -1113,7 +904,7 @@ void ARX_SPSound()
 {
 	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
 }
-//*************************************************************************************
+
 void ARX_PLAYER_MakeSpHero()
 {
 	ARX_SPSound();
@@ -1130,7 +921,7 @@ void ARX_PLAYER_MakeSpHero()
 	player.hunger = 100.f;
 	player.skin = 4;
 
-	ARX_PLAYER_ComputePlayerStats();
+	player.ComputeStats();
 	player.stat.life = player.stat.maxlife;
 	player.stat.mana = player.stat.maxmana;
 
@@ -1140,152 +931,136 @@ void ARX_PLAYER_MakeSpHero()
 	SKIN_MOD = 0;
 	QUICK_MOD = 0;
 }
-//*************************************************************************************
-// void ARX_PLAYER_MakePowerfullHero()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Creates a POWERFULL hero
-//*************************************************************************************
-void ARX_PLAYER_MakePowerfullHero()
+
+void arx::character::hero_generate_powerful()
 {
-	player.attribute = 18.0f;
-	player.old = 0.0f;
-	player.skill = 82.0f;
+	attribute = 18.0f;
+	old = 0.0f;
+	skill = 82.0f;
 	
-	player.redistribute.attribute = 0;
-	player.redistribute.skill = 0;
+	redistribute.attribute = 0;
+	redistribute.skill = 0;
 
-	player.level = 10;
-	player.xp = 178000;
-	player.poison = 0.f;
-	player.hunger = 100.f;
-	player.skin = 0;
+	level = 10;
+	xp = 178000;
+	poison = 0.f;
+	hunger = 100.f;
+	skin = 0;
 
-	ARX_PLAYER_ComputePlayerStats();
-	player.stat.life = player.stat.maxlife;
-	player.stat.mana = player.stat.maxmana;
+	ComputeStats();
+	stat.life = player.stat.maxlife;
+	stat.mana = player.stat.maxmana;
 
-	player.rune_flags = RuneFlags::all();
-	player.SpellToMemorize.bSpell = false;
+	rune_flags = RuneFlags::all();
+	SpellToMemorize.bSpell = false;
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_MakeAverageHero()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Creates an Average hero
-//*************************************************************************************
-void ARX_PLAYER_MakeAverageHero()
+void arx::character::hero_generate_average()
 {
-	ARX_PLAYER_MakeFreshHero();
+	hero_generate_fresh();
 
-	player.attribute = 10;
-	player.skill = 2;
+	attribute = 10;
+	skill = 2;
 
-	player.redistribute.attribute = 0;
-	player.redistribute.skill = 0;
+	redistribute.attribute = 0;
+	redistribute.skill = 0;
 
-	player.level = 0;
-	player.xp = 0;
-	player.hunger = 100.f;
+	level = 0;
+	xp = 0;
+	hunger = 100.f;
 
-	ARX_PLAYER_ComputePlayerStats();
+	ComputeStats();
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_QuickGeneration()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Quickgenerate a random hero
-//*************************************************************************************
-void ARX_PLAYER_QuickGeneration() {
-	
-	char old_skin = player.skin;
-	ARX_PLAYER_MakeFreshHero();
-	player.skin = old_skin;
+// Quickgenerate a random hero
+void arx::character::hero_generate_random() 
+{
+	char old_skin = skin;
+	hero_generate_fresh();
+	skin = old_skin;
 
-	while (player.redistribute.attribute)
+	while (redistribute.attribute)
 	{
 		float rn = rnd();
 
-		if ((rn < 0.25f) && (player.attribute.strength < 18))
+		if ((rn < 0.25f) && (attribute.strength < 18))
 		{
-			player.attribute.strength++;
-			player.redistribute.attribute--;
+			attribute.strength++;
+			redistribute.attribute--;
 		}
-		else if ((rn < 0.5f) && (player.attribute.mind < 18))
+		else if ((rn < 0.5f) && (attribute.mind < 18))
 		{
-			player.attribute.mind++;
-			player.redistribute.attribute--;
+			attribute.mind++;
+			redistribute.attribute--;
 		}
-		else if ((rn < 0.75f) && (player.attribute.dexterity < 18))
+		else if ((rn < 0.75f) && (attribute.dexterity < 18))
 		{
-			player.attribute.dexterity++;
-			player.redistribute.attribute--;
+			attribute.dexterity++;
+			redistribute.attribute--;
 		}
-		else if (player.attribute.constitution < 18)
+		else if (attribute.constitution < 18)
 		{
-			player.attribute.constitution++;
-			player.redistribute.attribute--;
+			attribute.constitution++;
+			redistribute.attribute--;
 		}
 	}
 
-	while (player.redistribute.skill)
+	while (redistribute.skill)
 	{
 		float rn = rnd();
 
-		if ((rn < 0.1f) && (player.skill.stealth < 18))
+		if ((rn < 0.1f) && (skill.stealth < 18))
 		{
-			player.skill.stealth++;
-			player.redistribute.skill--;
+			skill.stealth++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.2f) && (player.skill.mecanism < 18))
+		else if ((rn < 0.2f) && (skill.mecanism < 18))
 		{
-			player.skill.mecanism++;
-			player.redistribute.skill--;
+			skill.mecanism++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.3f) && (player.skill.intuition < 18))
+		else if ((rn < 0.3f) && (skill.intuition < 18))
 		{
-			player.skill.intuition++;
-			player.redistribute.skill--;
+			skill.intuition++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.4f) && (player.skill.etheral_link < 18))
+		else if ((rn < 0.4f) && (skill.etheral_link < 18))
 		{
-			player.skill.etheral_link++;
-			player.redistribute.skill--;
+			skill.etheral_link++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.5f) && (player.skill.object_knowledge < 18))
+		else if ((rn < 0.5f) && (skill.object_knowledge < 18))
 		{
-			player.skill.object_knowledge++;
-			player.redistribute.skill--;
+			skill.object_knowledge++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.6f) && (player.skill.casting < 18))
+		else if ((rn < 0.6f) && (skill.casting < 18))
 		{
-			player.skill.casting++;
-			player.redistribute.skill--;
+			skill.casting++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.7f) && (player.skill.projectile < 18))
+		else if ((rn < 0.7f) && (skill.projectile < 18))
 		{
-			player.skill.projectile++;
-			player.redistribute.skill--;
+			skill.projectile++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.8f) && (player.skill.close_combat < 18))
+		else if ((rn < 0.8f) && (skill.close_combat < 18))
 		{
-			player.skill.close_combat++;
-			player.redistribute.skill--;
+			skill.close_combat++;
+			redistribute.skill--;
 		}
-		else if ((rn < 0.9f) && (player.skill.defense < 18))
+		else if ((rn < 0.9f) && (skill.defense < 18))
 		{
-			player.skill.defense++;
-			player.redistribute.skill--;
+			skill.defense++;
+			redistribute.skill--;
 		}
 	}
 
-	player.level = 0;
-	player.xp = 0;
-	player.hunger = 100.f;
+	level = 0;
+	xp = 0;
+	hunger = 100.f;
 
-	ARX_PLAYER_ComputePlayerStats();
+	ComputeStats();
 }
 
 //*************************************************************************************
@@ -1362,7 +1137,7 @@ void ARX_PLAYER_LEVEL_UP()
 	player.level++;
 	player.redistribute.skill += 15;
 	player.redistribute.attribute++;
-	ARX_PLAYER_ComputePlayerStats();
+	player.ComputeStats();
 	player.stat.life = player.stat.maxlife;
 	player.stat.mana = player.stat.maxmana;
 
@@ -2359,27 +2134,24 @@ nochanges:
 		}
 	}
 }
-//*************************************************************************************
-// void InitPlayer()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Init Local Player Data
-//*************************************************************************************
-void ARX_PLAYER_InitPlayer() {
-	player.Interface = INTER_MINIBOOK | INTER_MINIBACK | INTER_LIFE_MANA;
-	player.physics.cyl.height = PLAYER_BASE_HEIGHT;
-	player.physics.cyl.radius = PLAYER_BASE_RADIUS;
-	player.stat.life = player.stat.maxlife = player.full.stat.maxlife = 100.f;
-	player.stat.mana = player.stat.maxmana = player.full.stat.maxmana = 100.f;
-	player.falling = 0;
-	player.rightIO = NULL;
-	player.leftIO = NULL;
-	player.equipsecondaryIO = NULL;
-	player.equipshieldIO = NULL;
-	player.gold = 0;
-	player.bag = 1;
-	player.doingmagic = 0;
-	ARX_PLAYER_MakeFreshHero();
+
+// Init Local Player Data
+void arx::character::Init() 
+{
+	Interface = INTER_MINIBOOK | INTER_MINIBACK | INTER_LIFE_MANA;
+	physics.cyl.height = PLAYER_BASE_HEIGHT;
+	physics.cyl.radius = PLAYER_BASE_RADIUS;
+	stat.life = stat.maxlife = full.stat.maxlife = 100.f;
+	stat.mana = stat.maxmana = full.stat.maxmana = 100.f;
+	falling = 0;
+	rightIO = NULL;
+	leftIO = NULL;
+	equipsecondaryIO = NULL;
+	equipshieldIO = NULL;
+	gold = 0;
+	bag = 1;
+	doingmagic = 0;
+	hero_generate_fresh();
 }
 
 //*************************************************************************************
@@ -2510,7 +2282,7 @@ void ARX_PLAYER_Frame_Update()
 
 	PLAYER_ARMS_FOCAL = static_cast<float>(CURRENT_BASE_FOCAL);
 
-	ARX_PLAYER_ComputePlayerFullStats();
+	player.ComputeFullStats();
 
 	TRAP_DETECT = checked_range_cast<long>(player.full.skill.mecanism);
 	TRAP_SECRET = checked_range_cast<long>(player.full.skill.intuition);
@@ -3497,13 +3269,13 @@ void ARX_PLAYER_AddGold(INTERACTIVE_OBJ * gold) {
 	
 }
 
-void ARX_PLAYER_Start_New_Quest() {
-	
+void ARX_PLAYER_Start_New_Quest() 
+{
 	SKIN_MOD = 0;
 	QUICK_MOD = 0;
 	EERIE_PATHFINDER_Clear();
 	EERIE_PATHFINDER_Release();
-	ARX_PLAYER_MakeFreshHero();
+	player.hero_generate_fresh();
 	CURRENT_TORCH = NULL;
 	FreeAllInter();
 	SecondaryInventory = NULL;
@@ -3740,7 +3512,7 @@ void ARX_GAME_Reset(long type) {
 
 		ARX_EQUIPMENT_ReleaseAll(inter.iobj[0]);
 
-		ARX_PLAYER_InitPlayer();
+		player.Init();
 		ARX_INTERACTIVE_RemoveGoreOnIO(inter.iobj[0]);
 		TRUE_PLAYER_MOUSELOOK_ON = 0;
 		// Player Inventory

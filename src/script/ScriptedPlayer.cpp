@@ -96,7 +96,7 @@ public:
 		
 		DebugScript("");
 		
-		ARX_PLAYER_MakeFreshHero();
+		player.hero_generate_fresh();
 		
 		return Success;
 	}

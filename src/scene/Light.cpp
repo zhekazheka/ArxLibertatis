@@ -59,6 +59,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "scene/Object.h"
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
+#include "io/log/Logger.h"
 
 extern float GLOBAL_LIGHT_FACTOR;
 EERIE_LIGHT * GLight[MAX_LIGHTS];
@@ -233,6 +234,8 @@ void EERIE_LIGHT_ClearSelected() {
 
 void EERIE_LIGHT_GlobalInit() {
 	
+	LogDebug("Lights Init");
+
 	static long init = 0;
 	
 	if(!init) {

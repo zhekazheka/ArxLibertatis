@@ -131,195 +131,221 @@ enum RuneFlag {
 DECLARE_FLAGS(RuneFlag, RuneFlags)
 DECLARE_FLAGS_OPERATORS(RuneFlags)
 
-struct ARXCHARACTER {
-	
-	struct attributes
+namespace arx
+{
+	class character 
 	{
-		void operator+=(const float &v)
+	public:
+
+		struct attributes
 		{
-			strength = v;
-			dexterity = v;
-			constitution = v;
-			mind = v;
-		}
+			void operator+=(const float &v)
+			{
+				strength += v;
+				dexterity += v;
+				constitution += v;
+				mind += v;
+			}
 
-		void operator=(const float &v)
+			void operator=(const float &v)
+			{
+				strength = v;
+				dexterity = v;
+				constitution = v;
+				mind = v;
+			}
+
+			float strength;
+			float dexterity;
+			float constitution;
+			float mind;
+		};
+
+		struct skills
 		{
-			strength = v;
-			dexterity = v;
-			constitution = v;
-			mind = v;
-		}
+			void operator+=(const float &v)
+			{
+				stealth += v;
+				mecanism += v;
+				intuition += v;
+				etheral_link += v;
+				object_knowledge += v;
+				casting += v;
+				projectile += v;
+				close_combat += v;
+				defense += v;
+			}
 
-		float strength;
-		float dexterity;
-		float constitution;
-		float mind;
-	};
+			void operator=(const float &v)
+			{
+				stealth = v;
+				mecanism = v;
+				intuition = v;
+				etheral_link = v;
+				object_knowledge = v;
+				casting = v;
+				projectile = v;
+				close_combat = v;
+				defense = v;
+			}
 
-	struct skills
-	{
-		void operator+=(const float &v)
+			float stealth;
+			float mecanism;
+			float intuition;
+			float etheral_link;
+			float object_knowledge;
+			float casting;
+			float projectile;
+			float close_combat;
+			float defense;
+		};
+
+		struct stats
 		{
-			stealth += v;
-			mecanism += v;
-			intuition += v;
-			etheral_link += v;
-			object_knowledge += v;
-			casting += v;
-			projectile += v;
-			close_combat += v;
-			defense += v;
-		}
+			void operator=(const float &v)
+			{
+				life = v;
+				maxlife = v;
+				mana = v;
+				maxmana = v;
+			}
 
-		void operator=(const float &v)
+			float life;
+			float maxlife;
+
+			float mana;
+			float maxmana;
+		};
+
+		// Modifier Values (Items, curses, etc...)
+		struct mod_stats
 		{
-			stealth = v;
-			mecanism = v;
-			intuition = v;
-			etheral_link = v;
-			object_knowledge = v;
-			casting = v;
-			projectile = v;
-			close_combat = v;
-			defense = v;
-		}
+			attributes attribute;
+			skills skill;
+			stats stat;
 
-		float stealth;
-		float mecanism;
-		float intuition;
-		float etheral_link;
-		float object_knowledge;
-		float casting;
-		float projectile;
-		float close_combat;
-		float defense;
-	};
+			float armor_class;
+			float resist_magic;
+			float resist_poison;
+			float critical_hit;
+			float damages;
+		};
 
-	struct stats
-	{
-		void operator=(const float &v)
+		// Full Frame values (including items)
+		struct full_stats
 		{
-			life = v;
-			maxlife = v;
-			mana = v;
-			maxmana = v;
-		}
+			attributes attribute;
+			skills skill;
+			stats stat;
 
-		float life;
-		float maxlife;
+			float aimtime;
+			float armor_class;
+			float resist_magic;
+			float resist_poison;
+			float critical_hit;
+			float damages;
+			long weapon_type;
+		};
 
-		float mana;
-		float maxmana;
-	};
+		struct purchase_points
+		{
+			unsigned char attribute;
+			unsigned char skill;
+		};
 
-	// Modifier Values (Items, curses, etc...)
-	struct mod_stats
-	{
+		character() {}
+		~character() {}
+
+		void Init();
+
+		void hero_generate_fresh();
+		void hero_generate_average();
+		void hero_generate_powerful();
+		void hero_generate_random();
+		void ComputeStats();
+		void ComputeFullStats();
+
+		float get_stealth(bool modified = false);
+		float get_mecanism(bool modified = false);
+		float get_intuition(bool modified = false);
+		float get_etheral_link(bool modified = false);
+		float get_object_knowledge(bool modified = false);
+		float get_casting(bool modified = false);
+		float get_projectile(bool modified = false);
+		float get_defense(bool modified = false);
+		float get_close_combat(bool modified = false);
+
+		unsigned char level;
+		long xp;
+
 		attributes attribute;
 		skills skill;
 		stats stat;
-
-		float armor_class;
-		float resist_magic;
-		float resist_poison;
+		
 		float critical_hit;
-		float damages;
-	};
 
-	mod_stats mod;
+		unsigned char armor_class;
+		unsigned char resist_magic;
+		unsigned char resist_poison;
 
-	// Full Frame values (including items)
-	struct full_stats
-	{
-		attributes attribute;
-		skills skill;
-		stats stat;
-
-		float aimtime;
-		float armor_class;
-		float resist_magic;
-		float resist_poison;
-		float critical_hit;
-		float damages;
+		long gold;
+		long aimtime;
 		long weapon_type;
+
+		skills old;
+
+		mod_stats mod;
+		full_stats full;
+
+		purchase_points redistribute;
+
+		char skin;
+		
+		Vec3f pos;
+		Anglef angle;
+		ANIM_USE useanim;
+		IO_PHYSICS physics;
+		
+		// Jump Sub-data
+		unsigned long jumpstarttime;
+		float jumplastposition;
+		long jumpphase; //!< 0 no jump, 1 doing anticipation anim, 2 moving_up, 3 moving_down, 4 finish_anim
+		
+		short climbing;
+		short levitate;
+		
+		Anglef desiredangle;
+		Vec3f size;
+		void * inzone;
+
+		long falling;
+		short doingmagic;
+		short Interface;
+		
+		PlayerMovement Current_Movement;
+		PlayerMovement Last_Movement;
+		long onfirmground;
+		
+		INTERACTIVE_OBJ *rightIO;
+		INTERACTIVE_OBJ *leftIO;
+		INTERACTIVE_OBJ *equipsecondaryIO;
+		INTERACTIVE_OBJ *equipshieldIO;
+		
+		short equiped[MAX_EQUIPED]; 
+
+		RuneFlags rune_flags;
+		TextureContainer * heads[5];
+		float damages;
+		float poison;
+		float hunger;
+		float grnd_color;
+		PlayerFlags playerflags;
+		short bag;
+		ARX_INTERFACE_MEMORIZE_SPELL SpellToMemorize;
 	};
-
-	full_stats full;
-	
-	// true (naked) Player Values
-	unsigned char level;
-	long xp;
-
-	attributes attribute;
-	skills skill;
-	stats stat;
-	
-	float critical_hit;
-
-	unsigned char armor_class;
-	unsigned char resist_magic;
-	unsigned char resist_poison;
-
-	long gold;
-	long aimtime;
-	long weapon_type;
-
-	// old skill values
-	skills old;
-	
-	struct purchase_points
-	{
-		unsigned char attribute;
-		unsigned char skill;
-	};
-
-	purchase_points redistribute;
-
-	char skin;
-	
-	Vec3f pos;
-	Anglef angle;
-	ANIM_USE useanim;
-	IO_PHYSICS physics;
-	
-	// Jump Sub-data
-	unsigned long jumpstarttime;
-	float jumplastposition;
-	long jumpphase; //!< 0 no jump, 1 doing anticipation anim, 2 moving_up, 3 moving_down, 4 finish_anim
-	
-	short climbing;
-	short levitate;
-	
-	Anglef desiredangle;
-	Vec3f size;
-	void * inzone;
-	
-	long falling;
-	short doingmagic;
-	short Interface;
-	
-	PlayerMovement Current_Movement;
-	PlayerMovement Last_Movement;
-	long onfirmground;
-	
-	INTERACTIVE_OBJ * rightIO;
-	INTERACTIVE_OBJ * leftIO;
-	INTERACTIVE_OBJ * equipsecondaryIO;
-	INTERACTIVE_OBJ * equipshieldIO;
-	
-	short equiped[MAX_EQUIPED]; 
-
-	RuneFlags rune_flags;
-	TextureContainer * heads[5];
-	float damages;
-	float poison;
-	float hunger;
-	float grnd_color;
-	PlayerFlags playerflags;
-	short bag;
-	ARX_INTERFACE_MEMORIZE_SPELL SpellToMemorize;
 };
+
+typedef arx::character ARXCHARACTER;
 
 struct KEYRING_SLOT {
 	char slot[64];
@@ -351,7 +377,6 @@ extern float PLAYER_BASE_HEIGHT;
 
 void ARX_PLAYER_MakeSpHero();
 void ARX_PLAYER_LoadHeroAnimsAndMesh();
-void ARX_PLAYER_InitPlayer();
 void ARX_PLAYER_BecomesDead();
 void ARX_PLAYER_ClickedOnTorch(INTERACTIVE_OBJ * io);
 void ARX_PLAYER_RectifyPosition();
@@ -362,11 +387,6 @@ void ARX_PLAYER_GotoAnyPoly();
 void ARX_PLAYER_Quest_Add(const std::string & quest, bool _bLoad = false);
 void ARX_PLAYER_Quest_Init();
 void ARX_PLAYER_FrontPos(Vec3f * pos);
-void ARX_PLAYER_MakePowerfullHero();
-void ARX_PLAYER_ComputePlayerFullStats();
-void ARX_PLAYER_MakeFreshHero();
-void ARX_PLAYER_QuickGeneration();
-void ARX_PLAYER_MakeAverageHero();
 void ARX_PLAYER_Modify_XP(long val);
 void ARX_PLAYER_FrameCheck(float _framedelay);
 void ARX_PLAYER_Poison(float val);
@@ -388,15 +408,6 @@ void ARX_PLAYER_KillTorch();
 void ARX_PLAYER_PutPlayerInNormalStance(long val);
 void ARX_PLAYER_Start_New_Quest();
 void ARX_PLAYER_Rune_Add_All();
-float ARX_PLAYER_Get_Skill_Stealth(long type);
-float ARX_PLAYER_Get_Skill_Mecanism(long type);
-float ARX_PLAYER_Get_Skill_Intuition(long type);
-float ARX_PLAYER_Get_Skill_Etheral_Link(long type);
-float ARX_PLAYER_Get_Skill_Object_Knowledge(long type);
-float ARX_PLAYER_Get_Skill_Casting(long type);
-float ARX_PLAYER_Get_Skill_Projectile(long type);
-float ARX_PLAYER_Get_Skill_Close_Combat(long type);
-float ARX_PLAYER_Get_Skill_Defense(long type);
  
 void ARX_PLAYER_Restore_Skin();
 float GetPlayerStealth();

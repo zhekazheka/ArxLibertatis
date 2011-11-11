@@ -69,6 +69,8 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "graphics/Draw.h"
 #include "graphics/particle/ParticleEffects.h"
 
+#include "io/log/Logger.h"
+
 EERIE_3DOBJ * fogobj = NULL;
 
 FOG_DEF fogs[MAX_FOG];
@@ -84,6 +86,8 @@ void ARX_FOGS_Set_Object(EERIE_3DOBJ * _fogobj)
 //*************************************************************************************
 void ARX_FOGS_FirstInit()
 {
+	LogDebug("Fogs Init");
+
 	ARX_FOGS_Clear();
 }
 //*************************************************************************************

@@ -2794,6 +2794,9 @@ void ARX_SPELLS_FizzleAllSpellsFromCaster(long num_caster) {
 PRECAST_STRUCT Precast[MAX_PRECAST];
 
 void ARX_SPELLS_Precast_Reset() {
+
+	LogDebug("Spell Init");
+
 	for(size_t i = 0; i < MAX_PRECAST; i++) {
 		Precast[i].typ = SPELL_NONE;
 	}
@@ -3223,7 +3226,7 @@ bool ARX_SPELLS_Launch(Spell typ, long source, SpellcastFlags flagss, long level
 			player.SpellToMemorize.bSpell	= false;
 		}
 
-		ARX_PLAYER_ComputePlayerFullStats();
+		player.ComputeFullStats();
 
 		if ( level == -1 )
 		{

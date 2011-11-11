@@ -97,6 +97,8 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 #include "script/Script.h"
 
+#include "io/log/Logger.h"
+
 using std::min;
 using std::max;
 using std::string;
@@ -362,7 +364,7 @@ void ARX_EQUIPMENT_UnEquipAllPlayer()
 		}
 	}
 
-	ARX_PLAYER_ComputePlayerFullStats();
+	player.ComputeFullStats();
 }
 
 
@@ -1338,7 +1340,7 @@ void ARX_EQUIPMENT_Equip(INTERACTIVE_OBJ * target, INTERACTIVE_OBJ * toequip)
 	        ||	(toequip->type_flags & OBJECT_TYPE_LEGGINGS))
 		ARX_EQUIPMENT_RecreatePlayerMesh();
 
-	ARX_PLAYER_ComputePlayerFullStats();
+	player.ComputeFullStats();
 }
 
 bool ARX_EQUIPMENT_SetObjectType(INTERACTIVE_OBJ & io, const string & temp, bool set) {
@@ -1361,6 +1363,8 @@ bool ARX_EQUIPMENT_SetObjectType(INTERACTIVE_OBJ & io, const string & temp, bool
 //***********************************************************************************************
 void ARX_EQUIPMENT_Init()
 {
+	LogDebug("Equipment Init");
+
 	// IO_EQUIPITEM_ELEMENT_... are Defined in EERIEPOLY.h
 	strcpy(equipinfo[IO_EQUIPITEM_ELEMENT_STRENGTH].name, "strength");
 	strcpy(equipinfo[IO_EQUIPITEM_ELEMENT_DEXTERITY].name, "dexterity");
