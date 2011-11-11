@@ -364,7 +364,7 @@ void ARX_EQUIPMENT_UnEquipAllPlayer()
 		}
 	}
 
-	player.ComputeFullStats();
+	player.compute_full_stats();
 }
 
 
@@ -1340,7 +1340,7 @@ void ARX_EQUIPMENT_Equip(INTERACTIVE_OBJ * target, INTERACTIVE_OBJ * toequip)
 	        ||	(toequip->type_flags & OBJECT_TYPE_LEGGINGS))
 		ARX_EQUIPMENT_RecreatePlayerMesh();
 
-	player.ComputeFullStats();
+	player.compute_full_stats();
 }
 
 bool ARX_EQUIPMENT_SetObjectType(INTERACTIVE_OBJ & io, const string & temp, bool set) {

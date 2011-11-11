@@ -35,7 +35,7 @@ public:
 		
 		DebugScript("");
 		
-		ARX_PLAYER_AddBag();
+		player.add_bag();
 		
 		return Success;
 	}
@@ -54,7 +54,7 @@ public:
 		
 		DebugScript(' ' << val);
 		
-		ARX_PLAYER_Modify_XP(static_cast<long>(val));
+		player.add_xp(static_cast<int>(val));
 		
 		return Success;
 	}
@@ -77,7 +77,7 @@ public:
 			ARX_SOUND_PlayInterface(SND_GOLD);
 		}
 		
-		ARX_PLAYER_AddGold(checked_range_cast<long>(val));
+		player.add_gold(checked_range_cast<long>(val));
 		
 		return Success;
 	}
@@ -151,7 +151,7 @@ public:
 				return Failed;
 			}
 			
-			ARX_PLAYER_Rune_Add_All();
+			player.add_all_runes();
 			
 		} else {
 			
@@ -167,9 +167,9 @@ public:
 			}
 			
 			if(add == 1) {
-				ARX_Player_Rune_Add(it->second);
+				player.add_rune(it->second);
 			} else if(add == -1) {
-				ARX_Player_Rune_Remove(it->second);
+				player.remove_rune(it->second);
 			}
 		}
 		
@@ -536,7 +536,7 @@ public:
 		
 		DebugScript(' ' << fval);
 		
-		ARX_PLAYER_Poison(fval);
+		player.add_poison(fval);
 		
 		return Success;
 	}
@@ -574,9 +574,9 @@ public:
 	
 	Result execute(Context & context) {
 		
-		bool player = false;
+		bool bplayer = false;
 		HandleFlags("p") {
-			player = test_flag(flg, 'p');
+			bplayer = test_flag(flg, 'p');
 		}
 		
 		bool enable = context.getBool();
@@ -584,21 +584,21 @@ public:
 		DebugScript(' ' << options << ' ' << enable);
 		
 		INTERACTIVE_OBJ * io = context.getIO();
-		if(!player && !io) {
+		if (!bplayer && !io) {
 			ScriptWarning << "must either use -p or execute in IO context";
 			return Failed;
 		}
 		
 		
 		if(enable) {
-			if(player) {
-				ARX_PLAYER_Invulnerability(1);
+			if (bplayer) {
+				player.set_invulnerable();
 			} else {
 				io->ioflags |= IO_INVULNERABILITY;
 			}
 		} else {
-			if(player) {
-				ARX_PLAYER_Invulnerability(0);
+			if (bplayer) {
+				player.set_invulnerable(false);
 			} else {
 				io->ioflags &= ~IO_INVULNERABILITY;
 			}

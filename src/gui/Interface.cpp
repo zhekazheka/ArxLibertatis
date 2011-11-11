@@ -2195,7 +2195,7 @@ bool ArxGame::ManageEditorControls()
 					COMBINE=NULL;
 				}
 			} else if (DRAGINTER->ioflags & IO_GOLD) {
-				ARX_PLAYER_AddGold(DRAGINTER);
+				player.add_gold(DRAGINTER);
 				Set_DragInter(NULL);
 			} else if(DRAGINTER!=NULL)
 			{
@@ -2225,7 +2225,7 @@ bool ArxGame::ManageEditorControls()
 						if (res==0) // Throw Object
 						{
 							INTERACTIVE_OBJ * io=DRAGINTER;
-							ARX_PLAYER_Remove_Invisibility();
+							player.remove_invisibility();
 							io->obj->pbox->active=1;
 							io->obj->pbox->stopcount=0;
 							Vec3f pos;
@@ -2467,7 +2467,7 @@ bool ArxGame::ManageEditorControls()
 
 					if (io!=NULL)
 					{
-						ARX_PLAYER_Remove_Invisibility();
+						player.remove_invisibility();
 
 						if (DRAGINTER->show==SHOW_FLAG_ON_PLAYER)
 						{
@@ -2501,7 +2501,7 @@ bool ArxGame::ManageEditorControls()
 				suivant:
 					;
 			}
-			else ARX_PLAYER_Remove_Invisibility();
+			else player.remove_invisibility();
 		}
 	
 	}
@@ -4401,7 +4401,7 @@ void ARX_INTERFACE_DrawSecondaryInventory(bool _bSteal) {
 
 				if (_bSteal)
 				{
-					if (!ARX_PLAYER_CanStealItem(io))
+					if (!player.can_steal(io))
 					{
 						bItemSteal = true;
 						tc = ITC.Get("item_cant_steal");
@@ -5151,7 +5151,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 			if (!found2) LastRune=-1;
 
 			// Now Draws Spells for this level...
-			player.ComputeFullStats();
+			player.compute_full_stats();
 
 			float posx=0;
 			float posy=0;
@@ -5939,7 +5939,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 		std::string tex;
 		Color color(0, 0, 0);
 
-		player.ComputeFullStats();
+		player.compute_full_stats();
 
 		std::stringstream ss;
 		ss << ITC.Level << " " << std::setw(3) << (int)player.level;
@@ -6041,7 +6041,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 					ARX_EQUIPMENT_IdentifyAll();
 				}
 
-				player.ComputeFullStats();
+				player.compute_full_stats();
 			}
 
 			if (CheckSkillClick(516,230,&player.skill.casting,		ITC.Get("ic_casting"),&player.old.casting))
@@ -6130,7 +6130,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 				if (FLYING_OVER == WND_XP)
 				{
 					std::stringstream ss;
-					ss << ARXmenu.mda->flyover[WND_XP] << " " << std::setw(8) << GetXPforLevel(player.level+1)-player.xp;
+					ss << ARXmenu.mda->flyover[WND_XP] << " " << std::setw(8) << arx::character::get_xp_for_level(player.level + 1) - player.xp;
 					UNICODE_ARXDrawTextCenteredScroll( hFontInGame,
 					                                   (DANAESIZX*0.5f),
 					                                   4,
@@ -8087,7 +8087,7 @@ long Manage3DCursor(long flags)
 				if (EEfabs(lastanything) > min(EEfabs(height), 12.0f))
 							{
 								INTERACTIVE_OBJ * io=DRAGINTER;
-								ARX_PLAYER_Remove_Invisibility();
+								player.remove_invisibility();
 								io->obj->pbox->active=1;
 								io->obj->pbox->stopcount=0;
 								Vec3f pos;
@@ -8120,7 +8120,7 @@ long Manage3DCursor(long flags)
 							else
 							{
 
-								ARX_PLAYER_Remove_Invisibility();
+								player.remove_invisibility();
 								ARX_SOUND_PlayInterface(SND_INVSTD);
 								ARX_INTERACTIVE_Teleport(io,&pos,1);
 

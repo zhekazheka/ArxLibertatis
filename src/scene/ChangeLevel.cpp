@@ -1857,10 +1857,10 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	player.size = asp->size;
 
 	player.skill.stealth					=	asp->Skill_Stealth;
-	player.skill.mecanism					=	asp->Skill_Mecanism;
+	player.skill.mecanism				=	asp->Skill_Mecanism;
 	player.skill.intuition				=	asp->Skill_Intuition;
 	player.skill.etheral_link			=	asp->Skill_Etheral_Link;
-	player.skill.object_knowledge =	asp->Skill_Object_Knowledge;
+	player.skill.object_knowledge		=	asp->Skill_Object_Knowledge;
 	player.skill.casting					=	asp->Skill_Casting;
 	player.skill.projectile				=	asp->Skill_Projectile;
 	player.skill.close_combat			=	asp->Skill_Close_Combat;
@@ -1933,7 +1933,7 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	
 	ARX_PLAYER_Restore_Skin();
 	
-	ARX_PLAYER_Modify_XP(0);
+	player.add_xp(0);
 	
 	PROGRESS_BAR_COUNT += 10.f;
 	LoadLevelScreen();

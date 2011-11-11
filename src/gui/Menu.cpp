@@ -921,7 +921,7 @@ bool ARX_Menu_Render()
 					}
 					else if (SKIN_MOD == -1)
 					{
-						ARX_PLAYER_MakeSpHero();
+						player.hero_generate_sp();
 						player.skin = 4;
 						ARX_PLAYER_Restore_Skin();
 						SKIN_MOD = 0;

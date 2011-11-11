@@ -740,7 +740,7 @@ int main(int argc, char ** argv) {
 	InitInter(10);
 
 	memset(&player,0,sizeof(ARXCHARACTER));
-	player.Init();
+	player.init();
 
 	CleanInventory();
 
@@ -2006,7 +2006,7 @@ void FirstFrameProc() {
 	{
 		ARX_TIME_Init();
 
-		if (!DONT_ERASE_PLAYER) player.Init();
+		if (!DONT_ERASE_PLAYER) player.init();
 
 		SLID_VALUE=0.f;
 	}
@@ -2380,7 +2380,7 @@ float GLOBAL_SLOWDOWN=1.f;
 
 bool StrikeAimtime()
 {
-	ARX_PLAYER_Remove_Invisibility();
+	player.remove_invisibility();
 	STRIKE_AIMTIME=(float)ARXTime-(float)AimTime;
 	STRIKE_AIMTIME=STRIKE_AIMTIME*(1.f+(1.f-GLOBAL_SLOWDOWN));
 

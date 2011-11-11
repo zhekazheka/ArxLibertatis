@@ -1048,9 +1048,9 @@ void ARX_NPC_ManagePoison(INTERACTIVE_OBJ * io)
 
 		if ((io->_npcdata->life > 0) && (io->_npcdata->life - dmg <= 0.f))
 		{
-			long xp = io->_npcdata->xpvalue;
+			int xp = (int)io->_npcdata->xpvalue;
 			ARX_DAMAGES_DamageNPC(io, dmg, -1, 0, NULL);
-			ARX_PLAYER_Modify_XP(xp);
+			player.add_xp(xp);
 		}
 		else io->_npcdata->life -= dmg;
 

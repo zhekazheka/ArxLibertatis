@@ -573,7 +573,7 @@ bool CanBePutInInventory(INTERACTIVE_OBJ * io)
 	if (io->ioflags & IO_MOVABLE) return false;
 
 	if(io->ioflags & IO_GOLD) {
-		ARX_PLAYER_AddGold(io);
+		player.add_gold(io);
 		return true;
 	}
 
@@ -1070,7 +1070,7 @@ bool PutInInventory()
 								Set_DragInter(NULL);
 							}
 
-							ARX_PLAYER_AddGold(cos);
+							player.add_gold(cos);
 							ARX_SOUND_PlayInterface(SND_GOLD);
 							ARX_SOUND_PlayInterface(SND_INVSTD);
 							return true;
@@ -1127,7 +1127,7 @@ bool PutInInventory()
 							{
 								if (io->ioflags & IO_SHOP) // SHOP
 								{
-									ARX_PLAYER_AddGold(cos);
+									player.add_gold(cos);
 									ARX_SOUND_PlayInterface(SND_GOLD);
 								}
 							}
@@ -1141,7 +1141,7 @@ bool PutInInventory()
 				}
 
 			if(DRAGINTER->ioflags & IO_GOLD) {
-				ARX_PLAYER_AddGold(DRAGINTER);
+				player.add_gold(DRAGINTER);
 				Set_DragInter(NULL);
 				return true;
 			}
@@ -1243,7 +1243,7 @@ bool PutInInventory()
 	}
 
 	if(DRAGINTER->ioflags & IO_GOLD) {
-		ARX_PLAYER_AddGold(DRAGINTER);
+		player.add_gold(DRAGINTER);
 		Set_DragInter(NULL);
 		return true;
 	}
@@ -1486,7 +1486,7 @@ INTERACTIVE_OBJ * GetFromInventory(Vec2s * pos)
 				if (SecondaryInventory->slot[tx][ty].io == NULL)
 					return NULL;
 
-				if (((player.Interface & INTER_STEAL) && (!ARX_PLAYER_CanStealItem(SecondaryInventory->slot[tx][ty].io))))
+				if (((player.Interface & INTER_STEAL) && (!player.can_steal(SecondaryInventory->slot[tx][ty].io))))
 					return NULL;
 
 				INTERACTIVE_OBJ * io = SecondaryInventory->slot[tx][ty].io;

@@ -3226,7 +3226,7 @@ bool ARX_SPELLS_Launch(Spell typ, long source, SpellcastFlags flagss, long level
 			player.SpellToMemorize.bSpell	= false;
 		}
 
-		player.ComputeFullStats();
+		player.compute_full_stats();
 
 		if ( level == -1 )
 		{
@@ -8790,24 +8790,24 @@ static void ApplySPMax() {
 
 			ARX_EQUIPMENT_RecreatePlayerMesh();
 		
-		ARX_PLAYER_Rune_Add_All();
+			player.add_all_runes();
 		std::string text = "!!!!!!! FanTomAciE !!!!!!!";
 		ARX_SPEECH_Add(text);
 		player.redistribute.attribute+=10;
 		player.redistribute.skill+=50;
-		player.level=std::max((int)player.level,10);
-		player.xp=GetXPforLevel(10);
+		player.level = std::max((int)player.level,10);
+		player.xp = arx::character::get_xp_for_level(10);
 	}
 	else
 	{
-		TextureContainer * tcm=TextureContainer::Load("graph/obj3d/textures/npc_human_cm_hero_head");
+		TextureContainer *tcm = TextureContainer::Load("graph/obj3d/textures/npc_human_cm_hero_head");
 
 		if (tcm)
 		{
 			delete tcm;
-			player.heads[0]=TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero_head");
-			player.heads[1]=TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero2_head");
-			player.heads[2]=TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero3_head");
+			player.heads[0] = TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero_head");
+			player.heads[1] = TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero2_head");
+			player.heads[2] = TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero3_head");
 			ARX_EQUIPMENT_RecreatePlayerMesh();
 		}
 	}	

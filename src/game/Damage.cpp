@@ -1010,11 +1010,11 @@ float ARX_DAMAGES_DamageNPC(INTERACTIVE_OBJ * io, float dmg, long source, long f
 
 			if (ValidIONum(source))
 			{
-				long xp = io->_npcdata->xpvalue;
+				int xp = (int)io->_npcdata->xpvalue;
 				ARX_DAMAGES_ForceDeath(io, inter.iobj[source]);
 
 				if (source == 0)
-					ARX_PLAYER_Modify_XP(xp);
+					player.add_xp(xp);
 			}
 			else ARX_DAMAGES_ForceDeath(io, NULL);
 		}

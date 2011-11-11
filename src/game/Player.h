@@ -22,38 +22,6 @@ If you have questions concerning this license or the applicable additional terms
 ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 ===========================================================================
 */
-//////////////////////////////////////////////////////////////////////////////////////
-//   @@        @@@        @@@                @@                           @@@@@     //
-//   @@@       @@@@@@     @@@     @@        @@@@                         @@@  @@@   //
-//   @@@       @@@@@@@    @@@    @@@@       @@@@      @@                @@@@        //
-//   @@@       @@  @@@@   @@@  @@@@@       @@@@@@     @@@               @@@         //
-//  @@@@@      @@  @@@@   @@@ @@@@@        @@@@@@@    @@@            @  @@@         //
-//  @@@@@      @@  @@@@  @@@@@@@@         @@@@ @@@    @@@@@         @@ @@@@@@@      //
-//  @@ @@@     @@  @@@@  @@@@@@@          @@@  @@@    @@@@@@        @@ @@@@         //
-// @@@ @@@    @@@ @@@@   @@@@@            @@@@@@@@@   @@@@@@@      @@@ @@@@         //
-// @@@ @@@@   @@@@@@@    @@@@@@           @@@  @@@@   @@@ @@@      @@@ @@@@         //
-// @@@@@@@@   @@@@@      @@@@@@@@@@      @@@    @@@   @@@  @@@    @@@  @@@@@        //
-// @@@  @@@@  @@@@       @@@  @@@@@@@    @@@    @@@   @@@@  @@@  @@@@  @@@@@        //
-//@@@   @@@@  @@@@@      @@@      @@@@@@ @@     @@@   @@@@   @@@@@@@    @@@@@ @@@@@ //
-//@@@   @@@@@ @@@@@     @@@@        @@@  @@      @@   @@@@   @@@@@@@    @@@@@@@@@   //
-//@@@    @@@@ @@@@@@@   @@@@             @@      @@   @@@@    @@@@@      @@@@@      //
-//@@@    @@@@ @@@@@@@   @@@@             @@      @@   @@@@    @@@@@       @@        //
-//@@@    @@@  @@@ @@@@@                          @@            @@@                  //
-//            @@@ @@@                           @@             @@        STUDIOS    //
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-// ARX_Player
-//////////////////////////////////////////////////////////////////////////////////////
-//
-// Description:
-//		ARX Player management
-//
-// Updates: (date) (person) (update)
-//
-// Code: Cyril Meynier
-//
-// Copyright (c) 1999-2000 ARKANE Studios SA. All rights reserved
-//////////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ARX_GAME_PLAYER_H
 #define ARX_GAME_PLAYER_H
@@ -155,10 +123,18 @@ namespace arx
 				mind = v;
 			}
 
-			float strength;
-			float dexterity;
-			float constitution;
-			float mind;
+			union 
+			{
+				struct 
+				{
+					float strength;
+					float dexterity;
+					float constitution;
+					float mind;
+				};
+
+				float v[4];
+			};
 		};
 
 		struct skills
@@ -189,15 +165,23 @@ namespace arx
 				defense = v;
 			}
 
-			float stealth;
-			float mecanism;
-			float intuition;
-			float etheral_link;
-			float object_knowledge;
-			float casting;
-			float projectile;
-			float close_combat;
-			float defense;
+			union
+			{
+				struct 
+				{
+					float stealth;
+					float mecanism;
+					float intuition;
+					float etheral_link;
+					float object_knowledge;
+					float casting;
+					float projectile;
+					float close_combat;
+					float defense;
+				};
+
+				float v[9];
+			};
 		};
 
 		struct stats
@@ -256,14 +240,32 @@ namespace arx
 		character() {}
 		~character() {}
 
-		void Init();
+		static int get_xp_for_level(const int &level);
+
+		void init();
 
 		void hero_generate_fresh();
 		void hero_generate_average();
 		void hero_generate_powerful();
+		void hero_generate_sp();
 		void hero_generate_random();
-		void ComputeStats();
-		void ComputeFullStats();
+
+		void compute_stats();
+		void compute_full_stats();
+
+		void add_xp(const int &v);
+		void level_up();
+
+		void add_poison(const float &v);
+		void add_gold(const int &v);
+		void add_gold(INTERACTIVE_OBJ *gold);
+		void add_bag();
+
+		void add_rune(RuneFlag _ulRune);
+		void remove_rune(RuneFlag _ulRune);
+		void add_all_runes();
+
+		void remove_invisibility();
 
 		float get_stealth(bool modified = false);
 		float get_mecanism(bool modified = false);
@@ -274,6 +276,9 @@ namespace arx
 		float get_projectile(bool modified = false);
 		float get_defense(bool modified = false);
 		float get_close_combat(bool modified = false);
+
+		void set_invulnerable(const bool &b = true);
+		bool can_steal(INTERACTIVE_OBJ *_io);
 
 		unsigned char level;
 		long xp;
@@ -351,7 +356,6 @@ struct KEYRING_SLOT {
 	char slot[64];
 };
 
-
 // Quests Management (QuestLogBook)
 
 struct STRUCT_QUEST {
@@ -375,48 +379,50 @@ extern long WILLRETURNTOCOMBATMODE;
 extern float PLAYER_BASE_RADIUS;
 extern float PLAYER_BASE_HEIGHT;
 
-void ARX_PLAYER_MakeSpHero();
 void ARX_PLAYER_LoadHeroAnimsAndMesh();
+
 void ARX_PLAYER_BecomesDead();
+
 void ARX_PLAYER_ClickedOnTorch(INTERACTIVE_OBJ * io);
+
 void ARX_PLAYER_RectifyPosition();
+
 void ARX_PLAYER_Frame_Update();
+
 void ARX_PLAYER_Manage_Movement();
 void ARX_PLAYER_Manage_Death();
+
 void ARX_PLAYER_GotoAnyPoly();
+
 void ARX_PLAYER_Quest_Add(const std::string & quest, bool _bLoad = false);
 void ARX_PLAYER_Quest_Init();
+
 void ARX_PLAYER_FrontPos(Vec3f * pos);
-void ARX_PLAYER_Modify_XP(long val);
+
 void ARX_PLAYER_FrameCheck(float _framedelay);
-void ARX_PLAYER_Poison(float val);
+
 void ARX_PLAYER_Manage_Visual();
-void ARX_PLAYER_Remove_Invisibility();
-void ARX_Player_Rune_Add(RuneFlag rune);
-void ARX_Player_Rune_Remove(RuneFlag rune);
-void ARX_PLAYER_AddGold(long value);
-void ARX_PLAYER_AddGold(INTERACTIVE_OBJ * gold);
-void ARX_PLAYER_AddBag();
-bool ARX_PLAYER_CanStealItem(INTERACTIVE_OBJ *);
 
 void ARX_KEYRING_Init();
 void ARX_KEYRING_Add(const std::string & key);
 void ARX_KEYRING_Combine(INTERACTIVE_OBJ * io);
 
 void ARX_PLAYER_Reset_Fall();
+
 void ARX_PLAYER_KillTorch();
+
 void ARX_PLAYER_PutPlayerInNormalStance(long val);
+
 void ARX_PLAYER_Start_New_Quest();
-void ARX_PLAYER_Rune_Add_All();
  
 void ARX_PLAYER_Restore_Skin();
+
 float GetPlayerStealth();
 
 void ARX_GAME_Reset(long type = 0);
 void Manage_sp_max();
-long GetXPforLevel(long level);
+
 bool ARX_PLAYER_IsInFightMode();
-void ARX_PLAYER_Invulnerability(long flag);
 
 void ForcePlayerLookAtIO(INTERACTIVE_OBJ * io);
 

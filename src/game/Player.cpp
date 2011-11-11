@@ -375,12 +375,13 @@ static void ARX_PLAYER_ManageTorch() {
 }
 
 // Init/Reset player Quest structures
-void ARX_PLAYER_Quest_Init() {
+void ARX_PLAYER_Quest_Init() 
+{
 	PlayerQuest.clear();
 }
 
 // Add _ulRune to player runes
-void ARX_Player_Rune_Add(RuneFlag _ulRune)
+void arx::character::add_rune(RuneFlag _ulRune)
 {
 	int iNbSpells = 0;
 	int iNbSpellsAfter = 0;
@@ -394,7 +395,7 @@ void ARX_Player_Rune_Add(RuneFlag _ulRune)
 
 			while ((j < 4) && (spellicons[i].symbols[j] != 255))
 			{
-				if (!(player.rune_flags & (RuneFlag)(1 << spellicons[i].symbols[j])))
+				if (!(rune_flags & (RuneFlag)(1 << spellicons[i].symbols[j])))
 				{
 					bOk = false;
 				}
@@ -409,7 +410,7 @@ void ARX_Player_Rune_Add(RuneFlag _ulRune)
 		}
 	}
 
-	player.rune_flags |= _ulRune;
+	rune_flags |= _ulRune;
 
 	for (size_t i = 0; i < SPELL_COUNT; i++)
 	{
@@ -420,7 +421,7 @@ void ARX_Player_Rune_Add(RuneFlag _ulRune)
 
 			while ((j < 4) && (spellicons[i].symbols[j] != 255))
 			{
-				if (!(player.rune_flags & (RuneFlag)(1 << spellicons[i].symbols[j])))
+				if (!(rune_flags & (RuneFlag)(1 << spellicons[i].symbols[j])))
 				{
 					bOk = false;
 				}
@@ -444,30 +445,32 @@ void ARX_Player_Rune_Add(RuneFlag _ulRune)
 }
 
 // Remove _ulRune from player runes
-void ARX_Player_Rune_Remove(RuneFlag _ulRune)
+void arx::character::remove_rune(RuneFlag _ulRune)
 {
-	player.rune_flags &= ~_ulRune;
+	rune_flags &= ~_ulRune;
 }
 
 // Add quest "quest" to player Questbook
-void ARX_PLAYER_Quest_Add(const std::string & quest, bool _bLoad) {
-	
+void ARX_PLAYER_Quest_Add(const std::string &quest, bool _bLoad) 
+{
 	std::string output = getLocalised(quest);
-	if(output.empty()) {
-		return;
+	if (!output.empty()) 
+	{
+		PlayerQuest.push_back(STRUCT_QUEST());
+		PlayerQuest.back().ident = quest;
+		PlayerQuest.back().localised = output;
+		bBookHalo = !_bLoad;
+		ulBookHaloTime = 0;
 	}
-	
-	PlayerQuest.push_back(STRUCT_QUEST());
-	PlayerQuest.back().ident = quest;
-	PlayerQuest.back().localised = output;
-	bBookHalo = !_bLoad;
-	ulBookHaloTime = 0;
 }
 
 // Removes player invisibility by killing Invisibility spells on him
-void ARX_PLAYER_Remove_Invisibility() {
-	for(size_t i = 0; i < MAX_SPELLS; i++) {
-		if(spells[i].exist && spells[i].type == SPELL_INVISIBILITY && spells[i].caster == 0) {
+void arx::character::remove_invisibility() 
+{
+	for (int i = 0; i < MAX_SPELLS; i++) 
+	{
+		if (spells[i].exist && spells[i].type == SPELL_INVISIBILITY && spells[i].caster == 0) 
+		{
 			spells[i].tolive = 0;
 		}
 	}
@@ -543,12 +546,12 @@ float arx::character::get_defense(bool modified)
 }
 
 // Compute secondary attributes for player
-void arx::character::ComputeStats() 
+void arx::character::compute_stats() 
 {
 	stat.maxlife = attribute.constitution * (level + 2);
 	stat.maxmana = attribute.mind * (level + 1);
 
-	float fCalc = get_defense() * (1.0f / 10.0f) - 1;
+	float fCalc = get_defense() * (1.0f / 10.0f);
 	armor_class = max((unsigned char)1, checked_range_cast<unsigned char>(fCalc));
 
 	damages = 100;
@@ -564,16 +567,10 @@ extern float ARX_EQUIPMENT_ApplyPercent(INTERACTIVE_OBJ * io, long ident, float 
 extern long cur_mr;
 extern long SPECIAL_PNUX;
 
-//*************************************************************************************
-// void ARX_PLAYER_ComputePlayerFullStats()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Compute FULL versions of player stats including Equiped Items
-//   and spells, and any other effect altering them.
-//*************************************************************************************
-void arx::character::ComputeFullStats()
+// Compute FULL versions of player stats including Equiped Items and spells, and any other effect altering them.
+void arx::character::compute_full_stats()
 {
-	ComputeStats();
+	compute_stats();
 
 	mod.stat				= 0.0f;
 	mod.attribute		= 0.0f;
@@ -791,7 +788,7 @@ void arx::character::hero_generate_fresh()
 	skin = 0;
 	bag = 1;
 
-	ComputeStats();
+	compute_stats();
 	rune_flags = 0;
 
 	SpellToMemorize.bSpell = false;
@@ -805,28 +802,29 @@ void ARX_SPSound()
 	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
 }
 
-void ARX_PLAYER_MakeSpHero()
+void arx::character::hero_generate_sp()
 {
 	ARX_SPSound();
-	player.attribute = 12.0f;
-	player.old = 0.0f;
-	player.skill = 5.0f;
 
-	player.redistribute.attribute = 6;
-	player.redistribute.skill = 10;
+	attribute = 12.0f;
+	old = 0.0f;
+	skill = 5.0f;
 
-	player.level = 1;
-	player.xp = 0;
-	player.poison = 0.f;
-	player.hunger = 100.f;
-	player.skin = 4;
+	redistribute.attribute = 6;
+	redistribute.skill = 10;
 
-	player.ComputeStats();
-	player.stat.life = player.stat.maxlife;
-	player.stat.mana = player.stat.maxmana;
+	level = 1;
+	xp = 0;
+	poison = 0.f;
+	hunger = 100.f;
+	skin = 4;
 
-	player.rune_flags = RuneFlags::all();
-	player.SpellToMemorize.bSpell = false;
+	compute_stats();
+	stat.life = stat.maxlife;
+	stat.mana = stat.maxmana;
+
+	rune_flags = RuneFlags::all();
+	SpellToMemorize.bSpell = false;
 
 	SKIN_MOD = 0;
 	QUICK_MOD = 0;
@@ -847,7 +845,7 @@ void arx::character::hero_generate_powerful()
 	hunger = 100.f;
 	skin = 0;
 
-	ComputeStats();
+	compute_stats();
 	stat.life = player.stat.maxlife;
 	stat.mana = player.stat.maxmana;
 
@@ -869,7 +867,7 @@ void arx::character::hero_generate_average()
 	xp = 0;
 	hunger = 100.f;
 
-	ComputeStats();
+	compute_stats();
 }
 
 // Quickgenerate a random hero
@@ -881,77 +879,20 @@ void arx::character::hero_generate_random()
 
 	while (redistribute.attribute)
 	{
-		float rn = rnd();
-
-		if ((rn < 0.25f) && (attribute.strength < 18))
+		unsigned int i = rand() % 4;
+		if (attribute.v[i] < 18)
 		{
-			attribute.strength++;
-			redistribute.attribute--;
-		}
-		else if ((rn < 0.5f) && (attribute.mind < 18))
-		{
-			attribute.mind++;
-			redistribute.attribute--;
-		}
-		else if ((rn < 0.75f) && (attribute.dexterity < 18))
-		{
-			attribute.dexterity++;
-			redistribute.attribute--;
-		}
-		else if (attribute.constitution < 18)
-		{
-			attribute.constitution++;
+			attribute.v[i]++;
 			redistribute.attribute--;
 		}
 	}
 
 	while (redistribute.skill)
 	{
-		float rn = rnd();
-
-		if ((rn < 0.1f) && (skill.stealth < 18))
+		unsigned int i = rand() % 9;
+		if (skill.v[i] < 18)
 		{
-			skill.stealth++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.2f) && (skill.mecanism < 18))
-		{
-			skill.mecanism++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.3f) && (skill.intuition < 18))
-		{
-			skill.intuition++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.4f) && (skill.etheral_link < 18))
-		{
-			skill.etheral_link++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.5f) && (skill.object_knowledge < 18))
-		{
-			skill.object_knowledge++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.6f) && (skill.casting < 18))
-		{
-			skill.casting++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.7f) && (skill.projectile < 18))
-		{
-			skill.projectile++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.8f) && (skill.close_combat < 18))
-		{
-			skill.close_combat++;
-			redistribute.skill--;
-		}
-		else if ((rn < 0.9f) && (skill.defense < 18))
-		{
-			skill.defense++;
+			skill.v[i]++;
 			redistribute.skill--;
 		}
 	}
@@ -960,135 +901,143 @@ void arx::character::hero_generate_random()
 	xp = 0;
 	hunger = 100.f;
 
-	ComputeStats();
+	compute_stats();
 }
 
-//*************************************************************************************
-// long GetXPforLevel(long level)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Returns necessary Experience for a given level
-//*************************************************************************************
-long GetXPforLevel(long level)
+// Returns necessary Experience for a given level
+int arx::character::get_xp_for_level(const int &level)
 {
-	switch (level)
+	int level_xp[] =
 	{
-		case 0:
-			return 0;
-			break;
-		case 1:
-			return 2000;
-			break;
-		case 2:
-			return 4000;
-			break;
-		case 3:
-			return 6000;
-			break;
-		case 4:
-			return 10000;
-			break;
-		case 5:
-			return 16000;
-			break;
-		case 6:
-			return 26000;
-			break;
-		case 7:
-			return 42000;
-			break;
-		case 8:
-			return 68000;
-			break;
-		case 9:
-			return 110000;
-			break;
-		case 10:
-			return 178000;
-			break;
-		case 11:
-			return 300000;
-			break;
-		case 12:
-			return 450000;
-			break;
-		case 13:
-			return 600000;
-			break;
-		case 14:
-			return 750000;
-			break;
-		default:
-			return level * 60000;
-	}
+		0, 
+		2000,		4000,		6000,		10000,	16000,	26000,	42000, 
+		68000,	110000,	178000,	300000,	450000,	600000,	750000,
+	};
 
-	return std::numeric_limits<long>::max();
+	return (level < 15 ? level_xp[level] : level * 60000);
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_LEVEL_UP()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Manages Player Level Up event
-//*************************************************************************************
-void ARX_PLAYER_LEVEL_UP()
+// Manages Player Level Up event
+void arx::character::level_up()
 {
 	ARX_SOUND_PlayInterface(SND_PLAYER_LEVEL_UP);
-	player.level++;
-	player.redistribute.skill += 15;
-	player.redistribute.attribute++;
-	player.ComputeStats();
-	player.stat.life = player.stat.maxlife;
-	player.stat.mana = player.stat.maxmana;
+	level++;
+	redistribute.skill += 15;
+	redistribute.attribute++;
+	compute_stats();
+	stat.life = stat.maxlife;
+	stat.mana = stat.maxmana;
 
-	player.old = player.skill;
+	old = skill;
 
 	SendIOScriptEvent(inter.iobj[0], SM_NULL, "", "level_up");
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_Modify_XP(long val)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Modify player XP by adding "val" to it
-//*************************************************************************************
-void ARX_PLAYER_Modify_XP(long val) {
-	
-	player.xp += val;
-	
-	for (long i = player.level + 1; i < 11; i++) {
-		if(player.xp >= GetXPforLevel(i)) {
-			ARX_PLAYER_LEVEL_UP();
-		}
+// add "val" to player xp
+void arx::character::add_xp(const int &v) 
+{
+	xp += v;
+
+	while (xp >= get_xp_for_level(level + 1)) 
+	{
+		level_up();
 	}
 }
 
-//*************************************************************************************
-// void ARX_PLAYER_Poison(float val)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   Function to poison player by "val" poison level
-//*************************************************************************************
-void ARX_PLAYER_Poison(float val)
+// Function to poison player by "val" poison level
+void arx::character::add_poison(const float &val)
 {
 	// Make a poison saving throw to see if player is affected
-	if (rnd() * 100.f > player.resist_poison)
+	if (resist_poison < rnd() * 100.0f)
 	{
-		player.poison += val;
+		poison += val;
 		ARX_SOUND_PlayInterface(SND_PLAYER_POISONED);
 	}
 }
+
+void arx::character::add_gold(const int &v) 
+{
+	player.gold += v;
+	bGoldHalo = true;
+	ulGoldHaloTime = 0;
+}
+
+void arx::character::add_gold(INTERACTIVE_OBJ *gold) 
+{
+	arx_assert(gold->ioflags & IO_GOLD);
+	
+	add_gold(gold->_itemdata->price * max((short)1, gold->_itemdata->count));
+	
+	ARX_SOUND_PlayInterface(SND_GOLD);
+	
+	if (gold->scriptload) 
+	{
+		RemoveFromAllInventories(gold);
+		ReleaseInter(gold);
+	} else 
+	{
+		gold->show = SHOW_FLAG_KILLED;
+		gold->GameFlags &= ~GFLAG_ISINTREATZONE;
+	}
+}
+
+void arx::character::add_bag()
+{
+	if (bag < 3)
+	{
+		player.bag++;	
+	}
+}
+
+bool arx::character::can_steal(INTERACTIVE_OBJ *_io)
+{
+	return (_io->_itemdata->stealvalue > 0 &&
+				full.skill.stealth >= _io->_itemdata->stealvalue &&	
+				_io->_itemdata->stealvalue < 100.f);
+}
+
+void arx::character::add_all_runes()
+{
+	add_rune(FLAG_AAM);
+	add_rune(FLAG_CETRIUS);
+	add_rune(FLAG_COMUNICATUM);
+	add_rune(FLAG_COSUM);
+	add_rune(FLAG_FOLGORA);
+	add_rune(FLAG_FRIDD);
+	add_rune(FLAG_KAOM);
+	add_rune(FLAG_MEGA);
+	add_rune(FLAG_MORTE);
+	add_rune(FLAG_MOVIS);
+	add_rune(FLAG_NHI);
+	add_rune(FLAG_RHAA);
+	add_rune(FLAG_SPACIUM);
+	add_rune(FLAG_STREGUM);
+	add_rune(FLAG_TAAR);
+	add_rune(FLAG_TEMPUS);
+	add_rune(FLAG_TERA);
+	add_rune(FLAG_VISTA);
+	add_rune(FLAG_VITAE);
+	add_rune(FLAG_YOK);
+}
+
+void arx::character::set_invulnerable(const bool &b)
+{
+	if (b)
+	{
+		playerflags |= PLAYERFLAGS_INVULNERABILITY;
+	} else
+	{
+		playerflags &= ~PLAYERFLAGS_INVULNERABILITY;
+	}
+}
+
 long PLAYER_PARALYSED = 0;
-//*************************************************************************************
-// void ARX_PLAYER_FrameCheck(float _framedelay)
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
-//   updates some player stats depending on time:
-//		.life/mana recovery
-//		.poison evolution
-//		.hunger check
-//		.invisibility
-//*************************************************************************************
+
+// updates some player stats depending on time:
+//	- life/mana recovery
+//	- poison evolution
+//	- hunger check
+//	- invisibility
 void ARX_PLAYER_FrameCheck(float Framedelay)
 {
 	//	ARX_PLAYER_QuickGeneration();
@@ -1167,6 +1116,7 @@ void ARX_PLAYER_FrameCheck(float Framedelay)
 		if (player.poison < 0.1f) player.poison = 0.f;
 	}
 }
+
 TextureContainer * PLAYER_SKIN_TC = NULL;
 
 void ARX_PLAYER_Restore_Skin() {
@@ -2036,7 +1986,7 @@ nochanges:
 }
 
 // Init Local Player Data
-void arx::character::Init() 
+void arx::character::init() 
 {
 	Interface = INTER_MINIBOOK | INTER_MINIBACK | INTER_LIFE_MANA;
 	physics.cyl.height = PLAYER_BASE_HEIGHT;
@@ -2182,7 +2132,7 @@ void ARX_PLAYER_Frame_Update()
 
 	PLAYER_ARMS_FOCAL = static_cast<float>(CURRENT_BASE_FOCAL);
 
-	player.ComputeFullStats();
+	player.compute_full_stats();
 
 	TRAP_DETECT = checked_range_cast<long>(player.full.skill.mecanism);
 	TRAP_SECRET = checked_range_cast<long>(player.full.skill.intuition);
@@ -3065,7 +3015,7 @@ void ARX_PLAYER_Manage_Death()
 //******************************************************************************
 float GetPlayerStealth()
 {
-	return 15 + player.full.skill.stealth * ( 1.0f / 10 );
+	return 15 + player.full.skill.stealth * (1.0f / 10.0f);
 }
 
 //******************************************************************************
@@ -3142,33 +3092,6 @@ void ARX_PLAYER_PutPlayerInNormalStance(long val)
 
 }
 
-//******************************************************************************
-// Add gold to player purse
-//******************************************************************************
-void ARX_PLAYER_AddGold(long _lValue) {
-	player.gold += _lValue;
-	bGoldHalo = true;
-	ulGoldHaloTime = 0;
-}
-
-void ARX_PLAYER_AddGold(INTERACTIVE_OBJ * gold) {
-	
-	arx_assert(gold->ioflags & IO_GOLD);
-	
-	ARX_PLAYER_AddGold(gold->_itemdata->price * max((short)1, gold->_itemdata->count));
-	
-	ARX_SOUND_PlayInterface(SND_GOLD);
-	
-	if(gold->scriptload) {
-		RemoveFromAllInventories(gold);
-		ReleaseInter(gold);
-	} else {
-		gold->show = SHOW_FLAG_KILLED;
-		gold->GameFlags &= ~GFLAG_ISINTREATZONE;
-	}
-	
-}
-
 void ARX_PLAYER_Start_New_Quest() 
 {
 	SKIN_MOD = 0;
@@ -3190,51 +3113,6 @@ void ARX_PLAYER_Start_New_Quest()
 	inter.iobj[0]->halo.flags = 0;
 }
 
-//-----------------------------------------------------------------------------
-void ARX_PLAYER_AddBag()
-{
-	++player.bag;
-
-	if (player.bag > 3)
-		player.bag = 3;
-}
-
-//-----------------------------------------------------------------------------
-bool ARX_PLAYER_CanStealItem(INTERACTIVE_OBJ * _io)
-{
-	if (_io->_itemdata->stealvalue > 0)
-		if ((player.full.skill.stealth >= _io->_itemdata->stealvalue)
-		        &&	(_io->_itemdata->stealvalue < 100.f))
-		{
-			return true;
-		}
-
-	return false;
-}
-void ARX_PLAYER_Rune_Add_All()
-{
-	ARX_Player_Rune_Add(FLAG_AAM);
-	ARX_Player_Rune_Add(FLAG_CETRIUS);
-	ARX_Player_Rune_Add(FLAG_COMUNICATUM);
-	ARX_Player_Rune_Add(FLAG_COSUM);
-	ARX_Player_Rune_Add(FLAG_FOLGORA);
-	ARX_Player_Rune_Add(FLAG_FRIDD);
-	ARX_Player_Rune_Add(FLAG_KAOM);
-	ARX_Player_Rune_Add(FLAG_MEGA);
-	ARX_Player_Rune_Add(FLAG_MORTE);
-	ARX_Player_Rune_Add(FLAG_MOVIS);
-	ARX_Player_Rune_Add(FLAG_NHI);
-	ARX_Player_Rune_Add(FLAG_RHAA);
-	ARX_Player_Rune_Add(FLAG_SPACIUM);
-	ARX_Player_Rune_Add(FLAG_STREGUM);
-	ARX_Player_Rune_Add(FLAG_TAAR);
-	ARX_Player_Rune_Add(FLAG_TEMPUS);
-	ARX_Player_Rune_Add(FLAG_TERA);
-	ARX_Player_Rune_Add(FLAG_VISTA);
-	ARX_Player_Rune_Add(FLAG_VITAE);
-	ARX_Player_Rune_Add(FLAG_YOK);
-}
-
 extern unsigned long LAST_PRECAST_TIME;
 extern long sp_wep;
 extern long TOTAL_BODY_CHUNKS_COUNT;
@@ -3243,14 +3121,6 @@ extern long GLOBAL_Player_Room;
 extern long cur_mx, cur_pom;
 extern long sp_arm, cur_arm;
 extern float sp_max_start;
-
-void ARX_PLAYER_Invulnerability(long flag)
-{
-	if (flag)
-		player.playerflags |= PLAYERFLAGS_INVULNERABILITY;
-	else
-		player.playerflags &= ~PLAYERFLAGS_INVULNERABILITY;
-}
 
 extern INTERACTIVE_OBJ * FlyingOverIO;
 extern long cur_sm;
@@ -3272,7 +3142,7 @@ void ARX_GAME_Reset(long type) {
 	}
 
 	if(inter.iobj[0])inter.iobj[0]->GameFlags &= ~GFLAG_INVISIBILITY;
-	ARX_PLAYER_Invulnerability(0);
+	player.set_invulnerable(false);
 	GLOBAL_Player_Room = -1;
 	PLAYER_PARALYSED = 0;
 
@@ -3413,7 +3283,7 @@ void ARX_GAME_Reset(long type) {
 
 		ARX_EQUIPMENT_ReleaseAll(inter.iobj[0]);
 
-		player.Init();
+		player.init();
 		ARX_INTERACTIVE_RemoveGoreOnIO(inter.iobj[0]);
 		TRUE_PLAYER_MOUSELOOK_ON = 0;
 		// Player Inventory
