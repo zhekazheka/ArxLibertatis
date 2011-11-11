@@ -133,6 +133,151 @@ DECLARE_FLAGS_OPERATORS(RuneFlags)
 
 struct ARXCHARACTER {
 	
+	struct attributes
+	{
+		void operator+=(const float &v)
+		{
+			strength = v;
+			dexterity = v;
+			constitution = v;
+			mind = v;
+		}
+
+		void operator=(const float &v)
+		{
+			strength = v;
+			dexterity = v;
+			constitution = v;
+			mind = v;
+		}
+
+		float strength;
+		float dexterity;
+		float constitution;
+		float mind;
+	};
+
+	struct skills
+	{
+		void operator+=(const float &v)
+		{
+			stealth += v;
+			mecanism += v;
+			intuition += v;
+			etheral_link += v;
+			object_knowledge += v;
+			casting += v;
+			projectile += v;
+			close_combat += v;
+			defense += v;
+		}
+
+		void operator=(const float &v)
+		{
+			stealth = v;
+			mecanism = v;
+			intuition = v;
+			etheral_link = v;
+			object_knowledge = v;
+			casting = v;
+			projectile = v;
+			close_combat = v;
+			defense = v;
+		}
+
+		float stealth;
+		float mecanism;
+		float intuition;
+		float etheral_link;
+		float object_knowledge;
+		float casting;
+		float projectile;
+		float close_combat;
+		float defense;
+	};
+
+	struct stats
+	{
+		void operator=(const float &v)
+		{
+			life = v;
+			maxlife = v;
+			mana = v;
+			maxmana = v;
+		}
+
+		float life;
+		float maxlife;
+
+		float mana;
+		float maxmana;
+	};
+
+	// Modifier Values (Items, curses, etc...)
+	struct mod_stats
+	{
+		attributes attribute;
+		skills skill;
+		stats stat;
+
+		float armor_class;
+		float resist_magic;
+		float resist_poison;
+		float critical_hit;
+		float damages;
+	};
+
+	mod_stats mod;
+
+	// Full Frame values (including items)
+	struct full_stats
+	{
+		attributes attribute;
+		skills skill;
+		stats stat;
+
+		float aimtime;
+		float armor_class;
+		float resist_magic;
+		float resist_poison;
+		float critical_hit;
+		float damages;
+		long weapon_type;
+	};
+
+	full_stats full;
+	
+	// true (naked) Player Values
+	unsigned char level;
+	long xp;
+
+	attributes attribute;
+	skills skill;
+	stats stat;
+	
+	float critical_hit;
+
+	unsigned char armor_class;
+	unsigned char resist_magic;
+	unsigned char resist_poison;
+
+	long gold;
+	long aimtime;
+	long weapon_type;
+
+	// old skill values
+	skills old;
+	
+	struct purchase_points
+	{
+		unsigned char attribute;
+		unsigned char skill;
+	};
+
+	purchase_points redistribute;
+
+	char skin;
+	
 	Vec3f pos;
 	Anglef angle;
 	ANIM_USE useanim;
@@ -164,109 +309,7 @@ struct ARXCHARACTER {
 	INTERACTIVE_OBJ * equipshieldIO;
 	
 	short equiped[MAX_EQUIPED]; 
-	
-	// Modifier Values (Items, curses, etc...)
-	float Mod_Attribute_Strength;
-	float Mod_Attribute_Dexterity;
-	float Mod_Attribute_Constitution;
-	float Mod_Attribute_Mind;
-	float Mod_Skill_Stealth;
-	float Mod_Skill_Mecanism;
-	float Mod_Skill_Intuition;
-	float Mod_Skill_Etheral_Link;
-	float Mod_Skill_Object_Knowledge;
-	float Mod_Skill_Casting;
-	float Mod_Skill_Projectile;
-	float Mod_Skill_Close_Combat;
-	float Mod_Skill_Defense;
-	float Mod_armor_class;
-	float Mod_resist_magic;
-	float Mod_resist_poison;
-	float Mod_Critical_Hit;
-	float Mod_damages;
-	float Mod_life;
-	float Mod_maxlife;
-	float Mod_mana;
-	float Mod_maxmana;
-	
-	// Full Frame values (including items)
-	float Full_Attribute_Strength;
-	float Full_Attribute_Dexterity;
-	float Full_Attribute_Constitution;
-	float Full_Attribute_Mind;
-	
-	float Full_Skill_Stealth;
-	float Full_Skill_Mecanism;
-	float Full_Skill_Intuition;
-	
-	float Full_Skill_Etheral_Link;
-	float Full_Skill_Object_Knowledge;
-	float Full_Skill_Casting;
-	
-	float Full_Skill_Projectile;
-	float Full_Skill_Close_Combat;
-	float Full_Skill_Defense;
-	float Full_armor_class;
-	float Full_resist_magic;
-	float Full_resist_poison;
-	float Full_Critical_Hit;
-	float Full_damages;
-	long Full_AimTime;
-	long Full_Weapon_Type;
-	float Full_life;
-	float Full_maxlife;
-	float Full_mana;
-	float Full_maxmana;
-	
-	// true (naked) Player Values
-	float Attribute_Strength;
-	float Attribute_Dexterity;
-	float Attribute_Constitution;
-	float Attribute_Mind;
-	
-	float Skill_Stealth;
-	float Skill_Mecanism;
-	float Skill_Intuition;
-	
-	float Skill_Etheral_Link;
-	float Skill_Object_Knowledge;
-	float Skill_Casting;
-	
-	float Skill_Projectile;
-	float Skill_Close_Combat;
-	float Skill_Defense;
-	
-	float Critical_Hit;
-	long AimTime;
-	float life;
-	float maxlife;
-	float mana;
-	float maxmana;
-	
-	// Player Old Values
-	float Old_Skill_Stealth;
-	float Old_Skill_Mecanism;
-	float Old_Skill_Intuition;
-	
-	float Old_Skill_Etheral_Link;
-	float Old_Skill_Object_Knowledge;
-	float Old_Skill_Casting;
-	
-	float Old_Skill_Projectile;
-	float Old_Skill_Close_Combat;
-	float Old_Skill_Defense;
-	
-	unsigned char Attribute_Redistribute;
-	unsigned char Skill_Redistribute;
-	
-	unsigned char level;
-	
-	unsigned char armor_class;
-	unsigned char resist_magic;
-	unsigned char resist_poison;
-	long xp;
-	char skin;
-	
+
 	RuneFlags rune_flags;
 	TextureContainer * heads[5];
 	float damages;
@@ -274,10 +317,8 @@ struct ARXCHARACTER {
 	float hunger;
 	float grnd_color;
 	PlayerFlags playerflags;
-	long gold;
 	short bag;
 	ARX_INTERFACE_MEMORIZE_SPELL SpellToMemorize;
-	
 };
 
 struct KEYRING_SLOT {

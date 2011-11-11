@@ -777,7 +777,7 @@ bool ARX_Menu_Render()
 		{
 			long DONE = 0;
 
-			if ((player.Skill_Redistribute == 0) && (player.Attribute_Redistribute == 0))
+			if ((player.redistribute.skill == 0) && (player.redistribute.attribute == 0))
 				DONE = 1;
 
 			float ox, oy;

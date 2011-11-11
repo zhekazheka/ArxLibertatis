@@ -2569,7 +2569,7 @@ long CanPayMana(long num, float cost, bool _bSound = true) {
 
 	if (spells[num].caster==0) 
 	{
-		if (player.mana<cost)
+		if (player.stat.mana<cost)
 		{
 			ARX_SPELLS_FizzleNoMana(num);
 
@@ -2581,7 +2581,7 @@ long CanPayMana(long num, float cost, bool _bSound = true) {
 			return 0;
 		}
 
-		player.mana -= cost;
+		player.stat.mana -= cost;
 		return 1;
 	}
 	else if (spells[num].caster<inter.nbmax)
@@ -2832,7 +2832,7 @@ long PrecastCheckCanPayMana(long num, float cost, bool _bSound = true)
 
 	if (Precast[num].flags & SPELLCAST_FLAG_NOMANA) return 1;
 
-		if (player.mana>=cost)
+		if (player.stat.mana>=cost)
 		{
 			return 1;
 		}
@@ -2946,7 +2946,7 @@ extern long FINAL_RELEASE;
 
 static float ARX_SPELLS_GetManaCost(Spell _lNumSpell,long lNumSpellTab) {
 	float Player_Magic_Level;
-	Player_Magic_Level = (float) player.Full_Skill_Casting + player.Full_Attribute_Mind;
+	Player_Magic_Level = (float) player.full.skill.casting + player.full.attribute.mind;
 	Player_Magic_Level= std::max(1.0f,Player_Magic_Level*( 1.0f / 10 ));
 	Player_Magic_Level= std::min(10.0f,Player_Magic_Level);
 
@@ -3227,7 +3227,7 @@ bool ARX_SPELLS_Launch(Spell typ, long source, SpellcastFlags flagss, long level
 
 		if ( level == -1 )
 		{
-			Player_Magic_Level = (float) player.Full_Skill_Casting + player.Full_Attribute_Mind;
+			Player_Magic_Level = (float) player.full.skill.casting + player.full.attribute.mind;
 			Player_Magic_Level = std::max( 1.0f, Player_Magic_Level * ( 1.0f / 10 ) );
 			Player_Magic_Level = std::min( 10.0f, Player_Magic_Level );
 		}
@@ -7146,7 +7146,7 @@ void ARX_SPELLS_Update()
 							if (ii==0) 
 							{
 								if (!BLOCK_PLAYER_CONTROLS)
-									player.life=std::min(player.life+gain,player.Full_maxlife);									
+									player.stat.life=std::min(player.stat.life+gain,player.full.stat.maxlife);									
 							}
 							else inter.iobj[ii]->_npcdata->life=std::min(inter.iobj[ii]->_npcdata->life+gain,inter.iobj[ii]->_npcdata->maxlife);
 						}
@@ -8790,8 +8790,8 @@ static void ApplySPMax() {
 		ARX_PLAYER_Rune_Add_All();
 		std::string text = "!!!!!!! FanTomAciE !!!!!!!";
 		ARX_SPEECH_Add(text);
-		player.Attribute_Redistribute+=10;
-		player.Skill_Redistribute+=50;
+		player.redistribute.attribute+=10;
+		player.redistribute.skill+=50;
 		player.level=std::max((int)player.level,10);
 		player.xp=GetXPforLevel(10);
 	}

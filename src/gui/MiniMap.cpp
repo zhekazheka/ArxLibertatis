@@ -779,7 +779,7 @@ void ARX_MINIMAP_Show(long SHOWLEVEL, long flag, long fl2)
 						if (!(inter.iobj[lnpc]->show == SHOW_FLAG_HIDDEN))
 							if (inter.iobj[lnpc]->_npcdata->fDetect >= 0)
 							{
-								if (player.Full_Skill_Etheral_Link >= inter.iobj[lnpc]->_npcdata->fDetect)
+								if (player.full.skill.etheral_link >= inter.iobj[lnpc]->_npcdata->fDetect)
 								{
 									float fpx;
 									float fpy;

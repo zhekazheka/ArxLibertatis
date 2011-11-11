@@ -142,9 +142,9 @@ static	void	Cedric_GetScale(float & scale, float & invisibility, INTERACTIVE_OBJ
 
 			if (num >= 0)
 			{
-				if (player.Full_Skill_Intuition > spells[num].caster_level * 10)
+				if (player.full.skill.intuition > spells[num].caster_level * 10)
 				{
-					invisibility -= (float)player.Full_Skill_Intuition * ( 1.0f / 100 ) + (float)spells[num].caster_level * ( 1.0f / 10 );
+					invisibility -= (float)player.full.skill.intuition * ( 1.0f / 100 ) + (float)spells[num].caster_level * ( 1.0f / 10 );
 
 					if (invisibility < 0.1f) invisibility = 0.1f;
 					else if (invisibility > 1.f) invisibility = 1.f;

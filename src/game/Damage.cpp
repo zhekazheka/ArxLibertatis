@@ -264,10 +264,10 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 
 	float damagesdone = 0.f;
 
-	if (player.life == 0.f) return damagesdone;
+	if (player.stat.life == 0.f) return damagesdone;
 
-	if (dmg > player.life) damagesdone = dmg;
-	else damagesdone = player.life;
+	if (dmg > player.stat.life) damagesdone = dmg;
+	else damagesdone = player.stat.life;
 
 	inter.iobj[0]->dmg_sum += dmg;
 
@@ -285,7 +285,7 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 		sprintf(tex, "%5.2f", inter.iobj[0]->dmg_sum);
 		SendIOScriptEvent( inter.iobj[0], SM_OUCH, tex );
 		EVENT_SENDER = oes;
-		float power = inter.iobj[0]->dmg_sum / player.maxlife * 220.f;
+		float power = inter.iobj[0]->dmg_sum / player.stat.maxlife * 220.f;
 		AddQuakeFX(power * 3.5f, 500 + power * 3, rnd() * 100.f + power + 200, 0);
 		inter.iobj[0]->dmg_sum = 0.f;
 	}
@@ -320,15 +320,15 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 
 		long alive;
 
-		if (player.life > 0) alive = 1;
+		if (player.stat.life > 0) alive = 1;
 		else alive = 0;
 
 		if (!BLOCK_PLAYER_CONTROLS)
-			player.life -= dmg;
+			player.stat.life -= dmg;
 
-		if (player.life <= 0.f)
+		if (player.stat.life <= 0.f)
 		{
-			player.life = 0.f;
+			player.stat.life = 0.f;
 
 			if (alive) 
 			{
@@ -366,9 +366,9 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 			}
 		}
 
-		if (player.maxlife <= 0.f) return damagesdone;
+		if (player.stat.maxlife <= 0.f) return damagesdone;
 
-		float t = dmg / player.maxlife;
+		float t = dmg / player.stat.maxlife;
 
 		if (Blood_Pos == 0.f) {
 			Blood_Pos = 0.000001f;
@@ -387,14 +387,14 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 
 void ARX_DAMAGES_HealPlayer(float dmg)
 {
-	if (player.life == 0.f) return;
+	if (player.stat.life == 0.f) return;
 
 	if (dmg > 0.f)
 	{
 		if (!BLOCK_PLAYER_CONTROLS)
-			player.life += dmg;
+			player.stat.life += dmg;
 
-		if (player.life > player.Full_maxlife) player.life = player.Full_maxlife;
+		if (player.stat.life > player.full.stat.maxlife) player.stat.life = player.full.stat.maxlife;
 	}
 }
 void ARX_DAMAGES_HealInter(INTERACTIVE_OBJ * io, float dmg)
@@ -416,13 +416,13 @@ void ARX_DAMAGES_HealInter(INTERACTIVE_OBJ * io, float dmg)
 }
 void ARX_DAMAGES_HealManaPlayer(float dmg)
 {
-	if (player.life == 0.f) return;
+	if (player.stat.life == 0.f) return;
 
 	if (dmg > 0.f)
 	{
-		player.mana += dmg;
+		player.stat.mana += dmg;
 
-		if (player.mana > player.Full_maxmana) player.mana = player.Full_maxmana;
+		if (player.stat.mana > player.full.stat.maxmana) player.stat.mana = player.full.stat.maxmana;
 	}
 }
 void ARX_DAMAGES_HealManaInter(INTERACTIVE_OBJ * io, float dmg)
@@ -453,14 +453,14 @@ float ARX_DAMAGES_DrainMana(INTERACTIVE_OBJ * io, float dmg)
 		if (player.playerflags & PLAYERFLAGS_NO_MANA_DRAIN)
 			return 0;
 
-		if (player.mana >= dmg)
+		if (player.stat.mana >= dmg)
 		{
-			player.mana -= dmg;
+			player.stat.mana -= dmg;
 			return dmg;
 		}
 
-		float d = player.mana;
-		player.mana = 0;
+		float d = player.stat.mana;
+		player.stat.mana = 0;
 		return d;
 	}
 
@@ -755,7 +755,7 @@ float ARX_DAMAGES_DealDamages(long target, float dmg, long source, DamageType fl
 		if ((flags & DAMAGE_TYPE_MAGICAL)
 		        && !(flags & (DAMAGE_TYPE_FIRE | DAMAGE_TYPE_COLD)))
 		{
-			damagesdone -= player.Full_resist_magic * ( 1.0f / 100 ) * damagesdone;
+			damagesdone -= player.full.resist_magic * ( 1.0f / 100 ) * damagesdone;
 			damagesdone = max(0.0f, damagesdone);
 		}
 
@@ -1288,8 +1288,8 @@ void ARX_DAMAGES_UpdateDamage(long j, float tim)
 
 							if (i == 0)
 							{
-								manadrained = min(dmg, player.mana);
-								player.mana -= manadrained;
+								manadrained = min(dmg, player.stat.mana);
+								player.stat.mana -= manadrained;
 							}
 							else
 							{
@@ -1304,7 +1304,7 @@ void ARX_DAMAGES_UpdateDamage(long j, float tim)
 
 							if (damages[j].source == 0)
 							{
-								player.mana = min(player.mana + manadrained, player.Full_maxmana);
+								player.stat.mana = min(player.stat.mana + manadrained, player.full.stat.maxmana);
 							}
 							else
 							{
@@ -1339,7 +1339,7 @@ void ARX_DAMAGES_UpdateDamage(long j, float tim)
 									        &&	(!(damages[j].type & DAMAGE_TYPE_COLD))
 									   )
 									{
-										dmg -= player.Full_resist_magic * ( 1.0f / 100 ) * dmg;
+										dmg -= player.full.resist_magic * ( 1.0f / 100 ) * dmg;
 										dmg = max(0.0f, dmg);
 									}
 

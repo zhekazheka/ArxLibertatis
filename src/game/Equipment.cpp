@@ -593,7 +593,7 @@ float ARX_EQUIPMENT_ComputeDamages(INTERACTIVE_OBJ * io_source, INTERACTIVE_OBJ 
 		if (io_target->ioflags & IO_FIX)
 		{
 			if (io_source == inter.iobj[0])
-				ARX_DAMAGES_DamageFIX(io_target, player.Full_damages, 0, 0);
+				ARX_DAMAGES_DamageFIX(io_target, player.full.damages, 0, 0);
 			else if (io_source->ioflags & IO_NPC)
 				ARX_DAMAGES_DamageFIX(io_target, io_source->_npcdata->damages, GetInterNum(io_source), 0);
 			else
@@ -623,9 +623,9 @@ float ARX_EQUIPMENT_ComputeDamages(INTERACTIVE_OBJ * io_source, INTERACTIVE_OBJ 
 			}
 		}
 
-		attack = player.Full_damages;
+		attack = player.full.damages;
 
-		if (rnd() * 100 <= (float)(player.Full_Attribute_Dexterity - 9) * 2.f + (float)(player.Full_Skill_Close_Combat * ( 1.0f / 5 )))
+		if (rnd() * 100 <= (float)(player.full.attribute.dexterity - 9) * 2.f + (float)(player.full.skill.close_combat * ( 1.0f / 5 )))
 		{
 			if (SendIOScriptEvent(io_source, SM_CRITICAL) != REFUSE)
 				critical = true;
@@ -636,7 +636,7 @@ float ARX_EQUIPMENT_ComputeDamages(INTERACTIVE_OBJ * io_source, INTERACTIVE_OBJ 
 
 		if (io_target->_npcdata->npcflags & NPCFLAG_BACKSTAB)
 		{
-			if (rnd() * 100.f <= player.Full_Skill_Stealth * ( 1.0f / 2 ))
+			if (rnd() * 100.f <= player.full.skill.stealth * ( 1.0f / 2 ))
 			{
 				if (SendIOScriptEvent(io_source, SM_BACKSTAB) != REFUSE)
 					backstab = 1.5f; 
@@ -692,8 +692,8 @@ float ARX_EQUIPMENT_ComputeDamages(INTERACTIVE_OBJ * io_source, INTERACTIVE_OBJ 
 
 	if (io_target == inter.iobj[0])
 	{
-		ac = player.Full_armor_class;
-		absorb = player.Full_Skill_Defense * ( 1.0f / 2 );
+		ac = player.full.armor_class;
+		absorb = player.full.skill.defense * ( 1.0f / 2 );
 	}
 	else
 	{
@@ -1539,7 +1539,7 @@ void ARX_EQUIPMENT_IdentifyAll()
 
 			if ((toequip) && (toequip->ioflags & IO_ITEM) && (toequip->_itemdata->equipitem))
 			{
-				if (player.Full_Skill_Object_Knowledge + player.Full_Attribute_Mind
+				if (player.full.skill.object_knowledge + player.full.attribute.mind
 				        >= toequip->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value)
 				{
 					SendIOScriptEvent(toequip, SM_IDENTIFY);

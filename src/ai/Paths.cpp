@@ -766,7 +766,7 @@ float ARX_THROWN_ComputeDamages(long thrownum, long source, long target)
 	{
 		attack	=	Thrown[thrownum].damages;
 
-		if (rnd() * 100 <= (float)(player.Full_Attribute_Dexterity - 9) * 2.f + (float)((player.Full_Skill_Projectile) * ( 1.0f / 5 )))
+		if (rnd() * 100 <= (float)(player.full.attribute.dexterity - 9) * 2.f + (float)((player.full.skill.projectile) * ( 1.0f / 5 )))
 		{
 			if (SendIOScriptEvent(io_source, SM_CRITICAL, "bow") != REFUSE)
 				critical = true;
@@ -776,7 +776,7 @@ float ARX_THROWN_ComputeDamages(long thrownum, long source, long target)
 
 		if (io_target->_npcdata->npcflags & NPCFLAG_BACKSTAB)
 		{
-			if (rnd() * 100.f <= player.Full_Skill_Stealth)
+			if (rnd() * 100.f <= player.full.skill.stealth)
 			{
 				if (SendIOScriptEvent(io_source, SM_BACKSTAB, "bow") != REFUSE)
 					backstab = 1.5f;
@@ -797,8 +797,8 @@ float ARX_THROWN_ComputeDamages(long thrownum, long source, long target)
 
 	if (target == 0)
 	{
-		ac		=	player.Full_armor_class;
-		absorb	=	player.Full_Skill_Defense * .5f;
+		ac		=	player.full.armor_class;
+		absorb	=	player.full.skill.defense * .5f;
 	}
 	else
 	{

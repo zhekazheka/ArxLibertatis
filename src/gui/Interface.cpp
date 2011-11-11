@@ -1625,7 +1625,7 @@ bool ArxGame::ManageEditorControls()
 							if(temp && !temp->locname.empty()) {
 								
 								if (((CURRENT_TORCH->ioflags & IO_ITEM) && CURRENT_TORCH->_itemdata->equipitem)
-									&& (player.Full_Skill_Object_Knowledge + player.Full_Attribute_Mind
+									&& (player.full.skill.object_knowledge + player.full.attribute.mind
 									>= CURRENT_TORCH->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) )
 								{
 									SendIOScriptEvent(FlyingOverIO,SM_IDENTIFY);
@@ -1697,7 +1697,7 @@ bool ArxGame::ManageEditorControls()
 				}
 
 				// redist
-				if ((player.Skill_Redistribute) || (player.Attribute_Redistribute))
+				if ((player.redistribute.skill) || (player.redistribute.attribute))
 				{
 					px = DANAESIZX - INTERFACE_RATIO(35) + lSLID_VALUE + GL_DECAL_ICONS;
 					py = DANAESIZY - INTERFACE_RATIO(218);
@@ -2900,11 +2900,11 @@ void ArxGame::ManagePlayerControls()
 		if (GInput->isKeyPressed(Keyboard::Key_A) && (GInput->isKeyPressed(Keyboard::Key_LeftShift) || GInput->isKeyPressed(Keyboard::Key_RightShift)))
 		{
 			BLOCK_PLAYER_CONTROLS=0;
-			player.life=player.Full_maxlife;
-			player.mana=player.Full_maxmana;
-			player.poison=0.f;
-			player.hunger=100;
-			DeadTime=0;
+			player.stat.life = player.full.stat.maxlife;
+			player.stat.mana = player.full.stat.maxmana;
+			player.poison = 0.f;
+			player.hunger = 100;
+			DeadTime = 0;
 			ARX_SOUND_PlayInterface(SND_PLAYER_FILLLIFEMANA, 0.9F + 0.2F * rnd());
 		}
 	}
@@ -4218,7 +4218,7 @@ void ArxGame::ManageKeyMouse() {
 						if(temp && !temp->locname.empty()) {
 							
 							if (((FlyingOverIO->ioflags & IO_ITEM) && FlyingOverIO->_itemdata->equipitem)
-								&& (player.Full_Skill_Object_Knowledge + player.Full_Attribute_Mind
+								&& (player.full.skill.object_knowledge + player.full.attribute.mind
 								>= FlyingOverIO->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) )
 							{
 								SendIOScriptEvent(FlyingOverIO,SM_IDENTIFY);
@@ -4288,7 +4288,7 @@ void ArxGame::ManageKeyMouse() {
 								if(temp && !temp->locname.empty()) {
 									
 									if (((FlyingOverIO->ioflags & IO_ITEM) && FlyingOverIO->_itemdata->equipitem)
-										&& (player.Full_Skill_Object_Knowledge + player.Full_Attribute_Mind
+										&& (player.full.skill.object_knowledge + player.full.attribute.mind
 										>= FlyingOverIO->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) )
 									{
 										SendIOScriptEvent(FlyingOverIO,SM_IDENTIFY);
@@ -4704,9 +4704,9 @@ bool CheckAttributeClick(float x, float y, float * val, TextureContainer * tc)
 
 		if (!(BOOKBUTTON & 1) && (LASTBOOKBUTTON & 1))
 		{
-			if ((player.Attribute_Redistribute > 0))
+			if ((player.redistribute.attribute > 0))
 			{
-				player.Attribute_Redistribute--;
+				player.redistribute.attribute--;
 				t++;
 				*val=t;
 				ARX_INTERFACE_RELEASESOUND();
@@ -4720,7 +4720,7 @@ bool CheckAttributeClick(float x, float y, float * val, TextureContainer * tc)
 			{
 				if ((t >6) && (player.level==0))
 				{
-					player.Attribute_Redistribute++;
+					player.redistribute.attribute++;
 					t --;
 					*val=t;
 					ARX_INTERFACE_RELEASESOUND();
@@ -4751,9 +4751,9 @@ bool CheckSkillClick(float x, float y, float * val, TextureContainer * tc, float
 
 		if (!(BOOKBUTTON & 1) && (LASTBOOKBUTTON & 1))
 		{
-			if ((player.Skill_Redistribute > 0))
+			if ((player.redistribute.skill > 0))
 			{
-				player.Skill_Redistribute--;
+				player.redistribute.skill--;
 				t++;
 				*val=t;
 				ARX_INTERFACE_RELEASESOUND();
@@ -4767,7 +4767,7 @@ bool CheckSkillClick(float x, float y, float * val, TextureContainer * tc, float
 			{
 				if ((t > ot) && (player.level==0))
 				{
-					player.Skill_Redistribute++;
+					player.redistribute.skill++;
 					t --;
 					*val=t;
 					ARX_INTERFACE_RELEASESOUND();
@@ -4878,7 +4878,7 @@ void ManageSpellIcon(long i,float rrr,long flag)
 
 	if (spells[i].bDuration)
 	{
-		if(	(player.mana<20)||
+		if(	(player.stat.mana<20)||
 			((spells[i].timcreation+spells[i].tolive-ARXTime)<2000) )
 		{
 			if(ucFlick&1) bOk=false;
@@ -4886,7 +4886,7 @@ void ManageSpellIcon(long i,float rrr,long flag)
 	}
 	else
 	{
-		if(player.mana<20)
+		if(player.stat.mana<20)
 		{
 			if(ucFlick&1) bOk=false;
 		}
@@ -5965,73 +5965,73 @@ void ARX_INTERFACE_ManageOpenedBook()
 		else if (MouseInBookRect(97+211,64+178, 97+211+32, 64+178+32))
 			FLYING_OVER = WND_DAMAGE;
 
-		if (!((player.Attribute_Redistribute == 0) && (ARXmenu.currentmode != AMCM_NEWQUEST)))
+		if (!((player.redistribute.attribute == 0) && (ARXmenu.currentmode != AMCM_NEWQUEST)))
 		{
 			// Main Player Attributes
-			if (CheckAttributeClick(379,95,&player.Attribute_Strength,		ITC.Get("ic_strength")))
+			if (CheckAttributeClick(379,95,&player.attribute.strength,		ITC.Get("ic_strength")))
 			{
 				FLYING_OVER=BOOK_STRENGTH;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Attribute_Redistribute;
+				lCursorRedistValue = player.redistribute.attribute;
 			}
 
-			if (CheckAttributeClick(428,95,&player.Attribute_Mind,			ITC.Get("ic_mind")))
+			if (CheckAttributeClick(428,95,&player.attribute.mind,			ITC.Get("ic_mind")))
 			{
 				FLYING_OVER=BOOK_MIND;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Attribute_Redistribute;
+				lCursorRedistValue = player.redistribute.attribute;
 			}
 
-			if (CheckAttributeClick(477,95,&player.Attribute_Dexterity,		ITC.Get("ic_dexterity")))
+			if (CheckAttributeClick(477,95,&player.attribute.dexterity,		ITC.Get("ic_dexterity")))
 			{
 				FLYING_OVER=BOOK_DEXTERITY;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Attribute_Redistribute;
+				lCursorRedistValue = player.redistribute.attribute;
 			}
 
-			if (CheckAttributeClick(526,95,&player.Attribute_Constitution,	ITC.Get("ic_constitution")))
+			if (CheckAttributeClick(526,95,&player.attribute.constitution,	ITC.Get("ic_constitution")))
 			{
 				FLYING_OVER=BOOK_CONSTITUTION;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Attribute_Redistribute;
+				lCursorRedistValue = player.redistribute.attribute;
 			}
 		}
 
-		if (!((player.Skill_Redistribute == 0) && (ARXmenu.currentmode != AMCM_NEWQUEST)))
+		if (!((player.redistribute.skill == 0) && (ARXmenu.currentmode != AMCM_NEWQUEST)))
 		{
-			if (CheckSkillClick(389,177,&player.Skill_Stealth,		ITC.Get("ic_stealth"),&player.Old_Skill_Stealth))
+			if (CheckSkillClick(389,177,&player.skill.stealth,		ITC.Get("ic_stealth"),&player.old.stealth))
 			{
 				FLYING_OVER=BOOK_STEALTH;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(453,177,&player.Skill_Mecanism,		ITC.Get("ic_mecanism"),&player.Old_Skill_Mecanism))
+			if (CheckSkillClick(453,177,&player.skill.mecanism,		ITC.Get("ic_mecanism"),&player.old.mecanism))
 			{
 				FLYING_OVER=BOOK_MECANISM;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(516,177,&player.Skill_Intuition,	ITC.Get("ic_intuition"),&player.Old_Skill_Intuition))
+			if (CheckSkillClick(516,177,&player.skill.intuition,	ITC.Get("ic_intuition"),&player.old.intuition))
 			{
 				FLYING_OVER=BOOK_INTUITION;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(389,230,&player.Skill_Etheral_Link,	ITC.Get("ic_etheral_link"),&player.Old_Skill_Etheral_Link))
+			if (CheckSkillClick(389,230,&player.skill.etheral_link,	ITC.Get("ic_etheral_link"),&player.old.etheral_link))
 			{
 				FLYING_OVER=BOOK_ETHERAL_LINK;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(453,230,&player.Skill_Object_Knowledge,ITC.Get("ic_object_knowledge"),&player.Old_Skill_Object_Knowledge))
+			if (CheckSkillClick(453,230,&player.skill.object_knowledge,ITC.Get("ic_object_knowledge"),&player.old.object_knowledge))
 			{
 				FLYING_OVER=BOOK_OBJECT_KNOWLEDGE;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 
 				if ((BOOKBUTTON & 1) && !(LASTBOOKBUTTON & 1))
 				{
@@ -6042,32 +6042,32 @@ void ARX_INTERFACE_ManageOpenedBook()
 				ARX_PLAYER_ComputePlayerFullStats();
 			}
 
-			if (CheckSkillClick(516,230,&player.Skill_Casting,		ITC.Get("ic_casting"),&player.Old_Skill_Casting))
+			if (CheckSkillClick(516,230,&player.skill.casting,		ITC.Get("ic_casting"),&player.old.casting))
 			{
 				FLYING_OVER=BOOK_CASTING;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(389,284,&player.Skill_Close_Combat,	ITC.Get("ic_close_combat"),&player.Old_Skill_Close_Combat))
+			if (CheckSkillClick(389,284,&player.skill.close_combat,	ITC.Get("ic_close_combat"),&player.old.close_combat))
 			{
 				FLYING_OVER=BOOK_CLOSE_COMBAT;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(453,284,&player.Skill_Projectile,	ITC.Get("ic_projectile"),&player.Old_Skill_Projectile))
+			if (CheckSkillClick(453,284,&player.skill.projectile,	ITC.Get("ic_projectile"),&player.old.projectile))
 			{
 				FLYING_OVER=BOOK_PROJECTILE;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 
-			if (CheckSkillClick(516,284,&player.Skill_Defense,		ITC.Get("ic_defense"),&player.Old_Skill_Defense))
+			if (CheckSkillClick(516,284,&player.skill.defense,		ITC.Get("ic_defense"),&player.old.defense))
 			{
 				FLYING_OVER=BOOK_DEFENSE;
 				SpecialCursor = CURSOR_REDIST;
-				lCursorRedistValue = player.Skill_Redistribute;
+				lCursorRedistValue = player.redistribute.skill;
 			}
 		}
 		else
@@ -6163,71 +6163,71 @@ void ARX_INTERFACE_ManageOpenedBook()
 		//------------------------------
 		
 		std::stringstream ss3;
-		ss3 << std::setw(3) << std::setprecision(0) << std::fixed << player.Full_Attribute_Strength;
+		ss3 << std::setw(3) << std::setprecision(0) << std::fixed << player.full.attribute.strength;
 		tex = ss3.str();
 
-		if (player.Mod_Attribute_Strength<0.f)
+		if (player.mod.attribute.strength<0.f)
 			color = Color::red;
-		else if (player.Mod_Attribute_Strength>0.f)
+		else if (player.mod.attribute.strength>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Full_Attribute_Strength == 6)
+			if (player.full.attribute.strength == 6)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 391, 129, tex, color);
 		
 		ss3.str(""); // clear the stream
-		ss3 << player.Full_Attribute_Mind;
+		ss3 << player.full.attribute.mind;
 		tex = ss3.str();
 
-		if (player.Mod_Attribute_Mind<0.f)
+		if (player.mod.attribute.mind<0.f)
 			color = Color::red;
-		else if (player.Mod_Attribute_Mind>0.f)
+		else if (player.mod.attribute.mind>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Full_Attribute_Mind == 6)
+			if (player.full.attribute.mind == 6)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 440, 129, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Attribute_Dexterity;
+		ss3 << player.full.attribute.dexterity;
 		tex = ss3.str();
 
-		if (player.Mod_Attribute_Dexterity<0.f)
+		if (player.mod.attribute.dexterity<0.f)
 			color = Color::red;
-		else if (player.Mod_Attribute_Dexterity>0.f)
+		else if (player.mod.attribute.dexterity>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Full_Attribute_Dexterity == 6)
+			if (player.full.attribute.dexterity == 6)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 490, 129, tex, color);
 		ss3.str("");
-		ss3 << player.Full_Attribute_Constitution;
+		ss3 << player.full.attribute.constitution;
 		tex = ss3.str();
 
-		if (player.Mod_Attribute_Constitution<0.f)
+		if (player.mod.attribute.constitution<0.f)
 			color = Color::red;
-		else if (player.Mod_Attribute_Constitution>0.f)
+		else if (player.mod.attribute.constitution>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Full_Attribute_Constitution == 6)
+			if (player.full.attribute.constitution == 6)
 				color = Color::red;
 		}
 
@@ -6235,126 +6235,126 @@ void ARX_INTERFACE_ManageOpenedBook()
 
 		// Player Skills
 		ss3.str("");
-		ss3 << player.Full_Skill_Stealth;
+		ss3 << player.full.skill.stealth;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Stealth<0.f)
+		if (player.mod.skill.stealth<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Stealth>0.f)
+		else if (player.mod.skill.stealth>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Stealth == 0)
+			if (player.skill.stealth == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 405, 210, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Mecanism;
+		ss3 << player.full.skill.mecanism;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Mecanism<0.f)
+		if (player.mod.skill.mecanism<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Mecanism>0.f)
+		else if (player.mod.skill.mecanism>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Mecanism == 0)
+			if (player.skill.mecanism == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 469, 210, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Intuition;
+		ss3 << player.full.skill.intuition;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Intuition<0.f)
+		if (player.mod.skill.intuition<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Intuition>0.f)
+		else if (player.mod.skill.intuition>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Intuition == 0)
+			if (player.skill.intuition == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 533, 210, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Etheral_Link;
+		ss3 << player.full.skill.etheral_link;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Etheral_Link<0.f)
+		if (player.mod.skill.etheral_link<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Etheral_Link>0.f)
+		else if (player.mod.skill.etheral_link>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Etheral_Link == 0)
+			if (player.skill.etheral_link == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 405, 265, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Object_Knowledge;
+		ss3 << player.full.skill.object_knowledge;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Object_Knowledge<0.f)
+		if (player.mod.skill.object_knowledge<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Object_Knowledge>0.f)
+		else if (player.mod.skill.object_knowledge>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Object_Knowledge == 0)
+			if (player.skill.object_knowledge == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 469, 265, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Casting;
+		ss3 << player.full.skill.casting;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Casting<0.f)
+		if (player.mod.skill.casting<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Casting>0.f)
+		else if (player.mod.skill.casting>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Casting == 0)
+			if (player.skill.casting == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 533, 265, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Close_Combat;
+		ss3 << player.full.skill.close_combat;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Close_Combat<0.f)
+		if (player.mod.skill.close_combat<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Close_Combat>0.f)
+		else if (player.mod.skill.close_combat>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Close_Combat == 0)
+			if (player.skill.close_combat == 0)
 				color = Color::red;
 		}
 
@@ -6362,36 +6362,36 @@ void ARX_INTERFACE_ManageOpenedBook()
 
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Projectile;
+		ss3 << player.full.skill.projectile;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Projectile<0.f)
+		if (player.mod.skill.projectile<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Projectile>0.f)
+		else if (player.mod.skill.projectile>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Projectile == 0)
+			if (player.skill.projectile == 0)
 				color = Color::red;
 		}
 
 		DrawBookTextCenter(hFontInBook, 469, 319, tex, color);
 		
 		ss3.str("");
-		ss3 << player.Full_Skill_Defense;
+		ss3 << player.full.skill.defense;
 		tex = ss3.str();
 
-		if (player.Mod_Skill_Defense<0.f)
+		if (player.mod.skill.defense<0.f)
 			color = Color::red;
-		else if (player.Mod_Skill_Defense>0.f)
+		else if (player.mod.skill.defense>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		if (ARXmenu.currentmode==AMCM_NEWQUEST)
 		{
-			if (player.Skill_Defense == 0)
+			if (player.skill.defense == 0)
 				color = Color::red;
 		}
 
@@ -6400,73 +6400,73 @@ void ARX_INTERFACE_ManageOpenedBook()
 		// Secondary Attributes
 		std::stringstream ss4;
 		ss4.str("");
-		ss4 << F2L_RoundUp(player.Full_maxlife);
+		ss4 << F2L_RoundUp(player.full.stat.maxlife);
 		tex = ss4.str();
 
-		if ((player.Mod_maxlife<0.f) || (player.Full_maxlife < player.maxlife))
+		if ((player.mod.stat.maxlife<0.f) || (player.full.stat.maxlife < player.stat.maxlife))
 			color = Color::red;
-		else if ((player.Mod_maxlife>0.f) || (player.Full_maxlife > player.maxlife))
+		else if ((player.mod.stat.maxlife>0.f) || (player.full.stat.maxlife > player.stat.maxlife))
 			color = Color::blue;
 		else color = Color::black;
 
 		DrawBookTextCenter( hFontInBook, 324, 158, tex, color );
 		
 		ss4.str("");
-		ss4 << F2L_RoundUp(player.Full_maxmana);
+		ss4 << F2L_RoundUp(player.full.stat.maxmana);
 		tex = ss4.str();
 
-		if ((player.Mod_maxmana<0.f) || (player.Full_maxmana < player.maxmana))
+		if ((player.mod.stat.maxmana<0.f) || (player.full.stat.maxmana < player.stat.maxmana))
 			color = Color::red;
-		else if ((player.Mod_maxmana>0.f) || (player.Full_maxmana > player.maxmana))
+		else if ((player.mod.stat.maxmana>0.f) || (player.full.stat.maxmana > player.stat.maxmana))
 			color = Color::blue;
 		else color = Color::black;
 
 		DrawBookTextCenter( hFontInBook, 324, 218, tex, color );
 		
 		ss4.str("");
-		ss4 << F2L_RoundUp(player.Full_damages);
+		ss4 << F2L_RoundUp(player.full.damages);
 		tex = ss4.str();
 
-		if (player.Mod_damages<0.f)
+		if (player.mod.damages<0.f)
 			color = Color::red;
-		else if (player.Mod_damages>0.f)
+		else if (player.mod.damages>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		DrawBookTextCenter(hFontInBook, 324, 278, tex, color);
 
-		float ac = player.Full_armor_class;
+		float ac = player.full.armor_class;
 		ss4.str("");
 		ss4 << F2L_RoundUp(ac);
 		tex = ss4.str();
 
-		if (player.Mod_armor_class<0.f)
+		if (player.mod.armor_class<0.f)
 			color = Color::red;
-		else if (player.Mod_armor_class>0.f)
+		else if (player.mod.armor_class>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		DrawBookTextCenter(hFontInBook, 153, 158, tex, color);
 
 		ss4.str("");
-		ss4 << std::setw(3) << std::setprecision(0) << F2L_RoundUp( player.Full_resist_magic );
+		ss4 << std::setw(3) << std::setprecision(0) << F2L_RoundUp( player.full.resist_magic );
 		tex = ss4.str();
 
-		if (player.Mod_resist_magic<0.f)
+		if (player.mod.resist_magic<0.f)
 			color = Color::red;
-		else if (player.Mod_resist_magic>0.f)
+		else if (player.mod.resist_magic>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
 		DrawBookTextCenter(hFontInBook, 153, 218, tex, color);
 		
 		ss4.str("");
-		ss4 << F2L_RoundUp( player.Full_resist_poison );
+		ss4 << F2L_RoundUp( player.full.resist_poison );
 		tex = ss4.str();
 
-		if (player.Mod_resist_poison<0.f)
+		if (player.mod.resist_poison<0.f)
 			color = Color::red;
-		else if (player.Mod_resist_poison>0.f)
+		else if (player.mod.resist_poison>0.f)
 			color = Color::blue;
 		else color = Color::black;
 
@@ -7015,7 +7015,7 @@ void ArxGame::DrawAllInterface()
 						bIsAiming = false;
 
 					at=at*(1.f+(1.f-GLOBAL_SLOWDOWN));
-					float aim = static_cast<float>(player.Full_AimTime);
+					float aim = static_cast<float>(player.aimtime);
 					j=at/aim;
 				}
 
@@ -7031,7 +7031,7 @@ void ArxGame::DrawAllInterface()
 			GRenderer->SetRenderState(Renderer::AlphaBlending, false);
 			ARX_INTERFACE_DrawItem(ITC.Get("aim_empty"), DANAECENTERX + INTERFACE_RATIO(-320+262.f), DANAESIZY + INTERFACE_RATIO(-72.f), 0.0001f, Color::white);
 			
-			if(bHitFlash && player.Full_Skill_Etheral_Link >= 40){
+			if(bHitFlash && player.full.skill.etheral_link >= 40){
 				float j = 1.0f - fHitFlash;
 				GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendOne);
 				GRenderer->SetRenderState(Renderer::AlphaBlending, true);
@@ -7331,7 +7331,7 @@ void ArxGame::DrawAllInterface()
 					{
 						long amount=ARX_INTERACTIVE_GetPrice(FlyingOverIO,temp);
 						// achat
-						float famount	= amount - amount * ( (float)player.Full_Skill_Intuition ) * 0.005f;
+						float famount	= amount - amount * ( (float)player.full.skill.intuition ) * 0.005f;
 						// check should always be OK because amount is supposed positive
 						amount = checked_range_cast<long>(famount);
 
@@ -7345,7 +7345,7 @@ void ArxGame::DrawAllInterface()
 					{
 						long amount = static_cast<long>( ARX_INTERACTIVE_GetPrice( FlyingOverIO, temp ) / 3.0f );
 						// achat
-						float famount	= amount + amount * ( (float) player.Full_Skill_Intuition ) * 0.005f;
+						float famount	= amount + amount * ( (float) player.full.skill.intuition ) * 0.005f;
 						// check should always be OK because amount is supposed positive
 						amount = checked_range_cast<long>( famount );
 
@@ -7447,7 +7447,7 @@ void ArxGame::DrawAllInterface()
 			}
 
 			// Draw/Manage Advancement Icon
-			if ((player.Skill_Redistribute) || (player.Attribute_Redistribute))
+			if ((player.redistribute.skill) || (player.redistribute.attribute))
 			{
 				px=DANAESIZX - INTERFACE_RATIO(35) + lSLID_VALUE+GL_DECAL_ICONS;
 				py=DANAESIZY - INTERFACE_RATIO(218);
@@ -7668,8 +7668,8 @@ void ArxGame::DrawAllInterface()
 		py = DANAESIZY - INTERFACE_RATIO(81);
 		ARX_INTERFACE_DrawItem(ITC.Get("empty_gauge_blue"), px, py, 0.f); //399
 
-		float fnl=(float)player.life/(float)player.Full_maxlife;
-		float fnm=(float)player.mana/(float)player.Full_maxmana;
+		float fnl=(float)player.stat.life/(float)player.full.stat.maxlife;
+		float fnm=(float)player.stat.mana/(float)player.full.stat.maxmana;
 
 
 		//---------------------------------------------------------------------
@@ -7695,7 +7695,7 @@ void ArxGame::DrawAllInterface()
 				if(	(EERIEMouseButton & 1)&&
 					(!(LastMouseClick & 1)) ) {
 					std::stringstream ss;
-					ss << checked_range_cast<int>(player.life);
+					ss << checked_range_cast<int>(player.stat.life);
 					ARX_SPEECH_Add(ss.str());
 				}
 			}
@@ -7725,7 +7725,7 @@ void ArxGame::DrawAllInterface()
 				if(	(EERIEMouseButton & 1)&&
 					(!(LastMouseClick & 1)) ) {
 					std::stringstream ss;
-					ss << checked_range_cast<int>(player.mana);
+					ss << checked_range_cast<int>(player.stat.mana);
 					ARX_SPEECH_Add(ss.str());
 				}
 			}

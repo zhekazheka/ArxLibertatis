@@ -1567,7 +1567,7 @@ static float _AvgFrameDiff = 150.f;
 		}
 	}
 
-	if (player.life<=0)
+	if (player.stat.life<=0)
 	{
 			DeadTime += static_cast<long>(FrameDiff);
 		float mdist = EEfabs(player.physics.cyl.height)-60;
@@ -1756,7 +1756,7 @@ static float _AvgFrameDiff = 150.f;
 	INTERTRANSPOLYSPOS=TRANSPOLYSPOS=0;
 
 	// Check For Hiding/unHiding Player Gore
-	if ((EXTERNALVIEW) || (player.life<=0))
+	if ((EXTERNALVIEW) || (player.stat.life<=0))
 	{
 		ARX_INTERACTIVE_Show_Hide_1st(inter.iobj[0],0);
 	}

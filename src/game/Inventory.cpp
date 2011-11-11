@@ -1022,7 +1022,7 @@ bool PutInInventory()
 		float fcos = ARX_INTERACTIVE_GetPrice(DRAGINTER, io) / 3.0f; //>>1;
 		long cos = checked_range_cast<long>(fcos);
 		cos *= DRAGINTER->_itemdata->count;
-		fcos = cos + cos * ((float)player.Full_Skill_Intuition) * 0.005f;
+		fcos = cos + cos * ((float)player.full.skill.intuition) * 0.005f;
 		cos = checked_range_cast<long>(fcos);
 
 
@@ -1093,7 +1093,7 @@ bool PutInInventory()
 			float fcos = ARX_INTERACTIVE_GetPrice(DRAGINTER, io) / 3.0f;
 			long cos = checked_range_cast<long>(fcos);
 			cos *= DRAGINTER->_itemdata->count;
-			fcos = cos + cos * ((float)player.Full_Skill_Intuition) * 0.005f;
+			fcos = cos + cos * ((float)player.full.skill.intuition) * 0.005f;
 			cos = checked_range_cast<long>(fcos);
 
 			for (j = 0; j < sy; j++)
@@ -1801,7 +1801,7 @@ bool TakeFromInventory(Vec2s * pos)
 					{
 						long cos = ARX_INTERACTIVE_GetPrice(io, ioo);
 
-						float fcos	= cos - cos * ((float)player.Full_Skill_Intuition) * 0.005f;
+						float fcos	= cos - cos * ((float)player.full.skill.intuition) * 0.005f;
 						cos = checked_range_cast<long>(fcos);
 
 						if (player.gold < cos)
@@ -2035,7 +2035,7 @@ INTERACTIVE_OBJ * ARX_INVENTORY_GetTorchLowestDurability() {
 
 void ARX_INVENTORY_IdentifyIO(INTERACTIVE_OBJ * _pIO) {
 	if(_pIO && (_pIO->ioflags & IO_ITEM) && _pIO->_itemdata->equipitem) {
-		if(player.Full_Skill_Object_Knowledge + player.Full_Attribute_Mind
+		if(player.full.skill.object_knowledge + player.full.attribute.mind
 		   >= _pIO->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) {
 			SendIOScriptEvent(_pIO, SM_IDENTIFY);
 		}
@@ -2050,7 +2050,7 @@ void ARX_INVENTORY_IdentifyAll() {
 				for(size_t i = 0; i < INVENTORY_X; i++) {
 					INTERACTIVE_OBJ * io = inventory[iNbBag][i][j].io;
 					if(io && (io->ioflags & IO_ITEM) && io->_itemdata->equipitem) {
-						if(player.Full_Skill_Object_Knowledge + player.Full_Attribute_Mind
+						if(player.full.skill.object_knowledge + player.full.attribute.mind
 						   >= io->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) {
 							SendIOScriptEvent(io, SM_IDENTIFY);
 						}

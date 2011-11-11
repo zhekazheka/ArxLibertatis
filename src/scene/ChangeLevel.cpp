@@ -736,14 +736,14 @@ static long ARX_CHANGELEVEL_Push_Player() {
 
 	memset(asp, 0, sizeof(ARX_CHANGELEVEL_PLAYER));
 
-	asp->AimTime = player.AimTime;
+	asp->AimTime = player.aimtime;
 	asp->angle = player.angle;
 	asp->armor_class = player.armor_class;
-	asp->Attribute_Constitution = player.Attribute_Constitution;
-	asp->Attribute_Dexterity = player.Attribute_Dexterity;
-	asp->Attribute_Mind = player.Attribute_Mind;
-	asp->Attribute_Strength = player.Attribute_Strength;
-	asp->Critical_Hit = player.Critical_Hit;
+	asp->Attribute_Constitution = player.attribute.constitution;
+	asp->Attribute_Dexterity = player.attribute.dexterity;
+	asp->Attribute_Mind = player.attribute.mind;
+	asp->Attribute_Strength = player.attribute.strength;
+	asp->Critical_Hit = player.critical_hit;
 	asp->Current_Movement = player.Current_Movement;
 	asp->damages = player.damages;
 	asp->doingmagic = player.doingmagic;
@@ -791,10 +791,10 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	asp->jumpstarttime = player.jumpstarttime;
 	asp->Last_Movement = player.Last_Movement;
 	asp->level = player.level;
-	asp->life = player.life;
-	asp->mana = player.mana;
-	asp->maxlife = player.maxlife;
-	asp->maxmana = player.maxmana;
+	asp->life = player.stat.life;
+	asp->mana = player.stat.mana;
+	asp->maxlife = player.stat.maxlife;
+	asp->maxmana = player.stat.maxmana;
 	asp->misc_flags = 0;
 
 	if (player.onfirmground)
@@ -831,23 +831,23 @@ static long ARX_CHANGELEVEL_Push_Player() {
 		asp->sp_flags |= SP_WEP;
 
 
-	asp->pos = player.pos;
-	asp->resist_magic = player.resist_magic;
-	asp->resist_poison = player.resist_poison;
-	asp->Attribute_Redistribute = player.Attribute_Redistribute;
-	asp->Skill_Redistribute = player.Skill_Redistribute;
-	asp->rune_flags = player.rune_flags;
-	asp->size = player.size;
-	asp->Skill_Stealth = player.Skill_Stealth;
-	asp->Skill_Mecanism = player.Skill_Mecanism;
-	asp->Skill_Intuition = player.Skill_Intuition;
-	asp->Skill_Etheral_Link = player.Skill_Etheral_Link;
-	asp->Skill_Object_Knowledge = player.Skill_Object_Knowledge;
-	asp->Skill_Casting = player.Skill_Casting;
-	asp->Skill_Projectile = player.Skill_Projectile;
-	asp->Skill_Close_Combat = player.Skill_Close_Combat;
-	asp->Skill_Defense = player.Skill_Defense;
-	asp->skin = player.skin;
+	asp->pos										= player.pos;
+	asp->resist_magic						= player.resist_magic;
+	asp->resist_poison					= player.resist_poison;
+	asp->Attribute_Redistribute = player.redistribute.attribute;
+	asp->Skill_Redistribute			= player.redistribute.skill;
+	asp->rune_flags							= player.rune_flags;
+	asp->size										= player.size;
+	asp->Skill_Stealth					= player.skill.stealth;
+	asp->Skill_Mecanism					= player.skill.mecanism;
+	asp->Skill_Intuition				= player.skill.intuition;
+	asp->Skill_Etheral_Link			= player.skill.etheral_link;
+	asp->Skill_Object_Knowledge = player.skill.object_knowledge;
+	asp->Skill_Casting					= player.skill.casting;
+	asp->Skill_Projectile				= player.skill.projectile;
+	asp->Skill_Close_Combat			= player.skill.close_combat;
+	asp->Skill_Defense					= player.skill.defense;
+	asp->skin										= player.skin;
 
 	asp->xp = player.xp;
 	asp->nb_PlayerQuest = PlayerQuest.size();
@@ -1751,22 +1751,22 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	const ARX_CHANGELEVEL_PLAYER * asp = reinterpret_cast<const ARX_CHANGELEVEL_PLAYER *>(dat + pos);
 	pos += sizeof(ARX_CHANGELEVEL_PLAYER);
 	
-	player.AimTime = asp->AimTime;
-	player.angle = asp->angle;
-	player.desiredangle.a = player.angle.a;
-	player.desiredangle.b = player.angle.b;
+	player.aimtime								= asp->AimTime;
+	player.angle									= asp->angle;
+	player.desiredangle.a					= player.angle.a;
+	player.desiredangle.b					= player.angle.b;
 	
-	player.armor_class = checked_range_cast<unsigned char>(asp->armor_class);
+	player.armor_class						= checked_range_cast<unsigned char>(asp->armor_class);
 	
-	player.Attribute_Constitution = asp->Attribute_Constitution;
-	player.Attribute_Dexterity = asp->Attribute_Dexterity;
-	player.Attribute_Mind = asp->Attribute_Mind;
-	player.Attribute_Strength = asp->Attribute_Strength;
-	player.Critical_Hit = asp->Critical_Hit;
-	player.Current_Movement = PlayerMovement::load(asp->Current_Movement); // TODO save/load flags
-	player.damages = asp->damages;
-	player.doingmagic = asp->doingmagic;
-	player.playerflags = PlayerFlags::load(asp->playerflags); // TODO save/load flags
+	player.attribute.constitution = asp->Attribute_Constitution;
+	player.attribute.dexterity		= asp->Attribute_Dexterity;
+	player.attribute.mind					= asp->Attribute_Mind;
+	player.attribute.strength			= asp->Attribute_Strength;
+	player.critical_hit						= asp->Critical_Hit;
+	player.Current_Movement				= PlayerMovement::load(asp->Current_Movement); // TODO save/load flags
+	player.damages								= asp->damages;
+	player.doingmagic							= asp->doingmagic;
+	player.playerflags						= PlayerFlags::load(asp->playerflags); // TODO save/load flags
 	
 	if(asp->TELEPORT_TO_LEVEL[0]) {
 		strcpy(TELEPORT_TO_LEVEL, toLowercase(safestring(asp->TELEPORT_TO_LEVEL)).c_str());
@@ -1797,10 +1797,10 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	
 	player.level = checked_range_cast<unsigned char>(asp->level);
 	
-	player.life = asp->life;
-	player.mana = asp->mana;
-	player.maxlife = asp->maxlife;
-	player.maxmana = asp->maxmana;
+	player.stat.life = asp->life;
+	player.stat.mana = asp->mana;
+	player.stat.maxlife = asp->maxlife;
+	player.stat.maxmana = asp->maxmana;
 	
 	player.onfirmground = (asp->misc_flags & 1) ? 1 : 0;
 	WILLRETURNTOCOMBATMODE = (asp->misc_flags & 2) ? 1 : 0;
@@ -1850,20 +1850,21 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	player.resist_magic = checked_range_cast<unsigned char>(asp->resist_magic);
 	player.resist_poison = checked_range_cast<unsigned char>(asp->resist_poison);
 	
-	player.Attribute_Redistribute = checked_range_cast<unsigned char>(asp->Attribute_Redistribute);
-	player.Skill_Redistribute = checked_range_cast<unsigned char>(asp->Skill_Redistribute);
+	player.redistribute.attribute = checked_range_cast<unsigned char>(asp->Attribute_Redistribute);
+	player.redistribute.skill = checked_range_cast<unsigned char>(asp->Skill_Redistribute);
 	
 	player.rune_flags = RuneFlags::load(asp->rune_flags); // TODO save/load flags
 	player.size = asp->size;
-	player.Skill_Stealth = asp->Skill_Stealth;
-	player.Skill_Mecanism = asp->Skill_Mecanism;
-	player.Skill_Intuition = asp->Skill_Intuition;
-	player.Skill_Etheral_Link = asp->Skill_Etheral_Link;
-	player.Skill_Object_Knowledge = asp->Skill_Object_Knowledge;
-	player.Skill_Casting = asp->Skill_Casting;
-	player.Skill_Projectile = asp->Skill_Projectile;
-	player.Skill_Close_Combat = asp->Skill_Close_Combat;
-	player.Skill_Defense = asp->Skill_Defense;
+
+	player.skill.stealth					=	asp->Skill_Stealth;
+	player.skill.mecanism					=	asp->Skill_Mecanism;
+	player.skill.intuition				=	asp->Skill_Intuition;
+	player.skill.etheral_link			=	asp->Skill_Etheral_Link;
+	player.skill.object_knowledge =	asp->Skill_Object_Knowledge;
+	player.skill.casting					=	asp->Skill_Casting;
+	player.skill.projectile				=	asp->Skill_Projectile;
+	player.skill.close_combat			=	asp->Skill_Close_Combat;
+	player.skill.defense					=	asp->Skill_Defense;
 	
 	player.skin = checked_range_cast<char>(asp->skin);
 	

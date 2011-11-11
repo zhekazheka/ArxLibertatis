@@ -1124,7 +1124,7 @@ ValueType GetSystemVar(const EERIE_SCRIPT * es, INTERACTIVE_OBJ * io, const stri
 
 			if (!specialstrcmp(name, "^player_life"))
 			{
-				*fcontent = player.Full_life;
+				*fcontent = player.full.stat.life;
 				return TYPE_FLOAT;
 			}
 
@@ -1186,85 +1186,85 @@ ValueType GetSystemVar(const EERIE_SCRIPT * es, INTERACTIVE_OBJ * io, const stri
 
 			if (!specialstrcmp(name, "^player_maxlife"))
 			{
-				*fcontent = player.Full_maxlife;
+				*fcontent = player.full.stat.maxlife;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_attribute_strength"))
 			{
-				*fcontent = player.Full_Attribute_Strength;
+				*fcontent = player.full.attribute.strength;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_attribute_dexterity"))
 			{
-				*fcontent = player.Full_Attribute_Dexterity;
+				*fcontent = player.full.attribute.dexterity;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_attribute_constitution"))
 			{
-				*fcontent = player.Full_Attribute_Constitution;
+				*fcontent = player.full.attribute.constitution;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_attribute_mind"))
 			{
-				*fcontent = player.Full_Attribute_Mind;
+				*fcontent = player.full.attribute.mind;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_stealth"))
 			{
-				*fcontent = player.Full_Skill_Stealth;
+				*fcontent = player.full.skill.stealth;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_mecanism"))
 			{
-				*fcontent = player.Full_Skill_Mecanism;
+				*fcontent = player.full.skill.mecanism;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_intuition"))
 			{
-				*fcontent = player.Full_Skill_Intuition;
+				*fcontent = player.full.skill.intuition;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_etheral_link"))
 			{
-				*fcontent = player.Full_Skill_Etheral_Link;
+				*fcontent = player.full.skill.etheral_link;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_object_knowledge"))
 			{
-				*fcontent = player.Full_Skill_Object_Knowledge;
+				*fcontent = player.full.skill.object_knowledge;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_casting"))
 			{
-				*fcontent = player.Full_Skill_Casting;
+				*fcontent = player.full.skill.casting;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_projectile"))
 			{
-				*fcontent = player.Full_Skill_Projectile;
+				*fcontent = player.full.skill.projectile;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_close_combat"))
 			{
-				*fcontent = player.Full_Skill_Close_Combat;
+				*fcontent = player.full.skill.close_combat;
 				return TYPE_FLOAT;
 			}
 
 			if (!specialstrcmp(name, "^player_skill_defense"))
 			{
-				*fcontent = player.Full_Skill_Defense;
+				*fcontent = player.full.skill.defense;
 				return TYPE_FLOAT;
 			}
 
