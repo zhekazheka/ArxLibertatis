@@ -1,4 +1,22 @@
 /*
+ * Copyright 2011 Arx Libertatis Team (see the AUTHORS file)
+ *
+ * This file is part of Arx Libertatis.
+ *
+ * Arx Libertatis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Arx Libertatis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/* Based on:
 ===========================================================================
 ARX FATALIS GPL Source Code
 Copyright (C) 1999-2010 Arkane Studios SA, a ZeniMax Media company.
@@ -22,41 +40,9 @@ If you have questions concerning this license or the applicable additional terms
 ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 ===========================================================================
 */
-//////////////////////////////////////////////////////////////////////////////////////
-//   @@        @@@        @@@                @@                           @@@@@     //
-//   @@@       @@@@@@     @@@     @@        @@@@                         @@@  @@@   //
-//   @@@       @@@@@@@    @@@    @@@@       @@@@      @@                @@@@        //
-//   @@@       @@  @@@@   @@@  @@@@@       @@@@@@     @@@               @@@         //
-//  @@@@@      @@  @@@@   @@@ @@@@@        @@@@@@@    @@@            @  @@@         //
-//  @@@@@      @@  @@@@  @@@@@@@@         @@@@ @@@    @@@@@         @@ @@@@@@@      //
-//  @@ @@@     @@  @@@@  @@@@@@@          @@@  @@@    @@@@@@        @@ @@@@         //
-// @@@ @@@    @@@ @@@@   @@@@@            @@@@@@@@@   @@@@@@@      @@@ @@@@         //
-// @@@ @@@@   @@@@@@@    @@@@@@           @@@  @@@@   @@@ @@@      @@@ @@@@         //
-// @@@@@@@@   @@@@@      @@@@@@@@@@      @@@    @@@   @@@  @@@    @@@  @@@@@        //
-// @@@  @@@@  @@@@       @@@  @@@@@@@    @@@    @@@   @@@@  @@@  @@@@  @@@@@        //
-//@@@   @@@@  @@@@@      @@@      @@@@@@ @@     @@@   @@@@   @@@@@@@    @@@@@ @@@@@ //
-//@@@   @@@@@ @@@@@     @@@@        @@@  @@      @@   @@@@   @@@@@@@    @@@@@@@@@   //
-//@@@    @@@@ @@@@@@@   @@@@             @@      @@   @@@@    @@@@@      @@@@@      //
-//@@@    @@@@ @@@@@@@   @@@@             @@      @@   @@@@    @@@@@       @@        //
-//@@@    @@@  @@@ @@@@@                          @@            @@@                  //
-//            @@@ @@@                           @@             @@        STUDIOS    //
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-// DANAE.CPP
-//////////////////////////////////////////////////////////////////////////////////////
-//
-// Description:
-//		Danae Application Main File
-//
-// Updates: (date) (person) (update)
-//
 // Code: Cyril Meynier
 //
 // Copyright (c) 1999-2001 ARKANE Studios SA. All rights reserved
-//////////////////////////////////////////////////////////////////////////////////////
-//-----------------------------------------------------------------------------
-// Included files
-//-----------------------------------------------------------------------------
 
 #include "core/Core.h"
 
@@ -67,7 +53,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include <sstream>
 #include <vector>
 
-#include "boost/algorithm/string/predicate.hpp"
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "ai/Paths.h"
 #include "ai/PathFinderManager.h"
@@ -342,6 +328,7 @@ float FrameDiff=0;
 float GLOBAL_LIGHT_FACTOR=0.85f;
 
 float IN_FRONT_DIVIDER_ITEMS	=0.7505f;
+long USE_NEW_SKILLS=1;
 
 long USE_LIGHT_OPTIM	=1;
 // set to 0 for dev mode
@@ -688,9 +675,9 @@ int main(int argc, char ** argv) {
 	
 	USE_FAST_SCENES = 1;
 	LogDebug("Danae Start");
-
+	
 	LogDebug("Project Init");
-
+	
 	NOCHECKSUM=0;
 	
 	ARX_INTERFACE_NoteInit();
@@ -705,10 +692,10 @@ int main(int argc, char ** argv) {
 		GoldCoinsObj[t]=NULL;
 		GoldCoinsTC[t]=NULL;
 	}
-
+	
 	LogDebug("LSV Init");
 	ModeLight=MODE_DYNAMICLIGHT | MODE_DEPTHCUEING;
-
+	
 	memset(&DefaultBkg,0,sizeof(EERIE_BACKGROUND));
 	memset(TELEPORT_TO_LEVEL,0,64);
 	memset(TELEPORT_TO_POSITION,0,64);
@@ -720,38 +707,38 @@ int main(int argc, char ** argv) {
 	ARX_EQUIPMENT_Init();
 	LogDebug("AEQ Init");
 	memset(_CURRENTLOAD_,0,256);
-
+	
 	ARX_SCRIPT_Timer_FirstInit(512);
 	LogDebug("Timer Init");
 	ARX_FOGS_FirstInit();
 	LogDebug("Fogs Init");
-
+	
 	EERIE_LIGHT_GlobalInit();
 	LogDebug("Lights Init");
 	
 	LogDebug("Svars Init");
-
+	
 	// Script Test
 	lastteleport.x=0.f;
 	lastteleport.y=PLAYER_BASE_HEIGHT;
 	lastteleport.z=0.f;
-
+	
 	inter.init=0;
 	InitInter(10);
-
+	
 	memset(&player,0,sizeof(ARXCHARACTER));
-	player.init();
-
+	ARX_PLAYER_InitPlayer();
+	
 	CleanInventory();
-
+	
 	ARX_SPEECH_FirstInit();
 	ARX_CONVERSATION_FirstInit();
 	ARX_SPEECH_Init();
 	ARX_SPEECH_ClearAll();
 	QuakeFx.intensity=0.f;
-
+	
 	LogDebug("Launching DANAE");
-
+	
 	memset(&Project, 0, sizeof(PROJECT));
 	
 	if (FINAL_RELEASE) {
@@ -759,17 +746,16 @@ int main(int argc, char ** argv) {
 		LaunchDemo=1;
 		Project.demo=LEVEL10;
 		NOCHECKSUM=1;
-	}
-	else {
+	} else {
 		LogInfo << "default LEVELDEMO2";
 		Project.demo=LEVELDEMO2;
 	}
-
+	
 	LogDebug("After Popup");
 	atexit(ClearGame);
-
-	if (LaunchDemo)	{
-
+	
+	if(LaunchDemo) {
+		
 #ifdef BUILD_EDITOR
 		if(FINAL_RELEASE) {
 			GAME_EDITOR=0;
@@ -777,7 +763,7 @@ int main(int argc, char ** argv) {
 			GAME_EDITOR=1;
 		}
 #endif
-
+		
 		NOBUILDMAP=1;
 		NOCHECKSUM=1;
 	}
@@ -785,7 +771,7 @@ int main(int argc, char ** argv) {
 	if(!AdjustUI()) {
 		return -1;
 	}
-
+	
 	ARX_SetAntiAliasing();
 	ARXMenu_Options_Video_SetFogDistance(config.video.fogDistance);
 	ARXMenu_Options_Video_SetTextureQuality(config.video.textureSize);
@@ -797,24 +783,15 @@ int main(int argc, char ** argv) {
 	ARXMenu_Options_Audio_SetSpeechVolume(config.audio.speechVolume);
 	ARXMenu_Options_Audio_SetAmbianceVolume(config.audio.ambianceVolume);
 	ARXMenu_Options_Audio_ApplyGameVolumes();
-
+	
 	ARXMenu_Options_Control_SetInvertMouse(config.input.invertMouse);
-	ARXMenu_Options_Control_SetAutoReadyWeapon(config.input.autoReadyWeapon);
-	ARXMenu_Options_Control_SetMouseLookToggleMode(config.input.mouseLookToggle);
 	ARXMenu_Options_Control_SetMouseSensitivity(config.input.mouseSensitivity);
-	ARXMenu_Options_Control_SetAutoDescription(config.input.autoDescription);
 	
 	if(config.video.textureSize==2)Project.TextureSize=0;
 	if(config.video.textureSize==1)Project.TextureSize=2;
 	if(config.video.textureSize==0)Project.TextureSize=64;
-
+	
 	ARX_MINIMAP_FirstInit();
-		
-	//read from cfg file
-	if ( config.language.length() == 0 ) {
-		config.language = "english";
-		LogWarning << "Falling back to default localisationpath";
-	}
 	
 	Project.torch.r=1.f;
 	Project.torch.g = 0.8f;
@@ -1626,7 +1603,7 @@ static void PlayerLaunchArrow_Test(float aimratio, float poisonous, Vec3f * pos,
 	float damages=
 		weapon_damages
 		*(1.f+
-		(float)(player.full.skill.projectile + player.full.attribute.dexterity )*( 1.0f / 50 ));
+		(float)(player.Full_Skill_Projectile + player.Full_Attribute_Dexterity )*( 1.0f / 50 ));
 
 	ARX_THROWN_OBJECT_Throw(
 										0, //source
@@ -1704,7 +1681,7 @@ void PlayerLaunchArrow(float aimratio,float poisonous)
 	float damages=
 		weapon_damages
 		*(1.f+
-		(float)(player.full.skill.projectile + player.full.attribute.dexterity )*( 1.0f / 50 ));
+		(float)(player.Full_Skill_Projectile + player.Full_Attribute_Dexterity )*( 1.0f / 50 ));
 
 	ARX_THROWN_OBJECT_Throw(
 										0, //source
@@ -1749,7 +1726,7 @@ void SetEditMode(long ed, const bool stop_sound) {
 	LAST_JUMP_ENDTIME = 0;
 	
 	if(!DONT_ERASE_PLAYER) {
-		player.stat.life = 0.1f;
+		player.life = 0.1f;
 	}
 	
 	for (long i=0;i<inter.nbmax;i++)
@@ -1781,10 +1758,10 @@ void SetEditMode(long ed, const bool stop_sound) {
 
 	if (!DONT_ERASE_PLAYER)
 	{
-		if (!FINAL_RELEASE)
-			player.hero_generate_powerful();
+		if(!FINAL_RELEASE)
+			ARX_PLAYER_MakePowerfullHero();
 		else
-			player.hero_generate_fresh();
+			ARX_PLAYER_MakeFreshHero();
 	}
 }
 
@@ -2006,22 +1983,22 @@ void FirstFrameProc() {
 	{
 		ARX_TIME_Init();
 
-		if (!DONT_ERASE_PLAYER) player.init();
+		if (!DONT_ERASE_PLAYER) ARX_PLAYER_InitPlayer();
 
 		SLID_VALUE=0.f;
 	}
 
 	if (!LOAD_N_DONT_ERASE)
 	{
-		player.stat.life=player.stat.maxlife;
-		player.stat.mana=player.stat.maxmana;
+		player.life=player.maxlife;
+		player.mana=player.maxmana;
 
 		if (!DONT_ERASE_PLAYER)
 		{
-			if (!FINAL_RELEASE)
-				player.hero_generate_powerful();
+			if(!FINAL_RELEASE)
+				ARX_PLAYER_MakePowerfullHero();
 			else
-				player.hero_generate_fresh();
+				ARX_PLAYER_MakeFreshHero();
 		}
 	}
 
@@ -2113,7 +2090,8 @@ void FirstFrameHandling()
 		LoadLevelScreen();
 	}
 #endif // BUILD_EDIT_LOADSAVE
-	else {
+	else
+	{
 		PROGRESS_BAR_COUNT+=4.f;
 		LoadLevelScreen();
 	}
@@ -2380,14 +2358,14 @@ float GLOBAL_SLOWDOWN=1.f;
 
 bool StrikeAimtime()
 {
-	player.remove_invisibility();
+	ARX_PLAYER_Remove_Invisibility();
 	STRIKE_AIMTIME=(float)ARXTime-(float)AimTime;
 	STRIKE_AIMTIME=STRIKE_AIMTIME*(1.f+(1.f-GLOBAL_SLOWDOWN));
 
-	if (STRIKE_AIMTIME>player.full.aimtime)
+	if (STRIKE_AIMTIME>player.Full_AimTime)
 		STRIKE_AIMTIME=1.f;
 	else
-		STRIKE_AIMTIME=(float)STRIKE_AIMTIME/(float)player.full.aimtime;
+		STRIKE_AIMTIME=(float)STRIKE_AIMTIME/(float)player.Full_AimTime;
 
 	if (STRIKE_AIMTIME<0.1f) STRIKE_AIMTIME=0.1f;
 
@@ -2513,7 +2491,7 @@ void ManageCombatModeAnimations()
 
 									if (CheckAnythingInSphere(&sphere,0,0,&num))
 									{
-										float dmgs=(player.full.damages+1)*STRIKE_AIMTIME;
+										float dmgs=(player.Full_damages+1)*STRIKE_AIMTIME;
 
 										if (FistParticles & 2) dmgs*=1.5f;
 
@@ -2557,7 +2535,7 @@ void ManageCombatModeAnimations()
 
 									if (CheckAnythingInSphere(&sphere,0,0,&num))
 									{
-										float dmgs=(player.full.damages+1)*STRIKE_AIMTIME;
+										float dmgs=(player.Full_damages+1)*STRIKE_AIMTIME;
 
 										if (FistParticles & 2) dmgs*=1.5f;
 
@@ -3841,8 +3819,8 @@ void ShowInfoText() {
 					io->move.y,io->move.z,io->_npcdata->moveproblem,io->_npcdata->pathfind.listpos,io->_npcdata->pathfind.listnb,
 					io->_npcdata->pathfind.truetarget, (long)io->_npcdata->behavior);
 				mainApp->OutputText(170, 420, tex);
-			sprintf(tex,"Life %4.0f/%4.0f Mana %4.0f/%4.0f Poisoned %3.1f Hunger %4.1f",player.stat.life,player.stat.maxlife,
-					player.stat.mana,player.stat.maxmana,player.poison,player.hunger);
+			sprintf(tex,"Life %4.0f/%4.0f Mana %4.0f/%4.0f Poisoned %3.1f Hunger %4.1f",player.life,player.maxlife,
+					player.mana,player.maxmana,player.poison,player.hunger);
 				mainApp->OutputText( 170, 320, tex );
 
 		  }
