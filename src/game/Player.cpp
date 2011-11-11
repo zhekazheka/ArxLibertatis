@@ -118,7 +118,6 @@ extern long		NEED_DEBUGGER_CLEAR;
 extern long		CHANGE_LEVEL_ICON;
 extern long		DONT_ERASE_PLAYER;
 extern long		GLOBAL_MAGIC_MODE;
-extern Vec3f	PUSH_PLAYER_FORCE;
 extern QUAKE_FX_STRUCT QuakeFx;
 extern INTERACTIVE_OBJ * CURRENT_TORCH;
 extern INTERACTIVE_OBJ * CAMERACONTROLLER;
@@ -132,7 +131,6 @@ extern unsigned long LAST_JUMP_ENDTIME;
 #define JUMP_GRAVITY	0.02f //OLD SETTING 0.03f
 #define STEP_DISTANCE	120.f
 
-extern Vec3f PUSH_PLAYER_FORCE;
 extern bool bBookHalo;
 extern bool bGoldHalo;
 extern float InventoryX;
@@ -2723,22 +2721,15 @@ void PlayerMovementIterate(float DeltaTime)
 		// Apply Attraction
 		Vec3f attraction;
 		ARX_SPECIAL_ATTRACTORS_ComputeForIO(*inter.iobj[0], attraction);
-		player.physics.forces.x += attraction.x;
-		player.physics.forces.y += attraction.y;
-		player.physics.forces.z += attraction.z;
+		player.physics.forces += attraction;
 
 		// Apply Push Player Force
-		player.physics.forces.x += PUSH_PLAYER_FORCE.x;
-		player.physics.forces.y += PUSH_PLAYER_FORCE.y;
-		player.physics.forces.z += PUSH_PLAYER_FORCE.z;
-		PUSH_PLAYER_FORCE.x = 0;
-		PUSH_PLAYER_FORCE.y = 0;
-		PUSH_PLAYER_FORCE.z = 0;
+		player.physics.forces += player.PUSH_PLAYER_FORCE;
+
+		player.PUSH_PLAYER_FORCE = Vec3f::ZERO;
 
 		// Apply Forces To Velocity
-		player.physics.velocity.x += player.physics.forces.x * DeltaTime;
-		player.physics.velocity.y += player.physics.forces.y * DeltaTime;
-		player.physics.velocity.z += player.physics.forces.z * DeltaTime;
+		player.physics.velocity += player.physics.forces * DeltaTime;
 
 		// Apply Climbing Velocity
 		if (player.climbing)
@@ -3315,7 +3306,7 @@ void ARX_GAME_Reset(long type) {
 	ROTATE_START = 0;
 	BLOCK_PLAYER_CONTROLS = 0;
 	HERO_SHOW_1ST = -1;
-	PUSH_PLAYER_FORCE = Vec3f::ZERO;
+	player.PUSH_PLAYER_FORCE = Vec3f::ZERO;
 	player.jumplastposition = 0;
 	player.jumpstarttime = 0;
 	player.jumpphase = 0;

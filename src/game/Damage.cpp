@@ -96,7 +96,6 @@ extern long REFUSE_GAME_RETURN;
 
 DAMAGE_INFO	damages[MAX_DAMAGES];
 extern long ParticleCount;
-extern Vec3f PUSH_PLAYER_FORCE;
 
 float Blood_Pos = 0.f;
 long Blood_Duration = 0;
@@ -674,7 +673,7 @@ void ARX_DAMAGES_PushIO(INTERACTIVE_OBJ * io_target, long source, float power)
 		fnormalize(vect);
 		vect *= power;
 		if(io_target == inter.iobj[0]) {
-			PUSH_PLAYER_FORCE = vect;
+			player.PUSH_PLAYER_FORCE = vect;
 		} else {
 			io_target->move += vect;
 		}

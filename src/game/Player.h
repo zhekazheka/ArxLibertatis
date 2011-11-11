@@ -328,6 +328,8 @@ namespace arx
 		char skin;
 		
 		Vec3f pos;
+		Vec3f PUSH_PLAYER_FORCE;
+
 		Anglef angle;
 		ANIM_USE useanim;
 		IO_PHYSICS physics;

@@ -100,7 +100,6 @@ struct EQUIP_INFO
 #define SP_SPARKING 1
 #define SP_BLOODY 2
 
-extern Vec3f PUSH_PLAYER_FORCE;
 extern long HERO_SHOW_1ST;
 extern long EXTERNALVIEW;
 
@@ -764,7 +763,7 @@ float ARX_EQUIPMENT_ComputeDamages(INTERACTIVE_OBJ * io_source, INTERACTIVE_OBJ 
 				push.x *= -dmgs * ( 1.0f / 11 );
 				push.y *= -dmgs * ( 1.0f / 30 );
 				push.z *= -dmgs * ( 1.0f / 11 );
-				PUSH_PLAYER_FORCE += push;
+				player.PUSH_PLAYER_FORCE += push;
 				//------- player push END
 
 				ppos *= 60.f;

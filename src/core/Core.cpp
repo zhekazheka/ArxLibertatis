@@ -223,7 +223,7 @@ extern EERIEMATRIX ProjectionMatrix;
 PROJECT Project;
 
 //-----------------------------------------------------------------------------
-Vec3f PUSH_PLAYER_FORCE;
+
 Cinematic			*ControlCinematique=NULL;	// 2D Cinematic Controller
 ParticleManager	*pParticleManager = NULL;
 TextureContainer *  ombrignon = NULL;
@@ -682,7 +682,7 @@ int main(int argc, char ** argv) {
 	
 	ARX_INTERFACE_NoteInit();
 	LogDebug("Note Init");
-	PUSH_PLAYER_FORCE = Vec3f::ZERO;
+	player.PUSH_PLAYER_FORCE = Vec3f::ZERO;
 	ARX_SPECIAL_ATTRACTORS_Reset();
 	LogDebug("Attractors Init");
 	ARX_SPELLS_Precast_Reset();
