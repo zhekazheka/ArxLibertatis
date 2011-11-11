@@ -652,8 +652,6 @@ void ARX_INTERFACE_NoteInit()
 
 	QuestBook.curpage=0;
 	QuestBook_Cache_nbQuests = -42;
-
-	LogDebug("Note Init");
 }
 
 //-----------------------------------------------------------------------------

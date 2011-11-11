@@ -152,8 +152,8 @@ void EERIE_ANIM_Get_Scale_Invisibility(INTERACTIVE_OBJ * io, float & invisibilit
 			long num = ARX_SPELLS_GetSpellOn(io, SPELL_INVISIBILITY);
 
 			if(num >= 0) {
-				if(player.Full_Skill_Intuition>spells[num].caster_level * 10) {
-					invisibility -= (float)player.Full_Skill_Intuition * .01f
+				if(player.full.skill.intuition > spells[num].caster_level * 10) {
+					invisibility -= (float)player.full.skill.intuition * .01f
 					                + (float)spells[num].caster_level * .1f;
 
 					if (invisibility < 0.1f) invisibility = 0.1f;

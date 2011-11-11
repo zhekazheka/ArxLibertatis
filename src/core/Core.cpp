@@ -727,7 +727,7 @@ int main(int argc, char ** argv) {
 	InitInter(10);
 	
 	memset(&player,0,sizeof(ARXCHARACTER));
-	ARX_PLAYER_InitPlayer();
+	player.init();
 	
 	CleanInventory();
 	
@@ -1603,7 +1603,7 @@ static void PlayerLaunchArrow_Test(float aimratio, float poisonous, Vec3f * pos,
 	float damages=
 		weapon_damages
 		*(1.f+
-		(float)(player.Full_Skill_Projectile + player.Full_Attribute_Dexterity )*( 1.0f / 50 ));
+		(float)(player.full.skill.projectile + player.full.attribute.dexterity )*( 1.0f / 50 ));
 
 	ARX_THROWN_OBJECT_Throw(
 										0, //source
@@ -1681,7 +1681,7 @@ void PlayerLaunchArrow(float aimratio,float poisonous)
 	float damages=
 		weapon_damages
 		*(1.f+
-		(float)(player.Full_Skill_Projectile + player.Full_Attribute_Dexterity )*( 1.0f / 50 ));
+		(float)(player.full.skill.projectile + player.full.attribute.dexterity )*( 1.0f / 50 ));
 
 	ARX_THROWN_OBJECT_Throw(
 										0, //source
@@ -1726,7 +1726,7 @@ void SetEditMode(long ed, const bool stop_sound) {
 	LAST_JUMP_ENDTIME = 0;
 	
 	if(!DONT_ERASE_PLAYER) {
-		player.life = 0.1f;
+		player.stat.life = 0.1f;
 	}
 	
 	for (long i=0;i<inter.nbmax;i++)
@@ -1759,9 +1759,9 @@ void SetEditMode(long ed, const bool stop_sound) {
 	if (!DONT_ERASE_PLAYER)
 	{
 		if(!FINAL_RELEASE)
-			ARX_PLAYER_MakePowerfullHero();
+			player.hero_generate_powerful();
 		else
-			ARX_PLAYER_MakeFreshHero();
+			player.hero_generate_fresh();
 	}
 }
 
@@ -1983,22 +1983,22 @@ void FirstFrameProc() {
 	{
 		ARX_TIME_Init();
 
-		if (!DONT_ERASE_PLAYER) ARX_PLAYER_InitPlayer();
+		if (!DONT_ERASE_PLAYER) player.init();
 
 		SLID_VALUE=0.f;
 	}
 
 	if (!LOAD_N_DONT_ERASE)
 	{
-		player.life=player.maxlife;
-		player.mana=player.maxmana;
+		player.stat.life=player.stat.maxlife;
+		player.stat.mana=player.stat.maxmana;
 
 		if (!DONT_ERASE_PLAYER)
 		{
 			if(!FINAL_RELEASE)
-				ARX_PLAYER_MakePowerfullHero();
+				player.hero_generate_powerful();
 			else
-				ARX_PLAYER_MakeFreshHero();
+				player.hero_generate_fresh();
 		}
 	}
 
@@ -2358,14 +2358,14 @@ float GLOBAL_SLOWDOWN=1.f;
 
 bool StrikeAimtime()
 {
-	ARX_PLAYER_Remove_Invisibility();
+	player.remove_invisibility();
 	STRIKE_AIMTIME=(float)ARXTime-(float)AimTime;
 	STRIKE_AIMTIME=STRIKE_AIMTIME*(1.f+(1.f-GLOBAL_SLOWDOWN));
 
-	if (STRIKE_AIMTIME>player.Full_AimTime)
+	if (STRIKE_AIMTIME>player.full.aimtime)
 		STRIKE_AIMTIME=1.f;
 	else
-		STRIKE_AIMTIME=(float)STRIKE_AIMTIME/(float)player.Full_AimTime;
+		STRIKE_AIMTIME=(float)STRIKE_AIMTIME/(float)player.full.aimtime;
 
 	if (STRIKE_AIMTIME<0.1f) STRIKE_AIMTIME=0.1f;
 
@@ -2491,7 +2491,7 @@ void ManageCombatModeAnimations()
 
 									if (CheckAnythingInSphere(&sphere,0,0,&num))
 									{
-										float dmgs=(player.Full_damages+1)*STRIKE_AIMTIME;
+										float dmgs=(player.full.damages+1)*STRIKE_AIMTIME;
 
 										if (FistParticles & 2) dmgs*=1.5f;
 
@@ -2535,7 +2535,7 @@ void ManageCombatModeAnimations()
 
 									if (CheckAnythingInSphere(&sphere,0,0,&num))
 									{
-										float dmgs=(player.Full_damages+1)*STRIKE_AIMTIME;
+										float dmgs=(player.full.damages+1)*STRIKE_AIMTIME;
 
 										if (FistParticles & 2) dmgs*=1.5f;
 
