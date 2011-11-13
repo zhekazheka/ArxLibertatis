@@ -86,6 +86,19 @@ ARX_SPEECH aspeech[MAX_ASPEECH];
 long HIDESPEECH = 0;
 Notification speech[MAX_SPEECH];
 
+// return true if io is associated with any active speech
+bool arx::speech::is_speaking(INTERACTIVE_OBJ *io)
+{
+	for (size_t i = 0; i < MAX_ASPEECH; i++) 
+	{
+		if (aspeech[i].exist && aspeech[i].io == io) 
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
 
 //-----------------------------------------------------------------------------
 void ARX_SPEECH_Init()

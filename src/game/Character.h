@@ -23,13 +23,10 @@
 #include <string>
 #include <vector>
 
-#include "game/Spells.h"
-#include "game/Keyring.h"
-
 #include "graphics/data/Mesh.h"
 #include "math/MathFwd.h"
-#include "platform/Flags.h"
-
+#include "game/Spells.h"
+#include "game/Keyring.h"
 #include "game/Runes.h"
 #include "game/Playerflags.h"
 
@@ -171,7 +168,7 @@ namespace arx
 			unsigned char skill;
 		};
 
-		character() {}
+		character();
 		~character() {}
 
 		static int get_xp_for_level(const int &level);
@@ -213,6 +210,8 @@ namespace arx
 
 		void set_invulnerable(const bool &b = true);
 		bool can_steal(INTERACTIVE_OBJ *_io);
+
+		void frame_check(const float &frame_delta);
 
 		unsigned char level;
 		long xp;
@@ -288,6 +287,8 @@ namespace arx
 		char QUICK_MOD;
 
 		keyring keyring;
+
+		unsigned long LastHungerSample;
 	};
 };
 

@@ -197,4 +197,12 @@ void ARX_SPEECH_ClearIOSpeech(INTERACTIVE_OBJ * io);
 void ARX_SPEECH_Launch_No_Unicode_Seek(const std::string & string, INTERACTIVE_OBJ * io_source, long mood = 0);
 bool ApplySpeechPos(EERIE_CAMERA * conversationcamera, long is);
 
+namespace arx
+{
+	namespace speech
+	{
+		bool is_speaking(INTERACTIVE_OBJ *io);
+	};
+};
+
 #endif // ARX_GUI_SPEECH_H

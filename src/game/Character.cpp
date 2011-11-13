@@ -19,6 +19,7 @@
 
 #include "game/Character.h"
 
+#include "core/GameTime.h"
 #include "game/Inventory.h"
 #include "game/Player.h"
 #include "graphics/math.h"
@@ -26,6 +27,7 @@
 #include "scene/Interactive.h"
 #include "scene/GameSound.h"
 #include "gui/Interface.h"
+#include "gui/Speech.h"
 
 extern bool bBookHalo;
 extern bool bGoldHalo;
@@ -42,6 +44,11 @@ extern long DANAESIZY;
 
 
 float ARX_EQUIPMENT_ApplyPercent(INTERACTIVE_OBJ * io, long ident, float trueval);
+
+arx::character::character()
+{
+	LastHungerSample = 0;
+}
 
 // TODO really strange thing here is full is used in only some of the stats
 float arx::character::get_stealth(bool modified)
@@ -684,4 +691,119 @@ void arx::character::init()
 	bag = 1;
 	doingmagic = 0;
 	hero_generate_fresh();
+}
+
+// updates some player stats depending on time:
+//  - invisibility
+//  - hunger check
+//  - life/mana recovery
+//  - poison evolution
+void arx::character::frame_check(const float &frame_delta)
+{
+	//  ARX_PLAYER_QuickGeneration();
+	if (frame_delta > 0)
+	{
+		UpdateIOInvisibility(inter.iobj[0]);
+		
+		const float base_recovery_rate = 8E-5f;
+
+		if (stat.life > 0.0f)
+		{
+			const float hunger_recovery_rate =
+				full.attribute.constitution + 
+				full.attribute.strength * 0.5f;
+	
+			const float hunger_delta = base_recovery_rate * hunger_recovery_rate * frame_delta * 1E-2f;
+			
+			hunger -= hunger_delta;
+
+			// Check for player hungry sample playing
+			if (hunger < 10.0f && (ARXTime > LastHungerSample + 180000 || hunger + hunger_delta >= 10.0f))
+			{
+				LastHungerSample = ARXTimeUL();
+
+				// TODO assumption is if BLOCK_PLAYER_CONTROLS is true, time does not pass
+				if (!BLOCK_PLAYER_CONTROLS)
+				{
+					if (!arx::speech::is_speaking(inter.iobj[0]))
+					{
+						ARX_SPEECH_AddSpeech(inter.iobj[0], "player_off_hungry", ANIM_TALK_NEUTRAL, ARX_SPEECH_FLAG_NOTEXT);
+					}
+				}
+			}
+
+			if (hunger < -10.0f) 
+			{
+				hunger = -10.0f;
+			}
+
+			// TODO assumption is if BLOCK_PLAYER_CONTROLS is true, time does not pass
+			if (!BLOCK_PLAYER_CONTROLS)
+			{
+				const float life_recovery_rate = 
+					full.attribute.constitution + 
+					full.attribute.strength * 0.5f +
+					full.skill.defense;
+
+				const float life_delta = base_recovery_rate * life_recovery_rate * frame_delta * 1E-2f;
+
+				// if the player is critically hungry, decrement life
+				stat.life += (hunger > 0.0f ? life_delta : -life_delta);
+
+				// VERIFY this limit moved here from base function scope
+				if (stat.life > full.stat.maxlife) 
+				{
+					stat.life = full.stat.maxlife;
+				}
+			}
+
+			const float mana_recovery_rate = 
+				full.attribute.mind + 
+				full.skill.etheral_link;
+
+			const float mana_delta = base_recovery_rate * mana_recovery_rate * frame_delta * 1E-1f;
+			
+			stat.mana += mana_delta;
+
+			if (stat.mana > full.stat.maxmana) 
+			{
+				stat.mana = full.stat.maxmana;
+			}
+		}
+
+		// TODO assumption is if BLOCK_PLAYER_CONTROLS is true, time does not pass
+		if (!BLOCK_PLAYER_CONTROLS)
+		{
+			// Now Checks Poison Progression
+			if (poison > 0.0f)
+			{
+				float cp = poison * frame_delta * 25E-5f;
+
+				float faster = (poison >= 10.0f ? 10.0f - poison : 0.0f);
+
+				if (rnd() * 100.0f > resist_poison + faster)
+				{
+					float dmg = cp * (1.0f / 3.0f);
+
+					if (stat.life - dmg <= 0.0f) 
+					{
+						ARX_DAMAGES_DamagePlayer(dmg, DAMAGE_TYPE_POISON, -1);
+					} else 
+					{
+						stat.life -= dmg;
+					}
+
+					poison -= cp * 1E-1f;
+				} else 
+				{
+					poison -= cp;
+				}
+	
+				if (poison < 0.1f) 
+				{
+					poison = 0.0f;
+				}
+			}
+		}
+	}
 }

@@ -1696,7 +1696,7 @@ static float _AvgFrameDiff = 150.f;
 	UpdateCameras();
 
 		///////////////////////////////////////////
-	ARX_PLAYER_FrameCheck(Original_framedelay);
+	player.frame_check(Original_framedelay);
 
 	if (MasterCamera.exist)
 	{

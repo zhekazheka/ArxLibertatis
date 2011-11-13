@@ -351,6 +351,10 @@ public:
 		
 		DebugScript("");
 		
+		// TODO there doesn't appear to be any limit on how much food you can eat
+		// maybe should define "full", and check hunger < full, eat, else refuse + 
+		// play "i'm too full" sfx - assuming it exists. 
+
 		INTERACTIVE_OBJ * io = context.getIO();
 		
 		if(io->ioflags & IO_ITEM) {

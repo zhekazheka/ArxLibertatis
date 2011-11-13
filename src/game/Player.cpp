@@ -163,7 +163,7 @@ long USE_PLAYERCOLLISIONS = 1;
 long BLOCK_PLAYER_CONTROLS = 0;
 long WILLRETURNTOCOMBATMODE = 0;
 long DeadTime = 0;
-unsigned long LastHungerSample = 0;
+
 unsigned long ROTATE_START = 0;
 long sp_max = 0;
 
@@ -461,90 +461,6 @@ void arx::character::remove_invisibility()
 		{
 			spells[i].tolive = 0;
 		}
-	}
-}
-
-// updates some player stats depending on time:
-//  - life/mana recovery
-//  - poison evolution
-//  - hunger check
-//  - invisibility
-void ARX_PLAYER_FrameCheck(float Framedelay)
-{
-	//  ARX_PLAYER_QuickGeneration();
-	if (Framedelay > 0)
-	{
-		UpdateIOInvisibility(inter.iobj[0]);
-		// Natural LIFE recovery
-		float inc = 0.00008f * Framedelay * (player.full.attribute.constitution + player.full.attribute.strength * ( 1.0f / 2 ) + player.full.skill.defense) * ( 1.0f / 50 );
-
-		if (player.stat.life > 0.f)
-		{
-			float inc_hunger = 0.00008f * Framedelay * (player.full.attribute.constitution + player.full.attribute.strength * ( 1.0f / 2 )) * ( 1.0f / 50 );
-
-			// Check for player hungry sample playing
-			if (((player.hunger > 10.f) && (player.hunger - inc_hunger <= 10.f))
-				|| ((player.hunger < 10.f) && (ARXTime > LastHungerSample + 180000)))
-			{
-				LastHungerSample = ARXTimeUL();
-
-				if (!BLOCK_PLAYER_CONTROLS)
-				{
-					bool bOk = true;
-
-					for(size_t i = 0; i < MAX_ASPEECH; i++) {
-						if(aspeech[i].exist && (aspeech[i].io == inter.iobj[0])) {
-							bOk = false;
-						}
-					}
-
-					if (bOk)
-						ARX_SPEECH_AddSpeech(inter.iobj[0], "player_off_hungry", ANIM_TALK_NEUTRAL, ARX_SPEECH_FLAG_NOTEXT);
-				}
-			}
-
-			player.hunger -= inc_hunger * .5f; //*.7f;
-
-			if (player.hunger < -10.f) player.hunger = -10.f;
-
-			if (!BLOCK_PLAYER_CONTROLS)
-			{
-				if (player.hunger < 0.f) player.stat.life -= inc * ( 1.0f / 2 );
-				else player.stat.life += inc;
-			}
-
-			// Natural MANA recovery
-			player.stat.mana += 0.00008f * Framedelay * ((player.full.attribute.mind + player.full.skill.etheral_link) * 10) * ( 1.0f / 100 ); //_framedelay*( 1.0f / 1000 );
-
-			if (player.stat.mana > player.full.stat.maxmana) player.stat.mana = player.full.stat.maxmana;
-		}
-
-		//float pmaxlife=(float)player.full.attribute.constitution*(float)(player.level+2);
-		if (player.stat.life > player.full.stat.maxlife) player.stat.life = player.full.stat.maxlife;
-
-		// Now Checks Poison Progression
-		if (!BLOCK_PLAYER_CONTROLS)
-			if (player.poison > 0.f)
-			{
-				float cp = player.poison;
-				cp *= ( 1.0f / 2 ) * Framedelay * ( 1.0f / 1000 ) * ( 1.0f / 2 );
-				float faster = 10.f - player.poison;
-
-				if (faster < 0.f) faster = 0.f;
-
-				if (rnd() * 100.f > player.resist_poison + faster)
-				{
-					float dmg = cp * ( 1.0f / 3 );
-
-					if (player.stat.life - dmg <= 0.f) ARX_DAMAGES_DamagePlayer(dmg, DAMAGE_TYPE_POISON, -1);
-					else player.stat.life -= dmg;
-
-					player.poison -= cp * ( 1.0f / 10 );
-				}
-				else player.poison -= cp;
-			}
-
-			if (player.poison < 0.1f) player.poison = 0.f;
 	}
 }
 
@@ -1464,9 +1380,7 @@ void ARX_PLAYER_Frame_Update()
 	}
 
 	// Reset player moveto info
-	moveto.x = player.pos.x;
-	moveto.y = player.pos.y;
-	moveto.z = player.pos.z;
+	moveto = player.pos;
 
 	// Reset current movement flags
 	player.Current_Movement = 0;
@@ -1577,10 +1491,9 @@ bool Valid_Jump_Pos()
 
 	EERIE_CYLINDER tmpp;
 	tmpp.height = player.physics.cyl.height;
-	tmpp.origin.x = player.pos.x;
-	tmpp.origin.y = player.pos.y - PLAYER_BASE_HEIGHT;
-	tmpp.origin.z = player.pos.z;
+	tmpp.origin = player.pos + Vec3f(0, -PLAYER_BASE_HEIGHT, 0);
 	tmpp.radius = player.physics.cyl.radius * 0.85f;
+
 	float tmp = CheckAnythingInCylinder(&tmpp, inter.iobj[0], CFLAG_PLAYER | CFLAG_JUST_TEST);
 
 	if (tmp <= 20.f)
@@ -1590,9 +1503,7 @@ bool Valid_Jump_Pos()
 
 	for (float vv = 0; vv < 360.f; vv += 20.f)
 	{
-		tmpp.origin.x = player.pos.x - EEsin(radians(vv)) * 20.f;
-		tmpp.origin.y = player.pos.y - PLAYER_BASE_HEIGHT;
-		tmpp.origin.z = player.pos.z + EEcos(radians(vv)) * 20.f;
+		tmpp.origin = player.pos + Vec3f(EEsin(radians(vv)) * -20.f, -PLAYER_BASE_HEIGHT, EEcos(radians(vv)) * 20.f);
 		tmpp.radius = player.physics.cyl.radius;
 		float anything = CheckAnythingInCylinder(&tmpp, inter.iobj[0], CFLAG_JUST_TEST); //-cyl->origin.y;
 
@@ -1634,9 +1545,7 @@ void ARX_PLAYER_Manage_Movement()
 	speedfactor = inter.iobj[0]->basespeed + inter.iobj[0]->speed_modif;
 
 	if (speedfactor < 0) speedfactor = 0;
-
 	if (cur_mr == 3) speedfactor += 0.5f;
-
 	if (cur_rf == 3) speedfactor += 1.5f;
 
 	static float StoredTime = 0;
@@ -1674,9 +1583,7 @@ void PlayerMovementIterate(float DeltaTime)
 		{
 			float old = player.physics.cyl.height;
 			player.physics.cyl.height = PLAYER_BASE_HEIGHT;
-			player.physics.cyl.origin.x = player.pos.x;
-			player.physics.cyl.origin.y = player.pos.y - PLAYER_BASE_HEIGHT;
-			player.physics.cyl.origin.z = player.pos.z;
+			player.physics.cyl.origin = player.pos + Vec3f(0, -PLAYER_BASE_HEIGHT, 0);
 			float anything = CheckAnythingInCylinder(&player.physics.cyl, inter.iobj[0], CFLAG_JUST_TEST); //-cyl->origin.y;
 
 			if (anything < 0.f)
@@ -1739,9 +1646,7 @@ void PlayerMovementIterate(float DeltaTime)
 			{
 				float old = player.physics.cyl.height;
 				player.physics.cyl.height = PLAYER_LEVITATE_HEIGHT;
-				player.physics.cyl.origin.x = player.pos.x;
-				player.physics.cyl.origin.y = player.pos.y - PLAYER_BASE_HEIGHT;
-				player.physics.cyl.origin.z = player.pos.z;
+				player.physics.cyl.origin = player.pos + Vec3f(0, -PLAYER_BASE_HEIGHT, 0);
 				float anything = CheckAnythingInCylinder(&player.physics.cyl, inter.iobj[0]);
 
 				if (anything < 0.f)
@@ -1770,9 +1675,7 @@ void PlayerMovementIterate(float DeltaTime)
 
 		if ((player.jumpphase != 2) && !levitate)
 		{
-			player.physics.cyl.origin.x = player.pos.x;
-			player.physics.cyl.origin.y = player.pos.y + 170.f;
-			player.physics.cyl.origin.z = player.pos.z;
+			player.physics.cyl.origin = player.pos + Vec3f(0, 170.f, 0);
 		}
 
 		if (EEfabs(lastposy - player.pos.y) < DeltaTime * ( 1.0f / 10 )) 
@@ -1816,9 +1719,7 @@ void PlayerMovementIterate(float DeltaTime)
 		}
 
 		EERIE_CYLINDER cyl;
-		cyl.origin.x = player.pos.x;
-		cyl.origin.y = player.pos.y - PLAYER_BASE_HEIGHT + 1.f;
-		cyl.origin.z = player.pos.z;
+		cyl.origin = player.pos + Vec3f(0, 1.0f - PLAYER_BASE_HEIGHT, 0);
 		cyl.radius = player.physics.cyl.radius;
 		cyl.height = player.physics.cyl.height;
 		float anything2 = CheckAnythingInCylinder(&cyl, inter.iobj[0], CFLAG_JUST_TEST | CFLAG_PLAYER); //-cyl->origin.y;
@@ -1967,10 +1868,7 @@ void PlayerMovementIterate(float DeltaTime)
 			player.physics.velocity.y = 0;
 		}
 
-		Vec3f mv2;
-		mv2.x = moveto.x - player.pos.x;
-		mv2.y = moveto.y - player.pos.y;
-		mv2.z = moveto.z - player.pos.z;
+		Vec3f mv2 = moveto - player.pos;
 
 		if (player.climbing)
 		{
@@ -1979,15 +1877,9 @@ void PlayerMovementIterate(float DeltaTime)
 
 		if ((mv2.x == 0) && (mv2.y == 0) && (mv2.z == 0))
 		{
-		}
-		else
+		} else
 		{
-			float tt = 1.f / mv2.length();
-			tt *= mval * ( 1.0f / 80 );
-
-			mv2.x = mv2.x * tt;
-			mv2.y = mv2.y * tt;
-			mv2.z = mv2.z * tt;
+			mv2 *= 1.f / mv2.length() * mval * ( 1.0f / 80 );
 		}
 
 		if (player.climbing)
@@ -2011,9 +1903,7 @@ void PlayerMovementIterate(float DeltaTime)
 
 		}
 
-		player.physics.forces.x += mv2.x;
-		player.physics.forces.y += mv2.y;
-		player.physics.forces.z += mv2.z;
+		player.physics.forces += mv2;
 
 		Vec3f modifplayermove(0, 0, 0);
 
@@ -2123,19 +2013,12 @@ void PlayerMovementIterate(float DeltaTime)
 			(EEfabs(player.physics.velocity.z) < 0.001f) && (player.onfirmground == 1)
 			&& (player.jumpphase == 0))
 		{
-			moveto.x = player.pos.x;
-			moveto.y = player.pos.y;
-			moveto.z = player.pos.z;
+			moveto = player.pos;
 			goto lasuite;
-		}
-		else // Need to apply some physics/collision tests
+		} else // Need to apply some physics/collision tests
 		{
-			player.physics.startpos.x = player.physics.cyl.origin.x = player.pos.x;
-			player.physics.startpos.y = player.physics.cyl.origin.y = player.pos.y - PLAYER_BASE_HEIGHT;
-			player.physics.startpos.z = player.physics.cyl.origin.z = player.pos.z;
-			player.physics.targetpos.x = player.physics.startpos.x + player.physics.velocity.x + modifplayermove.x * DeltaTime;
-			player.physics.targetpos.y = player.physics.startpos.y + player.physics.velocity.y + modifplayermove.y * DeltaTime;
-			player.physics.targetpos.z = player.physics.startpos.z + player.physics.velocity.z + modifplayermove.z * DeltaTime;
+			player.physics.startpos = player.physics.cyl.origin = player.pos + Vec3f(0, -PLAYER_BASE_HEIGHT, 0);
+			player.physics.targetpos = player.physics.startpos + player.physics.velocity + modifplayermove * DeltaTime;
 
 			// Jump Impulse
 			if (player.jumpphase == 2)
@@ -2175,8 +2058,7 @@ void PlayerMovementIterate(float DeltaTime)
 
 				if (!COLLIDED_CLIMB_POLY)
 					player.climbing = 0;
-			}
-			else
+			} else
 			{
 				test = ARX_COLLISION_Move_Cylinder(&player.physics, inter.iobj[0], PLAYER_CYLINDER_STEP, levitate | CFLAG_EASY_SLIDING | CFLAG_PLAYER);
 
@@ -2256,8 +2138,7 @@ void PlayerMovementIterate(float DeltaTime)
 			moveto.z = player.physics.cyl.origin.z;
 			d = dist(player.pos, moveto);
 		}
-	}
-	else
+	} else
 	{
 		if (!EDITMODE)
 		{

@@ -80,8 +80,6 @@ extern ANIM_HANDLE * herowait2;
 extern ANIM_HANDLE * herowait_2h;
 extern std::vector<STRUCT_QUEST> PlayerQuest;
 
-extern arx::keyring Keyring;
-
 extern float DeadCameraDistance;
 extern long BLOCK_PLAYER_CONTROLS;
 extern long USE_PLAYERCOLLISIONS;
@@ -106,8 +104,6 @@ void ARX_PLAYER_Quest_Add(const std::string & quest, bool _bLoad = false);
 void ARX_PLAYER_Quest_Init();
 
 void ARX_PLAYER_FrontPos(Vec3f * pos);
-
-void ARX_PLAYER_FrameCheck(float _framedelay);
 
 void ARX_PLAYER_Manage_Visual();
 
