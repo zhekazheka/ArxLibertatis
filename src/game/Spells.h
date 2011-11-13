@@ -188,6 +188,15 @@ struct PRECAST_STRUCT {
 	long duration;
 };
 
+struct ARX_INTERFACE_MEMORIZE_SPELL {
+	bool bSpell;
+	unsigned long lTimeCreation;
+	unsigned long lDuration;
+	Rune iSpellSymbols[6];
+	float fPosX;
+	float fPosY;
+};
+
 const size_t MAX_PRECAST = 3;
 extern PRECAST_STRUCT Precast[MAX_PRECAST];
 

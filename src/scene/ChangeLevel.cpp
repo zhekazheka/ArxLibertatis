@@ -698,7 +698,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	ARX_CHANGELEVEL_PLAYER * asp;
 
 	long allocsize = sizeof(ARX_CHANGELEVEL_PLAYER) + 48000;
-	allocsize += Keyring.size() * 64;
+	allocsize += player.keyring.ring.size() * 64;
 	allocsize += 80 * PlayerQuest.size();
 	allocsize += sizeof(SavedMapMarkerData) * Mapmarkers.size();
 
@@ -826,7 +826,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 
 	asp->xp = player.xp;
 	asp->nb_PlayerQuest = PlayerQuest.size();
-	asp->keyring_nb = Keyring.size();
+	asp->keyring_nb = player.keyring.ring.size();
 	asp->Global_Magic_Mode = GLOBAL_MAGIC_MODE;
 	asp->Nb_Mapmarkers = Mapmarkers.size();
 
@@ -860,9 +860,9 @@ static long ARX_CHANGELEVEL_Push_Player() {
 		pos += 80;
 	}
 	
-	for(size_t i = 0; i < Keyring.size(); i++) {
-		assert(sizeof(Keyring[i].slot) == SAVED_KEYRING_SLOT_SIZE);
-		memcpy((char *)(dat + pos), Keyring[i].slot, SAVED_KEYRING_SLOT_SIZE);
+	for(size_t i = 0; i < player.keyring.ring.size(); i++) {
+		assert(sizeof(player.keyring.ring[i].slot) == SAVED_KEYRING_SLOT_SIZE);
+		memcpy((char *)(dat + pos), player.keyring.ring[i].slot, SAVED_KEYRING_SLOT_SIZE);
 		pos += SAVED_KEYRING_SLOT_SIZE;
 	}
 	
@@ -1886,10 +1886,10 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 		LogError << "truncated data";
 		return -1;
 	}
-	ARX_KEYRING_Init();
+	player.keyring.init();
 	LogDebug(asp->keyring_nb);
 	for(int i = 0; i < asp->keyring_nb; i++) {
-		ARX_KEYRING_Add(toLowercase(safestring(dat + pos, SAVED_KEYRING_SLOT_SIZE)));
+		player.keyring.add(toLowercase(safestring(dat + pos, SAVED_KEYRING_SLOT_SIZE)));
 		pos += SAVED_KEYRING_SLOT_SIZE;
 	}
 	

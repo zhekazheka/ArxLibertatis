@@ -108,8 +108,6 @@ extern bool bFadeInOut;
 extern bool bFade;
 extern int iFadeAction;
 extern float fFadeInOut;
-extern char SKIN_MOD;
-extern char QUICK_MOD;
 
 extern float PROGRESS_BAR_TOTAL;
 extern float OLD_PROGRESS_BAR_COUNT;
@@ -813,7 +811,7 @@ bool ARX_Menu_Render() {
 				if (EERIEMouseButton & 1) ;
 				else if ((!(EERIEMouseButton & 1)) && (LastMouseClick & 1))
 				{
-					QUICK_MOD++;
+					player.QUICK_MOD++;
 					int iSkin = player.skin;
 					ARX_MENU_CLICKSOUND();
 
@@ -847,7 +845,7 @@ bool ARX_Menu_Render() {
 
 				if ((!(EERIEMouseButton & 1)) && (LastMouseClick & 1))
 				{
-					SKIN_MOD++;
+					player.SKIN_MOD++;
 					BOOKZOOM = 1;
 					ARX_MENU_CLICKSOUND();
 					player.skin++;
@@ -892,16 +890,16 @@ bool ARX_Menu_Render() {
 
 				if ((DONE) && (!(EERIEMouseButton & 1)) && (LastMouseClick & 1))
 				{
-					if ((SKIN_MOD == 8) && (QUICK_MOD == 10))
+					if ((player.SKIN_MOD == 8) && (player.QUICK_MOD == 10))
 					{
-						SKIN_MOD = -2;
+						player.SKIN_MOD = -2;
 					}
-					else if (SKIN_MOD == -1)
+					else if (player.SKIN_MOD == -1)
 					{
 						player.hero_generate_sp();
 						player.skin = 4;
 						ARX_PLAYER_Restore_Skin();
-						SKIN_MOD = 0;
+						player.SKIN_MOD = 0;
 						SP_HEAD = 1;
 					}
 					else
@@ -937,7 +935,7 @@ bool ARX_Menu_Render() {
 					color = Color(192, 192, 192);
 			}
 
-			if (SKIN_MOD < 0)
+			if (player.SKIN_MOD < 0)
 				color = Color(255, 0, 255);
 
 			pTextManage->AddText(hFontMenu, ARXmenu.mda->str_button_done, static_cast<long>(fPosX), static_cast<long>(fPosY), color);

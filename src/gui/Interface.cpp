@@ -2314,7 +2314,7 @@ bool ArxGame::ManageEditorControls()
 					EVENT_SENDER=COMBINE;
 
 					if (!specialstrcmp( COMBINE->short_name(),"keyring"))
-						ARX_KEYRING_Combine(io);
+						player.keyring.combine(io);
 					else
 						SendIOScriptEvent(io,SM_COMBINE,temp);
 				}

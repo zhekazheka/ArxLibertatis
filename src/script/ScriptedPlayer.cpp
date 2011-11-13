@@ -485,7 +485,7 @@ public:
 		
 		DebugScript(' ' << key);
 		
-		ARX_KEYRING_Add(key);
+		player.keyring.add(key);
 		
 		return Success;
 	}
