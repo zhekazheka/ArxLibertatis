@@ -17,6 +17,8 @@
  * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #ifndef ARX_GAME_CHARACTER_H
 #define ARX_GAME_CHARACTER_H
 
@@ -32,26 +34,31 @@
 
 namespace arx
 {
+	template <class T>
+	T limit(const T &v, const T &l, const T &h) { return (v < l ? l : v > h ? h : v); }
+
 	class character 
 	{
 	public:
 
 		struct attributes
 		{
+			float &operator[](const int &i) { return val[i]; }
+
 			void operator+=(const float &v)
 			{
-				strength += v;
-				dexterity += v;
-				constitution += v;
-				mind += v;
+				for (int i = 0; i < 4; i++)
+				{
+					val[i] += v;
+				}
 			}
 
 			void operator=(const float &v)
 			{
-				strength = v;
-				dexterity = v;
-				constitution = v;
-				mind = v;
+				for (int i = 0; i < 4; i++)
+				{
+					val[i] = v;
+				}
 			}
 
 			union 
@@ -64,36 +71,28 @@ namespace arx
 					float mind;
 				};
 
-				float v[4];
+				float val[4];
 			};
 		};
 
 		struct skills
 		{
+			float &operator[](const int &i) { return val[i]; }
+
 			void operator+=(const float &v)
 			{
-				stealth += v;
-				mecanism += v;
-				intuition += v;
-				etheral_link += v;
-				object_knowledge += v;
-				casting += v;
-				projectile += v;
-				close_combat += v;
-				defense += v;
+				for (int i = 0; i < 9; i++)
+				{
+					val[i] += v;
+				}
 			}
 
 			void operator=(const float &v)
 			{
-				stealth = v;
-				mecanism = v;
-				intuition = v;
-				etheral_link = v;
-				object_knowledge = v;
-				casting = v;
-				projectile = v;
-				close_combat = v;
-				defense = v;
+				for (int i = 0; i < 9; i++)
+				{
+					val[i] = v;
+				}
 			}
 
 			union
@@ -111,7 +110,7 @@ namespace arx
 					float defense;
 				};
 
-				float v[9];
+				float val[9];
 			};
 		};
 
@@ -124,6 +123,10 @@ namespace arx
 				mana = v;
 				maxmana = v;
 			}
+
+			void limit_life() { life = arx::limit(life, 0.0f, maxlife); }
+			void limit_mana() { mana = arx::limit(mana, 0.0f, maxmana); }
+			void limit() { limit_life(); limit_mana(); }
 
 			float life;
 			float maxlife;

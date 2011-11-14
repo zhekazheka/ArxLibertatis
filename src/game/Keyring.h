@@ -19,6 +19,9 @@
  
 #pragma once
 
+#ifndef ARX_GAME_KEYRING_H
+#define ARX_GAME_KEYRING_H
+
 #include <string>
 #include <vector>
 
@@ -47,7 +50,10 @@ namespace arx
 		// Init/Reset player Keyring structures
 		void init()
 		{
-			ring.clear();
+			if (!ring.empty())
+			{
+				ring.clear();
+			}
 		}
 		
 		// Add a key to Keyring
@@ -73,3 +79,5 @@ namespace arx
 		std::vector<KEYRING_SLOT> ring;
 	};
 };
+
+#endif

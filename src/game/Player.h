@@ -63,8 +63,6 @@ enum constants
 {
 	PLAYER_BASE_RADIUS = 52,
 	PLAYER_BASE_HEIGHT = -170,
-	PLAYER_CROUCH_HEIGHT = -120,
-	PLAYER_LEVITATE_HEIGHT = -195,
 };
 
 // Quests Management (QuestLogBook)

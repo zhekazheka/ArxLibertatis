@@ -50,7 +50,6 @@ arx::character::character()
 	LastHungerSample = 0;
 }
 
-// TODO really strange thing here is full is used in only some of the stats
 float arx::character::get_stealth(bool modified)
 {
 	return skill.stealth + 
@@ -80,13 +79,12 @@ float arx::character::get_etheral_link(bool modified)
 		(modified ? mod.skill.etheral_link : 0.0f);
 }
 
-// full attribute values not used here - verify as a bug?
 float arx::character::get_object_knowledge(bool modified)
 {
 	return skill.object_knowledge + 
-		attribute.mind * 3.0f +
-		attribute.dexterity + 
-		attribute.strength * (1.0f / 2.0f) +
+		full.attribute.mind * 3.0f +
+		full.attribute.dexterity + 
+		full.attribute.strength * (1.0f / 2.0f) +
 		(modified ? mod.skill.object_knowledge : 0.0f);
 }
 
@@ -156,7 +154,7 @@ void arx::character::compute_full_stats()
 
 	full.weapon_type = ARX_EQUIPMENT_GetPlayerWeaponType();
 
-	// Check for Equipment Modulators
+	// Check for equipment modulators
 	INTERACTIVE_OBJ *io = inter.iobj[0];
 	mod.attribute.strength     = ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_STRENGTH,         attribute.strength);
 	mod.attribute.dexterity    = ARX_EQUIPMENT_Apply(io, IO_EQUIPITEM_ELEMENT_DEXTERITY,        attribute.dexterity);
@@ -188,7 +186,7 @@ void arx::character::compute_full_stats()
 	if (full.aimtime <= 1500) full.aimtime = 1500;
 
 	// PERCENTILE.....
-	// Check for Equipment modulators
+	// Check for equipment modulators
 	mod.attribute.strength     += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_STRENGTH,         attribute.strength + mod.attribute.strength);
 	mod.attribute.dexterity    += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_DEXTERITY,        attribute.dexterity + mod.attribute.dexterity);
 	mod.attribute.constitution += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_CONSTITUTION,     attribute.constitution + mod.attribute.constitution);
@@ -209,7 +207,7 @@ void arx::character::compute_full_stats()
 	mod.damages                += ARX_EQUIPMENT_ApplyPercent(io, IO_EQUIPITEM_ELEMENT_Damages,          damages);
 	//full.AimTime                = ARX_EQUIPMENT_ApplyPercent(io,IO_EQUIPITEM_ELEMENT_AimTime,0);
 
-	// Check for Spell Modificators
+	// Check for spell modulators
 	if (inter.iobj[0])
 		for (long i = 0; i < inter.iobj[0]->nb_spells_on; i++)
 		{
@@ -345,11 +343,9 @@ void arx::character::compute_full_stats()
 		full.stat.maxlife           = (level + 2.0f) * full.attribute.constitution + mod.stat.maxlife;
 		full.stat.maxmana           = (level + 1.0f) * full.attribute.mind         + mod.stat.maxmana;
 
-		stat.life                   = std::min(stat.life, full.stat.maxlife);
-		stat.mana                   = std::min(stat.mana, full.stat.maxmana);
+		stat.limit();
 }
 
-// Creates a Fresh hero
 void arx::character::hero_generate_fresh()
 {
 	attribute = 6.0f;
@@ -373,14 +369,9 @@ void arx::character::hero_generate_fresh()
 	SpellToMemorize.bSpell = false;
 }
 
-void ARX_SPSound()
-{
-	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
-}
-
 void arx::character::hero_generate_sp()
 {
-	ARX_SPSound();
+	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
 
 	attribute = 12.0f;
 	skill     = 5.0f;
@@ -456,9 +447,9 @@ void arx::character::hero_generate_random()
 	while (redistribute.attribute)
 	{
 		unsigned int i = rand() % 4;
-		if (attribute.v[i] < 18)
+		if (attribute[i] < 18)
 		{
-			attribute.v[i]++;
+			attribute[i]++;
 			redistribute.attribute--;
 		}
 	}
@@ -466,9 +457,9 @@ void arx::character::hero_generate_random()
 	while (redistribute.skill)
 	{
 		unsigned int i = rand() % 9;
-		if (skill.v[i] < 18)
+		if (skill[i] < 18)
 		{
-			skill.v[i]++;
+			skill[i]++;
 			redistribute.skill--;
 		}
 	}
@@ -650,11 +641,9 @@ void arx::character::add_all_runes()
 {
 	RuneFlag all_runes[20] =
 	{
-		FLAG_AAM, FLAG_CETRIUS, FLAG_COMUNICATUM, FLAG_COSUM,
-		FLAG_FOLGORA, FLAG_FRIDD, FLAG_KAOM, FLAG_MEGA,
-		FLAG_MORTE, FLAG_MOVIS, FLAG_NHI, FLAG_RHAA,
-		FLAG_SPACIUM, FLAG_STREGUM, FLAG_TAAR, FLAG_TEMPUS,
-		FLAG_TERA, FLAG_VISTA, FLAG_VITAE, FLAG_YOK,
+		FLAG_AAM, FLAG_CETRIUS, FLAG_COMUNICATUM, FLAG_COSUM, FLAG_FOLGORA, FLAG_FRIDD, 
+		FLAG_KAOM, FLAG_MEGA, FLAG_MORTE, FLAG_MOVIS, FLAG_NHI, FLAG_RHAA, FLAG_SPACIUM, 
+		FLAG_STREGUM, FLAG_TAAR, FLAG_TEMPUS, FLAG_TERA, FLAG_VISTA, FLAG_VITAE, FLAG_YOK,
 	};
 
 	for (int i = 0; i < 20; i++)
@@ -749,12 +738,6 @@ void arx::character::frame_check(const float &frame_delta)
 
 				// if the player is critically hungry, decrement life
 				stat.life += (hunger > 0.0f ? life_delta : -life_delta);
-
-				// VERIFY this limit moved here from base function scope
-				if (stat.life > full.stat.maxlife) 
-				{
-					stat.life = full.stat.maxlife;
-				}
 			}
 
 			const float mana_recovery_rate = 
@@ -764,11 +747,6 @@ void arx::character::frame_check(const float &frame_delta)
 			const float mana_delta = base_recovery_rate * mana_recovery_rate * frame_delta * 1E-1f;
 			
 			stat.mana += mana_delta;
-
-			if (stat.mana > full.stat.maxmana) 
-			{
-				stat.mana = full.stat.maxmana;
-			}
 		}
 
 		// TODO assumption is if BLOCK_PLAYER_CONTROLS is true, time does not pass
@@ -805,5 +783,7 @@ void arx::character::frame_check(const float &frame_delta)
 				}
 			}
 		}
+
+		stat.limit();
 	}
 }

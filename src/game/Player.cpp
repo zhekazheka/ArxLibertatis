@@ -1000,6 +1000,7 @@ void ARX_PLAYER_Manage_Visual()
 					{
 						ChangeMoveAnim = alist[ANIM_CROUCH_WAIT];
 						ChangeMA_Loop = 1;
+						const float PLAYER_CROUCH_HEIGHT = -120.0f;
 						player.physics.cyl.height = PLAYER_CROUCH_HEIGHT;
 					}
 				}
@@ -1627,10 +1628,9 @@ void PlayerMovementIterate(float DeltaTime)
 		if (inter.iobj[0]->_npcdata->climb_count < 0) inter.iobj[0]->_npcdata->climb_count = 0.f;
 	}
 
-	// TODO what is the purpose of this?
-	// PLAYER_LEVITATE_HEIGHT = -220.f;
-
 	float d = 0;
+
+	const float PLAYER_LEVITATE_HEIGHT = -220.0f;
 
 	if ((!EDITMODE) && (USE_PLAYERCOLLISIONS))
 	{

@@ -162,7 +162,7 @@ short uw_mode_pos=0;
 extern long MAGICMODE;
 extern INTERACTIVE_OBJ * CURRENT_TORCH;
 extern float GLOBAL_SLOWDOWN;
-extern void ARX_SPSound();
+
 extern float sp_max_y[64];
 extern Color sp_max_col[64];
 extern char	sp_max_ch[64];
@@ -8576,7 +8576,7 @@ void TryToCastSpell(INTERACTIVE_OBJ * io, Spell spellid, long level, long target
 static void ApplySPWep() {
 	if (!sp_wep)
 	{		
-		ARX_SPSound();
+		ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
 		
 		fs::path file = "graph/obj3d/interactive/items/weapons/sword_mx/sword_mx.teo";
 		
@@ -8604,7 +8604,7 @@ static void ApplySPWep() {
 }
 void MakeSpCol()
 {
-	ARX_SPSound();
+	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
 
 	for (long i=0;i<64;i++)
 	{
@@ -8643,7 +8643,8 @@ static void ApplyCurSOS() {
 
 static void ApplySPBow() {
 	
-	ARX_SPSound();
+	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
+
 	const char OBJ_BOW[] = "graph/obj3d/interactive/items/weapons/bow_mx/bow_mx.teo";
 	INTERACTIVE_OBJ * ioo = AddItem(OBJ_BOW, IO_IMMEDIATELOAD);
 	
@@ -8666,7 +8667,8 @@ static void ApplySPBow() {
 }
 
 static void ApplySPArm() {
-	ARX_SPSound();
+
+	ARX_SOUND_PlayCinematic("kra_zoha_equip.wav");
 	
 	fs::path file;
 	switch (sp_arm) {
