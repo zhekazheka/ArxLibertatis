@@ -368,12 +368,16 @@ set(EDITOR_SOURCES
 )
 
 set(GAME_SOURCES
+	src/game/Character.cpp
+	src/game/Character_animation.cpp
+	src/game/Character_physics.cpp
 	src/game/Damage.cpp
 	src/game/Equipment.cpp
 	src/game/Inventory.cpp
 	src/game/Levels.cpp
 	src/game/Map.cpp
 	src/game/Missile.cpp
+	src/game/Necklace.cpp
 	src/game/NPC.cpp
 	src/game/Player.cpp
 	src/game/Spells.cpp

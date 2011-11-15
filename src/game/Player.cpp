@@ -159,7 +159,8 @@ void arx::character::torch_kill()
 		{
 			CURRENT_TORCH->show = SHOW_FLAG_IN_INVENTORY;
 		}
-	} else
+	} 
+	else
 	{
 		PutInFrontOfPlayer(CURRENT_TORCH);
 	}
@@ -214,10 +215,12 @@ void arx::character::torch_clicked(INTERACTIVE_OBJ * io)
 				DRAGINTER = NULL;
 			}
 		}
-	} else if (CURRENT_TORCH == io)
+	} 
+	else if (CURRENT_TORCH == io)
 	{
 		player.torch_kill();
-	} else
+	} 
+	else
 	{
 		player.torch_kill();
 

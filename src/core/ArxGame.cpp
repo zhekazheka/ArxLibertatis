@@ -2506,7 +2506,8 @@ void arx::game::reset(const int &type)
 		{
 			player.torch_clicked(player.CURRENT_TORCH);
 		}
-	} else
+	} 
+	else
 	{
 		player.CURRENT_TORCH = NULL;
 	}

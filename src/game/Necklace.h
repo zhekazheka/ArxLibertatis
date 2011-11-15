@@ -56,4 +56,4 @@ namespace arx
 	};
 };
 
-#endif
+#endif // ARX_GAME_NECKLACE_H

@@ -50,4 +50,4 @@ enum RuneFlag {
 DECLARE_FLAGS(RuneFlag, RuneFlags)
 DECLARE_FLAGS_OPERATORS(RuneFlags)
 
-#endif
+#endif // ARX_GAME_RUNES_H

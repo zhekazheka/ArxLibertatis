@@ -45,8 +45,6 @@ extern long cur_rf;
 extern long cur_mr;
 extern long SPECIAL_PNUX;
 
-
-
 extern long DANAESIZX;
 extern long DANAESIZY;
 

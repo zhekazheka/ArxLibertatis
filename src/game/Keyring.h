@@ -80,4 +80,4 @@ namespace arx
 	};
 };
 
-#endif
+#endif // ARX_GAME_KEYRING_H

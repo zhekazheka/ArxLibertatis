@@ -17,8 +17,15 @@
  * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
+#ifndef ARX_GAME_QUEST_H
+#define ARX_GAME_QUEST_H
+
 // Quests Management (QuestLogBook)
 struct STRUCT_QUEST {
 	std::string ident;
 	std::string localised;
 };
+
+#endif

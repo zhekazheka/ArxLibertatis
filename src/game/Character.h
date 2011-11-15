@@ -356,4 +356,4 @@ namespace arx
 
 extern arx::character player;
 
-#endif
+#endif // ARX_GAME_CHARACTER_H

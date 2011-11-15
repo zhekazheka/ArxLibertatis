@@ -20,6 +20,9 @@
 
 #pragma once
 
+#ifndef ARX_GAME_PLAYERFLAGS_H
+#define ARX_GAME_PLAYERFLAGS_H
+
 #include "platform/Flags.h"
 
 enum PlayerMovementFlag {
@@ -43,3 +46,5 @@ enum PlayerFlag {
 };
 DECLARE_FLAGS(PlayerFlag, PlayerFlags)
 DECLARE_FLAGS_OPERATORS(PlayerFlags)
+
+#endif // ARX_GAME_PLAYERFLAGS_H
