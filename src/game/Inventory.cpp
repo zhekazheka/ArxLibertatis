@@ -1583,14 +1583,14 @@ bool GetItemWorldPositionSound(const INTERACTIVE_OBJ * io, Vec3f * pos)
 	if (!io) return false;
 	
 	if (DRAGINTER == io) {
-		ARX_PLAYER_FrontPos(pos);
+		player.get_front_pos(*pos);
 		return true;
 	}
 	
 	if (io->show != SHOW_FLAG_IN_SCENE) {
 		if (IsEquipedByPlayer(io)) {
 			// in player inventory
-			ARX_PLAYER_FrontPos(pos);
+			player.get_front_pos(*pos);
 			return true;
 		}
 		
@@ -1600,7 +1600,7 @@ bool GetItemWorldPositionSound(const INTERACTIVE_OBJ * io, Vec3f * pos)
 					for(size_t i = 0; i < INVENTORY_X; i++) {
 						if(inventory[iNbBag][i][j].io == io) {
 							// in player inventory
-							ARX_PLAYER_FrontPos(pos);
+							player.get_front_pos(*pos);
 							return true;
 						}
 					}

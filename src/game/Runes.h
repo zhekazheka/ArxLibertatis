@@ -19,16 +19,10 @@
  
 #pragma once
 
+#ifndef ARX_GAME_RUNES_H
+#define ARX_GAME_RUNES_H
+
 #include "platform/Flags.h"
-
-struct EERIE_3DOBJ;
-class TextureContainer;
-
-struct ARX_NECKLACE {
-	EERIE_3DOBJ * lacet;
-	EERIE_3DOBJ * runes[RUNE_COUNT];
-	TextureContainer * pTexTab[RUNE_COUNT];
-};
 
 enum RuneFlag {
 	FLAG_AAM         = (1<<(RUNE_AAM)),
@@ -55,3 +49,5 @@ enum RuneFlag {
 
 DECLARE_FLAGS(RuneFlag, RuneFlags)
 DECLARE_FLAGS_OPERATORS(RuneFlags)
+
+#endif

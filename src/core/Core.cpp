@@ -159,7 +159,7 @@ extern TextManager	*pTextManage;
 extern float FORCE_TIME_RESTORE;
 extern CMenuState		*pMenu;
 extern long SPECIAL_DRAGINTER_RENDER;
-extern INTERACTIVE_OBJ * CURRENT_TORCH;
+
 extern EERIE_3DOBJ * fogobj;
 extern bool		bSkipVideoIntro;
 extern string SCRIPT_SEARCH_TEXT;
@@ -174,7 +174,7 @@ extern float	vdist;
 extern float	FLOATTEST;
 extern float	_MAX_CLIP_DIST;
 extern long		LastSelectedIONum;
-extern long		FistParticles;
+
 extern long		INTER_DRAW;
 extern long		INTER_COMPUTE;
 extern long		FAKE_DIR;
@@ -615,7 +615,7 @@ void InitializeDanae()
 		}
 		EERIEPOLY_Compute_PolyIn();
 		LastLoadedScene = levelPath;
-		USE_PLAYERCOLLISIONS=0;
+		player.USE_PLAYERCOLLISIONS=0;
 	}
 	
 }
@@ -747,7 +747,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 	inter.init=0;
 	InitInter(10);
 	
-	memset(&player,0,sizeof(ARXCHARACTER));
 	player.init();
 	
 	CleanInventory();
@@ -1637,7 +1636,7 @@ static void PlayerLaunchArrow_Test(float aimratio, float poisonous, Vec3f * pos,
 										poisonous); //damages
 }
 
-extern long sp_max;
+
 void PlayerLaunchArrow(float aimratio,float poisonous)
 {
 	Vec3f position;
@@ -1649,7 +1648,7 @@ void PlayerLaunchArrow(float aimratio,float poisonous)
 	float angleb;
 	float velocity;
 
-	if ((sp_max) && (poisonous<3.f))
+	if ((player.sp_max) && (poisonous<3.f))
 		poisonous=3.f;
 
 	position.x=player.pos.x;
@@ -1714,7 +1713,7 @@ void PlayerLaunchArrow(float aimratio,float poisonous)
 										damages,
 										poisonous); //damages
 
-	if (sp_max)
+	if (player.sp_max)
 	{
 		Anglef angle;
 		Vec3f pos;
@@ -1737,14 +1736,12 @@ void PlayerLaunchArrow(float aimratio,float poisonous)
 	}
 }
 
-extern unsigned long LAST_JUMP_ENDTIME;
-
 //*************************************************************************************
 // Switches from/to Game Mode/Editor Mode
 //*************************************************************************************
 void SetEditMode(long ed, const bool stop_sound) {
 	
-	LAST_JUMP_ENDTIME = 0;
+	player.LAST_JUMP_ENDTIME = 0;
 	
 	if(!DONT_ERASE_PLAYER) {
 		player.stat.life = 0.1f;
@@ -1859,25 +1856,7 @@ void DANAE_ReleaseAllDatasDynamic()
 
 void ReleaseDanaeBeforeRun()
 {
-	if(necklace.lacet)
-	{
-		delete necklace.lacet;
-		necklace.lacet=NULL;
-	}
-
-	for (long i=0; i<20; i++)
-	{
-		if(necklace.runes[i]) {
-			delete necklace.runes[i];
-			necklace.runes[i] = NULL;
-		}
-
-		if (necklace.pTexTab[i])
-		{
-
-			necklace.pTexTab[i] = NULL;
-		}
-	}
+	player.necklace.clear();
 
 	if(eyeballobj) {
 		delete eyeballobj;
@@ -2117,7 +2096,7 @@ void FirstFrameHandling()
 		LoadLevelScreen();
 	}
 
-	if (CURRENT_TORCH)
+	if (player.CURRENT_TORCH)
 	{
 		ARX_SOUND_PlaySFX(SND_TORCH_LOOP, NULL, 1.0F, ARX_SOUND_PLAY_LOOPED);
 		SHOW_TORCH=1;
@@ -2291,7 +2270,7 @@ void ManageNONCombatModeAnimations()
 		||	(player.Current_Movement & PLAYER_LEAN_RIGHT)			)
 	{
 	}
-	else if ((player.equiped[EQUIP_SLOT_SHIELD] != 0) && !BLOCK_PLAYER_CONTROLS)
+	else if ((player.equiped[EQUIP_SLOT_SHIELD] != 0) && !player.BLOCK_PLAYER_CONTROLS)
 	{
 		if ( (useanim3->cur_anim==NULL)  ||
 			( (useanim3->cur_anim!=alist[ANIM_SHIELD_CYCLE])
@@ -2506,7 +2485,7 @@ void ManageCombatModeAnimations()
 									sphere.origin.z=io->obj->vertexlist3[id].v.z;
 									sphere.radius=25.f;
 
-									if (FistParticles & 2) sphere.radius*=2.f;
+									if (player.FistParticles & 2) sphere.radius*=2.f;
 
 									long num;
 
@@ -2514,11 +2493,11 @@ void ManageCombatModeAnimations()
 									{
 										float dmgs=(player.full.damages+1)*STRIKE_AIMTIME;
 
-										if (FistParticles & 2) dmgs*=1.5f;
+										if (player.FistParticles & 2) dmgs*=1.5f;
 
 										if (ARX_DAMAGES_TryToDoDamage(&io->obj->vertexlist3[id].v,dmgs,40,0))
 										{
-											if (FistParticles & 2)
+											if (player.FistParticles & 2)
 												ARX_SOUND_PlaySFX(SND_SPELL_LIGHTNING_START, &io->obj->vertexlist3[id].v);
 
 											PlayerWeaponBlocked=useanim->ctime;
@@ -2550,7 +2529,7 @@ void ManageCombatModeAnimations()
 									sphere.origin.z=io->obj->vertexlist3[id].v.z;
 									sphere.radius=25.f;
 
-									if (FistParticles & 2) sphere.radius*=2.f;
+									if (player.FistParticles & 2) sphere.radius*=2.f;
 
 									long num;
 
@@ -2558,26 +2537,23 @@ void ManageCombatModeAnimations()
 									{
 										float dmgs=(player.full.damages+1)*STRIKE_AIMTIME;
 
-										if (FistParticles & 2) dmgs*=1.5f;
+										if (player.FistParticles & 2) dmgs*=1.5f;
 
 										if (ARX_DAMAGES_TryToDoDamage(&io->obj->vertexlist3[id].v,dmgs,40,0))
 										{
-											if (FistParticles & 2)
+											if (player.FistParticles & 2)
 												ARX_SOUND_PlaySFX(SND_SPELL_LIGHTNING_START, &io->obj->vertexlist3[id].v);
 
 											PlayerWeaponBlocked=useanim->ctime;
 										PlayerWeaponBlockTime = ARXTimeUL();
 										}
 
-										{
 										ARX_PARTICLES_Spawn_Spark(&sphere.origin, dmgs, 2);
 
-											if (ValidIONum(num))
-											{
-												ARX_SOUND_PlayCollision(inter.iobj[num]->material,MATERIAL_FLESH, 1.f, 1.f, &sphere.origin, NULL);
-											}
+										if (ValidIONum(num))
+										{
+											ARX_SOUND_PlayCollision(inter.iobj[num]->material,MATERIAL_FLESH, 1.f, 1.f, &sphere.origin, NULL);
 										}
-
 									}
 								}
 							}
@@ -3138,13 +3114,13 @@ void ManageCombatModeAnimationsEND()
 			useanim->cur_anim=NULL;
 			player.doingmagic=0;
 
-			if (WILLRETURNTOCOMBATMODE)
+			if (player.WILLRETURNTOCOMBATMODE)
 			{
 				player.Interface|=INTER_COMBATMODE;
 				player.Interface|=INTER_NO_STRIKE;
 
 				ARX_EQUIPMENT_LaunchPlayerReadyWeapon();
-				WILLRETURNTOCOMBATMODE=0;
+				player.WILLRETURNTOCOMBATMODE=0;
 			}
 		}
 	}
@@ -3382,7 +3358,7 @@ void DANAE_StartNewQuest()
 	FirstFrame=1;
 	START_NEW_QUEST=0;
 	STARTED_A_GAME=1;
-	BLOCK_PLAYER_CONTROLS = 0;
+	player.BLOCK_PLAYER_CONTROLS = 0;
 	FADEDURATION=0;
 	FADEDIR=0;
 	player.Interface = INTER_LIFE_MANA | INTER_MINIBACK | INTER_MINIBOOK;
@@ -3567,7 +3543,7 @@ long DANAE_Manage_Cinematic()
 		PLAY_LOADED_CINEMATIC=0;
 		bool bWasBlocked = false;
 
-		if (BLOCK_PLAYER_CONTROLS)
+		if (player.BLOCK_PLAYER_CONTROLS)
 			bWasBlocked = true;
 
 		// !! avant le cine end
@@ -3579,7 +3555,7 @@ long DANAE_Manage_Cinematic()
 		}
 
 		if (bWasBlocked)
-			BLOCK_PLAYER_CONTROLS=1;
+			player.BLOCK_PLAYER_CONTROLS=1;
 
 		ARX_SPEECH_Reset();
 		SendMsgToAllIO(SM_CINE_END, LAST_LAUNCHED_CINE);
@@ -3742,7 +3718,7 @@ void ShowTestText()
 	sprintf( tex,"Last Failed Sequence : %s",LAST_FAILED_SEQUENCE.c_str() );
 	mainApp->OutputText( 0, 64, tex );
 }
-extern float CURRENT_PLAYER_COLOR;
+
 extern int TSU_TEST_COLLISIONS;
 extern long TSU_TEST;
 
@@ -3890,7 +3866,7 @@ void ShowInfoText() {
 	sprintf(tex,"POLY %ld",zap);		
 	mainApp->OutputText( 270, 220, tex );
 
-	sprintf(tex,"COLOR %3.0f Stealth %3.0f",CURRENT_PLAYER_COLOR,GetPlayerStealth());
+	sprintf(tex,"COLOR %3.0f Stealth %3.0f",player.CURRENT_PLAYER_COLOR,player.get_stealth_for_color());
 	mainApp->OutputText( 270, 200, tex );
 
 	ARX_SCRIPT_Init_Event_Stats();

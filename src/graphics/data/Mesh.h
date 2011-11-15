@@ -1038,6 +1038,7 @@ float CEDRIC_PtIn2DPolyProjV2(EERIE_3DOBJ * obj,EERIE_FACE * ef, float x, float 
 void EERIE_PORTAL_ReleaseOnlyVertexBuffer();
 void ComputePortalVertexBuffer();
 bool GetNameInfo( const std::string& name1,long& type,long& val1,long& val2);
+void ClearDynLights();
 
 struct TILE_LIGHTS
 {

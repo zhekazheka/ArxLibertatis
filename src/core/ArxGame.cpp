@@ -111,6 +111,9 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "platform/Flags.h"
 #include "platform/Platform.h"
 
+#include "physics/Collisions.h"
+#include "physics/Attractors.h"
+
 #include "scene/ChangeLevel.h"
 #include "scene/Interactive.h"
 #include "scene/GameSound.h"
@@ -144,13 +147,12 @@ extern long REFUSE_GAME_RETURN;
 extern long PLAYER_MOUSELOOK_ON;
 extern long TRUE_PLAYER_MOUSELOOK_ON;
 extern long FRAME_COUNT;
-extern long PLAYER_PARALYSED;
+
 extern long STOP_KEYBOARD_INPUT;
 extern long USEINTERNORM;
 extern long cur_mr;
 extern long cur_rf;
 extern long STRIKE_TIME;
-extern long DeadTime;
 extern long INTERTRANSPOLYSPOS;
 extern long TRANSPOLYSPOS;
 extern long FORCE_FRONT_DRAW;
@@ -649,60 +651,10 @@ bool ArxGame::BeforeRun() {
 	const Vec2i & size = mainApp->GetWindow()->GetSize();
 	ControlCinematique = new Cinematic(size.x, size.y);
 	
-	memset(&necklace,0,sizeof(ARX_NECKLACE));
-	
 	long old = GLOBAL_EERIETEXTUREFLAG_LOADSCENE_RELEASE;
 	GLOBAL_EERIETEXTUREFLAG_LOADSCENE_RELEASE = -1;
-	
-	necklace.lacet = loadObject("graph/interface/book/runes/lacet.teo");
-	
-	necklace.runes[RUNE_AAM] =         loadObject("graph/interface/book/runes/runes_aam.teo");
-	necklace.runes[RUNE_CETRIUS] =     loadObject("graph/interface/book/runes/runes_citrius.teo");
-	necklace.runes[RUNE_COMUNICATUM] = loadObject("graph/interface/book/runes/runes_comunicatum.teo");
-	necklace.runes[RUNE_COSUM] =       loadObject("graph/interface/book/runes/runes_cosum.teo");
-	necklace.runes[RUNE_FOLGORA] =     loadObject("graph/interface/book/runes/runes_folgora.teo");
-	necklace.runes[RUNE_FRIDD] =       loadObject("graph/interface/book/runes/runes_fridd.teo");
-	necklace.runes[RUNE_KAOM] =        loadObject("graph/interface/book/runes/runes_kaom.teo");
-	necklace.runes[RUNE_MEGA] =        loadObject("graph/interface/book/runes/runes_mega.teo");
-	necklace.runes[RUNE_MORTE] =       loadObject("graph/interface/book/runes/runes_morte.teo");
-	necklace.runes[RUNE_MOVIS] =       loadObject("graph/interface/book/runes/runes_movis.teo");
-	necklace.runes[RUNE_NHI] =         loadObject("graph/interface/book/runes/runes_nhi.teo");
-	necklace.runes[RUNE_RHAA] =        loadObject("graph/interface/book/runes/runes_rhaa.teo");
-	necklace.runes[RUNE_SPACIUM] =     loadObject("graph/interface/book/runes/runes_spacium.teo");
-	necklace.runes[RUNE_STREGUM] =     loadObject("graph/interface/book/runes/runes_stregum.teo");
-	necklace.runes[RUNE_TAAR] =        loadObject("graph/interface/book/runes/runes_taar.teo");
-	necklace.runes[RUNE_TEMPUS] =      loadObject("graph/interface/book/runes/runes_tempus.teo");
-	necklace.runes[RUNE_TERA] =        loadObject("graph/interface/book/runes/runes_tera.teo");
-	necklace.runes[RUNE_VISTA] =       loadObject("graph/interface/book/runes/runes_vista.teo");
-	necklace.runes[RUNE_VITAE] =       loadObject("graph/interface/book/runes/runes_vitae.teo");
-	necklace.runes[RUNE_YOK] =         loadObject("graph/interface/book/runes/runes_yok.teo");
-	
-	necklace.pTexTab[RUNE_AAM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_aam[icon]");
-	necklace.pTexTab[RUNE_CETRIUS] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_cetrius[icon]");
-	necklace.pTexTab[RUNE_COMUNICATUM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_comunicatum[icon]");
-	necklace.pTexTab[RUNE_COSUM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_cosum[icon]");
-	necklace.pTexTab[RUNE_FOLGORA] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_folgora[icon]");
-	necklace.pTexTab[RUNE_FRIDD] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_fridd[icon]");
-	necklace.pTexTab[RUNE_KAOM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_kaom[icon]");
-	necklace.pTexTab[RUNE_MEGA] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_mega[icon]");
-	necklace.pTexTab[RUNE_MORTE] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_morte[icon]");
-	necklace.pTexTab[RUNE_MOVIS] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_movis[icon]");
-	necklace.pTexTab[RUNE_NHI] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_nhi[icon]");
-	necklace.pTexTab[RUNE_RHAA] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_rhaa[icon]");
-	necklace.pTexTab[RUNE_SPACIUM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_spacium[icon]");
-	necklace.pTexTab[RUNE_STREGUM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_stregum[icon]");
-	necklace.pTexTab[RUNE_TAAR] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_taar[icon]");
-	necklace.pTexTab[RUNE_TEMPUS] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_tempus[icon]");
-	necklace.pTexTab[RUNE_TERA] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_tera[icon]");
-	necklace.pTexTab[RUNE_VISTA] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_vista[icon]");
-	necklace.pTexTab[RUNE_VITAE] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_vitae[icon]");
-	necklace.pTexTab[RUNE_YOK] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_yok[icon]");
-	
-	for(size_t i = 0; i < RUNE_COUNT-1; i++) { // TODO why -1?
-		if(necklace.pTexTab[i]) {
-			necklace.pTexTab[i]->CreateHalo();
-		}
-	}
+
+	player.necklace.init();
 	
 	// TODO this is the only place where _LoadTheObj is used
 	EERIE_3DOBJ * _fogobj = _LoadTheObj("editor/obj3d/fog_generator.teo", "node_teo maps");
@@ -838,7 +790,9 @@ static float _AvgFrameDiff = 150.f;
 
 	// Update Various Player Infos for this frame.
 	if (FirstFrame==0)
-		ARX_PLAYER_Frame_Update();
+	{
+		player.frame_update();
+	}
 	
 	// Project need to reload all textures ???
 	if (WILL_RELOAD_ALL_TEXTURES)
@@ -879,7 +833,7 @@ static float _AvgFrameDiff = 150.f;
 	if (EDITMODE)
 	{
 		TOTIOPDL=0;
-		BLOCK_PLAYER_CONTROLS=0;
+		player.BLOCK_PLAYER_CONTROLS=0;
 	}
 
 	if (FirstFrame==0) // Checks for Keyboard & Moulinex
@@ -917,7 +871,7 @@ static float _AvgFrameDiff = 150.f;
 		{
 			if ((DRAGINTER == NULL) && (FRAME_COUNT<=0))
 			{
-				if (!BLOCK_PLAYER_CONTROLS && !TRUE_PLAYER_MOUSELOOK_ON && !(ARX_MOUSE_OVER & ARX_MOUSE_OVER_BOOK)
+				if (!player.BLOCK_PLAYER_CONTROLS && !TRUE_PLAYER_MOUSELOOK_ON && !(ARX_MOUSE_OVER & ARX_MOUSE_OVER_BOOK)
 					&& (eMouseState != MOUSE_IN_NOTE)
 				   )
 					FlyingOverIO = FlyingOverObject(&DANAEMouse);
@@ -926,7 +880,7 @@ static float _AvgFrameDiff = 150.f;
 			}
 		}
 
-		if ( (!PLAYER_PARALYSED)
+		if ( (!player.PLAYER_PARALYSED)
 			|| (ARXmenu.currentmode != AMCM_OFF) )
 
 		{
@@ -1017,20 +971,19 @@ static float _AvgFrameDiff = 150.f;
 
 	if (ARXmenu.currentmode == AMCM_OFF)
 	{
-		if (!PLAYER_PARALYSED)
+		if (!player.PLAYER_PARALYSED)
 		{
 			if (ManageEditorControls()) goto finish;
 		}
 
-		if ((!BLOCK_PLAYER_CONTROLS) && (!PLAYER_PARALYSED))
+		if ((!player.BLOCK_PLAYER_CONTROLS) && (!player.PLAYER_PARALYSED))
 		{
 			ManagePlayerControls();
 		}
 	}
 
-	ARX_PLAYER_Manage_Movement();
-
-	ARX_PLAYER_Manage_Visual();
+	player.manage_movement();
+	player.manage_visual();
 
 	if (FRAME_COUNT<=0)
 		ARX_MINIMAP_ValidatePlayerPos();
@@ -1564,11 +1517,11 @@ static float _AvgFrameDiff = 150.f;
 
 	if (player.stat.life<=0)
 	{
-			DeadTime += static_cast<long>(FrameDiff);
+		player.DeadTime += static_cast<long>(FrameDiff);
 		float mdist = EEfabs(player.physics.cyl.height)-60;
-		DeadCameraDistance+=(float)FrameDiff*( 1.0f / 80 )*((mdist-DeadCameraDistance)/mdist)*2.f;
+		player.DeadCameraDistance+=(float)FrameDiff*( 1.0f / 80 )*((mdist-player.DeadCameraDistance)/mdist)*2.f;
 
-		if (DeadCameraDistance>mdist) DeadCameraDistance=mdist;
+		if (player.DeadCameraDistance>mdist) player.DeadCameraDistance=mdist;
 
 		Vec3f targetpos;
 
@@ -1587,13 +1540,13 @@ static float _AvgFrameDiff = 150.f;
 		}
 
 		conversationcamera.pos.x = targetpos.x;
-		conversationcamera.pos.y = targetpos.y - DeadCameraDistance;
+		conversationcamera.pos.y = targetpos.y - player.DeadCameraDistance;
 		conversationcamera.pos.z = targetpos.z;
 
 		if (id2!=-1)
 		{
 				conversationcamera.pos.x=inter.iobj[0]->obj->vertexlist3[id2].v.x;
-				conversationcamera.pos.y=inter.iobj[0]->obj->vertexlist3[id2].v.y-DeadCameraDistance;
+				conversationcamera.pos.y=inter.iobj[0]->obj->vertexlist3[id2].v.y-player.DeadCameraDistance;
 				conversationcamera.pos.z=inter.iobj[0]->obj->vertexlist3[id2].v.z;
 		}
 
@@ -1613,7 +1566,7 @@ static float _AvgFrameDiff = 150.f;
 	}
 	else
 	{
-		DeadCameraDistance=0;
+		player.DeadCameraDistance=0;
 
 	}
 
@@ -1841,7 +1794,7 @@ static float _AvgFrameDiff = 150.f;
 	if (!EDITMODE) // Playing Game
 	{
 		// Checks Magic Flares Drawing
-		if (!PLAYER_PARALYSED)
+		if (!player.PLAYER_PARALYSED)
 		{
 			if (EERIEMouseButton & 1)
 			{
@@ -1914,7 +1867,7 @@ static float _AvgFrameDiff = 150.f;
 		DrawMagicSightInterface();
 	}
 
-		if (PLAYER_PARALYSED)
+	if (player.PLAYER_PARALYSED)
 	{
 		GRenderer->SetRenderState(Renderer::DepthWrite, false);
 		GRenderer->SetRenderState(Renderer::AlphaBlending, true);
@@ -1947,7 +1900,7 @@ static float _AvgFrameDiff = 150.f;
 	GRenderer->SetRenderState(Renderer::Fog, true);
 
 	// Manage Death visual & Launch menu...
-	if (DeadTime>2000)
+	if (player.DeadTime>2000)
 		ARX_PLAYER_Manage_Death();
 
 	//-------------------------------------------------------------------------
@@ -2005,7 +1958,7 @@ static float _AvgFrameDiff = 150.f;
 		pTextManage->Render();
 	}
 
-	if (SHOW_INGAME_MINIMAP && ((PLAY_LOADED_CINEMATIC == 0) && (!CINEMASCOPE) && (!BLOCK_PLAYER_CONTROLS) && (ARXmenu.currentmode == AMCM_OFF))
+	if (SHOW_INGAME_MINIMAP && ((PLAY_LOADED_CINEMATIC == 0) && (!CINEMASCOPE) && (!player.BLOCK_PLAYER_CONTROLS) && (ARXmenu.currentmode == AMCM_OFF))
 		&& (!(player.Interface & INTER_MAP ) ))
 	{
 			long SHOWLEVEL = ARX_LEVELS_GetRealNum(CURRENTLEVEL);
@@ -2088,7 +2041,7 @@ static float _AvgFrameDiff = 150.f;
 	//----------------------------------------------------------------------------
 	// Begin 2D Pass for Lense Flares
 
-	if ((PLAY_LOADED_CINEMATIC == 0) && (!CINEMASCOPE) && (!BLOCK_PLAYER_CONTROLS) && (ARXmenu.currentmode == AMCM_OFF))
+	if ((PLAY_LOADED_CINEMATIC == 0) && (!CINEMASCOPE) && (!player.BLOCK_PLAYER_CONTROLS) && (ARXmenu.currentmode == AMCM_OFF))
 	{
 		if (GInput->actionNowPressed(CONTROLS_CUST_QUICKLOAD) && !WILL_QUICKLOAD)
 		{
@@ -2395,4 +2348,264 @@ void ArxGame::onRendererShutdown(RenderWindow &) {
 	
 	GRenderer = NULL;
 	
+}
+
+// externs specific to arx::game::reset()
+extern long DONT_ERASE_PLAYER;
+extern long GLOBAL_Player_Room;
+extern long cur_sm;
+extern unsigned long LAST_PRECAST_TIME;
+extern long REQUEST_SPEECH_SKIP;
+extern long HERO_SHOW_1ST;
+extern long GLOBAL_MAGIC_MODE;
+extern long TOTAL_BODY_CHUNKS_COUNT;
+extern long sp_arm;
+extern long cur_arm;
+extern long cur_mx;
+extern long cur_pom;
+extern long sp_wep;
+
+void arx::game::reset(const int &type) 
+{
+	if (inter.iobj[0]) 
+	{
+		inter.iobj[0]->speed_modif = 0;
+	}
+
+	player.LAST_JUMP_ENDTIME = 0;
+	FlyingOverIO = NULL;
+	ARX_MAPMARKER_Init();
+	ClearDynLights();
+
+	if (!DONT_ERASE_PLAYER && inter.iobj[0]) 
+	{
+		inter.iobj[0]->halo.flags = 0;
+	}
+
+	if(inter.iobj[0])inter.iobj[0]->GameFlags &= ~GFLAG_INVISIBILITY;
+	player.set_invulnerable(false);
+	GLOBAL_Player_Room = -1;
+	player.PLAYER_PARALYSED = 0;
+
+	player.reset_fall();
+
+	player.levitate = 0;
+	player.onfirmground = 0;
+	player.TRUE_FIRM_GROUND = 0;
+	player.lastposy = -99999999999.f;
+
+	Project.telekinesis = 0;
+
+	sp_max_start = 0;
+
+	ioSteal = NULL;
+
+	WILL_QUICKLOAD = 0;
+	WILL_QUICKSAVE = 0;
+	GLOBAL_SLOWDOWN = 1.f;
+
+	PrecalcIOLighting(NULL, 0, 1);
+
+	sp_arm = 0;
+	cur_arm = 0;
+	cur_sm = 0;
+	sp_wep = 0;
+	player.sp_max = 0;
+	cur_mx = 0;
+	cur_pom = 0;
+	cur_rf = 0;
+	cur_mr = 0;
+
+	if(inter.iobj[0]) 
+	{
+		inter.iobj[0]->spellcast_data.castingspell = SPELL_NONE;
+	}
+
+	LAST_PRECAST_TIME = 0;
+
+	ARX_INTERFACE_NoteClear();
+	player.Interface = INTER_LIFE_MANA | INTER_MINIBACK | INTER_MINIBOOK;
+
+	// Interactive DynData
+	ARX_INTERACTIVE_ClearAllDynData();
+
+	// PolyBooms
+	ARX_BOOMS_ClearAllPolyBooms();
+
+	// Magical Flares
+	ARX_MAGICAL_FLARES_KillAll();
+
+	// Thrown Objects
+	ARX_THROWN_OBJECT_KillAll();
+
+	// Pathfinder
+	EERIE_PATHFINDER_Clear();
+
+	// Sound
+	if (!(type & 1))
+	{
+		ARX_SOUND_MixerStop(ARX_SOUND_MixerGame);
+		ARX_SOUND_MixerPause(ARX_SOUND_MixerGame);
+		ARX_SOUND_MixerResume(ARX_SOUND_MixerGame);
+	}
+
+	// Damages
+	ARX_DAMAGE_Reset_Blood_Info();
+	ARX_DAMAGES_Reset();
+
+	// Scripts
+	ARX_SCRIPT_Timer_ClearAll();
+	ARX_SCRIPT_EventStackClear();
+	ARX_SCRIPT_ResetAll(0);
+
+	// Conversations
+	ARX_CONVERSATION_Reset();
+	ARX_CONVERSATION = 0;
+
+	// Speech Things
+	REQUEST_SPEECH_SKIP = 0;
+	ARX_SPEECH_ClearAll();
+	ARX_SPEECH_Reset();
+
+	// Spells
+	ARX_SPELLS_Precast_Reset();
+	ARX_SPELLS_CancelSpellTarget();
+
+	ARX_SPELLS_ClearAll();
+	ARX_SPELLS_ClearAllSymbolDraw();
+	ARX_SPELLS_ResetRecognition();
+
+	// Particles
+	ARX_PARTICLES_ClearAll();
+	if (pParticleManager)
+	{
+		pParticleManager->Clear();
+	}
+
+	// Fogs
+	ARX_FOGS_TimeReset();
+	ARX_FOGS_Render();
+
+	// Anchors
+	ANCHOR_BLOCK_Clear();
+
+	// Attractors
+	ARX_SPECIAL_ATTRACTORS_Reset();
+
+	// Cinematics
+	DANAE_KillCinematic();
+
+	// Paths
+	ARX_PATH_ClearAllControled();
+	ARX_PATH_ClearAllUsePath();
+
+	// Player Torch
+	if (type & 1)
+	{
+		if (player.CURRENT_TORCH) 
+		{
+			player.torch_clicked(player.CURRENT_TORCH);
+		}
+	} else
+	{
+		player.CURRENT_TORCH = NULL;
+	}
+
+	// Player Quests
+	if (!player.quest.empty())
+	{
+		player.quest.clear();
+	}
+
+	// Player Keyring
+	player.keyring.init();
+
+	// Player Init
+	if (!DONT_ERASE_PLAYER)
+	{
+		ARX_MAPMARKER_Init();
+		GLOBAL_MAGIC_MODE = 1;
+
+		// Linked Objects
+		if (!(type & 2))
+		{
+			UnlinkAllLinkedObjects();
+			ARX_EQUIPMENT_UnEquipAllPlayer();
+		}
+
+		ARX_EQUIPMENT_ReleaseAll(inter.iobj[0]);
+
+		player.init();
+		ARX_INTERACTIVE_RemoveGoreOnIO(inter.iobj[0]);
+		TRUE_PLAYER_MOUSELOOK_ON = 0;
+		// Player Inventory
+		CleanInventory();
+	}
+
+	// Misc Player Vars.
+	player.ROTATE_START = 0;
+	player.BLOCK_PLAYER_CONTROLS = 0;
+	HERO_SHOW_1ST = -1;
+
+	player.PUSH_PLAYER_FORCE = Vec3f::ZERO;
+	
+	player.jumplastposition = 0;
+	player.jumpstarttime = 0;
+	player.jumpphase = 0;
+	
+	player.inzone = NULL;
+
+	QuakeFx.intensity = 0.f;
+	Project.improve = 0;
+
+	if (eyeball.exist) eyeball.exist = -100;
+
+	if ((inter.iobj) && (inter.nbmax > 0) && (inter.iobj[0]))
+	{
+		inter.iobj[0]->ouch_time = 0;
+		inter.iobj[0]->invisibility = 0.f;
+	}
+
+	FADEDIR = 0;
+	FADEDURATION = 0;
+	FADESTART = 0;
+	FADECOLOR.r = 0;
+	FADECOLOR.b = 0;
+	FADECOLOR.g = 0;
+
+	// GLOBALMods
+	ARX_GLOBALMODS_Reset();
+
+	// Missiles
+	ARX_MISSILES_ClearAll();
+
+	// IO PDL
+	TOTIOPDL = 0;
+
+	// Interface
+	ARX_INTERFACE_Reset();
+	ARX_INTERFACE_NoteClear();
+	Set_DragInter(NULL);
+	SecondaryInventory = NULL;
+	TSecondaryInventory = NULL;
+	MasterCamera.exist = 0;
+	CHANGE_LEVEL_ICON = -1;
+
+	CAMERACONTROLLER = NULL;
+
+	// Kill Script Loaded IO
+	CleanScriptLoadedIO();
+
+#ifdef BUILD_EDITOR
+	// ARX Debugger
+	NEED_DEBUGGER_CLEAR = 1;
+#endif
+
+	//Body chunks count
+	TOTAL_BODY_CHUNKS_COUNT = 0;
+
+	// ARX Timer
+	ARX_TIME_Init();
+
+	ClearTileLights();
 }

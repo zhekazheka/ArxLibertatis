@@ -51,10 +51,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include <vector>
 
 #include "game/Character.h"
-#include "game/Spells.h"
-#include "game/Runes.h"
-#include "game/Keyring.h"
-#include "game/Playerflags.h"
 
 #include "graphics/data/Mesh.h"
 #include "math/MathFwd.h"
@@ -65,63 +61,30 @@ enum constants
 	PLAYER_BASE_HEIGHT = -170,
 };
 
-// Quests Management (QuestLogBook)
-struct STRUCT_QUEST {
-	std::string ident;
-	std::string localised;
+namespace arx
+{
+	namespace game
+	{
+		void reset(const int &type = 0);
+	};
 };
 
-extern ARX_NECKLACE necklace;
-extern EERIE_3DOBJ * hero;
-extern ANIM_HANDLE * herowaitbook;
-extern ANIM_HANDLE * herowait2;
-extern ANIM_HANDLE * herowait_2h;
-extern std::vector<STRUCT_QUEST> PlayerQuest;
-
-extern float DeadCameraDistance;
-extern long BLOCK_PLAYER_CONTROLS;
-extern long USE_PLAYERCOLLISIONS;
-extern long WILLRETURNTOCOMBATMODE;
+extern EERIE_3DOBJ *hero;
+extern ANIM_HANDLE *herowaitbook;
+extern ANIM_HANDLE *herowait2;
+extern ANIM_HANDLE *herowait_2h;
 
 void ARX_PLAYER_LoadHeroAnimsAndMesh();
-
 void ARX_PLAYER_BecomesDead();
-
-void ARX_PLAYER_ClickedOnTorch(INTERACTIVE_OBJ * io);
-
 void ARX_PLAYER_RectifyPosition();
-
-void ARX_PLAYER_Frame_Update();
-
-void ARX_PLAYER_Manage_Movement();
 void ARX_PLAYER_Manage_Death();
-
 void ARX_PLAYER_GotoAnyPoly();
-
 void ARX_PLAYER_Quest_Add(const std::string & quest, bool _bLoad = false);
-void ARX_PLAYER_Quest_Init();
-
-void ARX_PLAYER_FrontPos(Vec3f * pos);
-
-void ARX_PLAYER_Manage_Visual();
-
-void ARX_PLAYER_Reset_Fall();
-
-void ARX_PLAYER_KillTorch();
-
 void ARX_PLAYER_PutPlayerInNormalStance(long val);
-
 void ARX_PLAYER_Start_New_Quest();
- 
 void ARX_PLAYER_Restore_Skin();
 
-float GetPlayerStealth();
-
-void ARX_GAME_Reset(long type = 0);
 void Manage_sp_max();
-
 bool ARX_PLAYER_IsInFightMode();
-
-void ForcePlayerLookAtIO(INTERACTIVE_OBJ * io);
 
 #endif // ARX_GAME_PLAYER_H

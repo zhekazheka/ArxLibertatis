@@ -469,7 +469,7 @@ void ARX_SPEECH_Update() {
 	
 	unsigned long tim = ARXTimeUL();
 
-	if (CINEMASCOPE || BLOCK_PLAYER_CONTROLS) ARX_CONVERSATION_CheckAcceleratedSpeech();
+	if (CINEMASCOPE || player.BLOCK_PLAYER_CONTROLS) ARX_CONVERSATION_CheckAcceleratedSpeech();
 
 	for (size_t i = 0 ; i < MAX_ASPEECH ; i++)
 	{

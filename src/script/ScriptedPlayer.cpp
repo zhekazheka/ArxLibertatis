@@ -59,7 +59,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 using std::string;
 
 extern float InventoryDir;
-extern INTERACTIVE_OBJ * CURRENT_TORCH;
 
 namespace script {
 
@@ -317,17 +316,17 @@ public:
 		DebugScript(' ' << enable);
 		
 		if(enable) {
-			if(BLOCK_PLAYER_CONTROLS) {
+			if(player.BLOCK_PLAYER_CONTROLS) {
 				Stack_SendMsgToAllNPC_IO(SM_CONTROLS_ON, "");
 			}
-			BLOCK_PLAYER_CONTROLS = 0;
+			player.BLOCK_PLAYER_CONTROLS = 0;
 		} else {
-			if(!BLOCK_PLAYER_CONTROLS) {
+			if(!player.BLOCK_PLAYER_CONTROLS) {
 				ARX_PLAYER_PutPlayerInNormalStance(0);
 				Stack_SendMsgToAllNPC_IO(SM_CONTROLS_OFF, "");
 				ARX_SPELLS_FizzleAllSpellsFromCaster(0);
 			}
-			BLOCK_PLAYER_CONTROLS = 1;
+			player.BLOCK_PLAYER_CONTROLS = 1;
 			player.Interface &= ~INTER_COMBATMODE;
 		}
 		
@@ -395,7 +394,7 @@ public:
 			
 			DebugScript(" heal " << val);
 			
-			if(!BLOCK_PLAYER_CONTROLS) {
+			if(!player.BLOCK_PLAYER_CONTROLS) {
 				player.stat.life += val;
 			}
 			player.stat.life = clamp(player.stat.life, 0.f, player.full.stat.maxlife);
@@ -435,7 +434,7 @@ public:
 				io->_itemdata->count--;
 			}
 			
-			ARX_PLAYER_ClickedOnTorch(ioo);
+			player.torch_clicked(ioo);
 			
 		} else if(type == "fiery") {
 			DebugScript(" fiery");
@@ -459,8 +458,8 @@ public:
 			
 		} else if(type == "torchoff") {
 			DebugScript(" torchoff");
-			if(CURRENT_TORCH) {
-				ARX_PLAYER_ClickedOnTorch(CURRENT_TORCH);
+			if(player.CURRENT_TORCH) {
+				player.torch_clicked(player.CURRENT_TORCH);
 			}
 			
 		} else {
@@ -510,7 +509,7 @@ public:
 			return Failed;
 		}
 		
-		ForcePlayerLookAtIO(t);
+		player.look_at(t);
 		
 		return Success;
 	}

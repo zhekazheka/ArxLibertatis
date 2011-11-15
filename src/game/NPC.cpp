@@ -3803,7 +3803,7 @@ float AngularDifference(float a1, float a2)
 	return ret;
 
 }
-extern float CURRENT_PLAYER_COLOR;
+
 //***********************************************************************************************
 // INTERACTIVE_OBJ * ARX_NPC_GetFirstNPCInSight(INTERACTIVE_OBJ * ioo)
 //-----------------------------------------------------------------------------------------------
@@ -3898,7 +3898,7 @@ INTERACTIVE_OBJ * ARX_NPC_GetFirstNPCInSight(INTERACTIVE_OBJ * ioo)
 			}
 
 			
-			float grnd_color = CURRENT_PLAYER_COLOR - GetPlayerStealth(); 
+			float grnd_color = player.CURRENT_PLAYER_COLOR - player.get_stealth_for_color(); 
 
 			if (grnd_color > 0) 
 			{
@@ -3931,7 +3931,7 @@ INTERACTIVE_OBJ * ARX_NPC_GetFirstNPCInSight(INTERACTIVE_OBJ * ioo)
 
 	return found_io;
 }
-extern float CURRENT_PLAYER_COLOR;
+
  
 //***********************************************************************************************
 // void CheckNPC(INTERACTIVE_OBJ * io)
@@ -4030,7 +4030,7 @@ void CheckNPCEx(INTERACTIVE_OBJ * io)
 			if (EEfabs(AngularDifference(aa, ab)) < 110.f)
 			{
 				// Check for Darkness/Stealth
-				if ((CURRENT_PLAYER_COLOR > GetPlayerStealth())
+				if ((player.CURRENT_PLAYER_COLOR > player.get_stealth_for_color())
 				        ||	SHOW_TORCH
 				        ||	(ds < square(200.f)))
 				{
@@ -4165,13 +4165,13 @@ void ARX_NPC_SpawnAudibleSound(Vec3f * pos, INTERACTIVE_OBJ * source, const floa
 			}
 		}
 }
-extern INTERACTIVE_OBJ * CURRENT_TORCH;
+
 //-------------------------------------------------------------------------
 void ManageIgnition(INTERACTIVE_OBJ * io)
 {
 	if (!io) return;
 
-	if (CURRENT_TORCH == io)
+	if (player.CURRENT_TORCH == io)
 	{
 		if (ValidDynLight(io->ignit_light))
 			DynLight[io->ignit_light].exist = 0;

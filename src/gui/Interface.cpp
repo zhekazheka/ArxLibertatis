@@ -163,10 +163,10 @@ extern TextureContainer * arrow_left_tc;
 extern FOG_DEF fogparam;
 extern TexturedVertex LATERDRAWHALO[];
 extern EERIE_LIGHT lightparam;
-extern INTERACTIVE_OBJ * CURRENT_TORCH;
+
 extern Notification speech[];
 extern std::string WILLADDSPEECH;
-extern float PLAYER_ROTATION;
+
 extern float SLID_VALUE;
 
 extern long BOOKBUTTON;
@@ -176,8 +176,6 @@ extern long LastSelectedIONum;
 extern long lSLID_VALUE;
 
 extern long CHANGE_LEVEL_ICON;
-extern long BLOCK_PLAYER_CONTROLS;
-extern long DeadTime;
 extern long HALOCUR;
 extern long ALLOW_CHEATS;
 extern long LOOKING_FOR_SPELL_TARGET;
@@ -1620,7 +1618,7 @@ bool ArxGame::ManageEditorControls()
 	float px = 0;
 	float py = 0;
 
-	if (!BLOCK_PLAYER_CONTROLS)
+	if (!player.BLOCK_PLAYER_CONTROLS)
 	{
 		if ((!(player.Interface & INTER_COMBATMODE)))
 		{
@@ -1633,7 +1631,7 @@ bool ArxGame::ManageEditorControls()
 
 				py = DANAESIZY - INTERFACE_RATIO(158+32);
 
-				if (CURRENT_TORCH != NULL)
+				if (player.CURRENT_TORCH != NULL)
 				{
 					if (MouseInRect(px,py, px + INTERFACE_RATIO(32), py + INTERFACE_RATIO(64)))
 					{
@@ -1642,13 +1640,13 @@ bool ArxGame::ManageEditorControls()
 
 						if ((LastMouseClick & 1) && (!(EERIEMouseButton & 1)) )
 						{
-							INTERACTIVE_OBJ * temp = CURRENT_TORCH;
+							INTERACTIVE_OBJ * temp = player.CURRENT_TORCH;
 
 							if(temp && !temp->locname.empty()) {
 								
-								if (((CURRENT_TORCH->ioflags & IO_ITEM) && CURRENT_TORCH->_itemdata->equipitem)
+								if (((player.CURRENT_TORCH->ioflags & IO_ITEM) && player.CURRENT_TORCH->_itemdata->equipitem)
 									&& (player.full.skill.object_knowledge + player.full.attribute.mind
-									>= CURRENT_TORCH->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) )
+									>= player.CURRENT_TORCH->_itemdata->equipitem->elements[IO_EQUIPITEM_ELEMENT_Identify_Value].value) )
 								{
 									SendIOScriptEvent(FlyingOverIO,SM_IDENTIFY);
 								}
@@ -1691,11 +1689,11 @@ bool ArxGame::ManageEditorControls()
 
 						if ((DRAGINTER == NULL)  && (!PLAYER_MOUSELOOK_ON) && DRAGGING)
 						{
-							INTERACTIVE_OBJ * io=CURRENT_TORCH;
-							CURRENT_TORCH->show=SHOW_FLAG_IN_SCENE;
+							INTERACTIVE_OBJ *io = player.CURRENT_TORCH;
+							player.CURRENT_TORCH->show=SHOW_FLAG_IN_SCENE;
 							ARX_SOUND_PlaySFX(SND_TORCH_END);
 							ARX_SOUND_Stop(SND_TORCH_LOOP);
-							CURRENT_TORCH=NULL;
+							player.CURRENT_TORCH=NULL;
 							SHOW_TORCH=0;
 							DynLight[0].exist=0;
 							Set_DragInter(io);
@@ -1705,12 +1703,12 @@ bool ArxGame::ManageEditorControls()
 						{
 							if ((EERIEMouseButton & 4) && (COMBINE == NULL))
 							{
-								COMBINE = CURRENT_TORCH;
+								COMBINE = player.CURRENT_TORCH;
 							}
 
 							if (!(EERIEMouseButton & 2) && (LastMouseClick & 2))
 							{
-								ARX_PLAYER_ClickedOnTorch(CURRENT_TORCH);
+								player.torch_clicked(player.CURRENT_TORCH);
 								EERIEMouseButton &= ~2;
 								TRUE_PLAYER_MOUSELOOK_ON&=~1;
 							}
@@ -2279,7 +2277,7 @@ bool ArxGame::ManageEditorControls()
 
 	if (COMBINE)
 	{
-		if ((!CURRENT_TORCH) || (CURRENT_TORCH && (COMBINE != CURRENT_TORCH)))
+		if ((!player.CURRENT_TORCH) || (player.CURRENT_TORCH && (COMBINE != player.CURRENT_TORCH)))
 		{
 			Vec3f pos;
 
@@ -2337,7 +2335,7 @@ bool ArxGame::ManageEditorControls()
 					{
 						if (COMBINE->ioflags & IO_ITEM)
 						{
-							if ((COMBINE == CURRENT_TORCH) || (COMBINE->_itemdata->LightValue == 1))
+							if ((COMBINE == player.CURRENT_TORCH) || (COMBINE->_itemdata->LightValue == 1))
 							{
 								if (GLight[i]->status != 1)
 								{
@@ -2468,7 +2466,7 @@ bool ArxGame::ManageEditorControls()
 
 				INTERACTIVE_OBJ *io = InterClick(&STARTDRAG);
 
-				if (io && !BLOCK_PLAYER_CONTROLS)
+				if (io && !player.BLOCK_PLAYER_CONTROLS)
 				{
 					if (ARX_MOUSE_OVER & ARX_MOUSE_OVER_BOOK)
 					{
@@ -2585,7 +2583,7 @@ long CSEND=0;
 long MOVE_PRECEDENCE=0;
 
 extern long DISABLE_JUMP;
-extern unsigned long REQUEST_JUMP;
+
 //-----------------------------------------------------------------------------
 void ArxGame::ManagePlayerControls()
 {
@@ -2821,7 +2819,7 @@ void ArxGame::ManagePlayerControls()
 			tm.x+=(float)EEsin(t)*multi;
 			tm.z-=(float)EEcos(t)*multi;
 
-			if(!USE_PLAYERCOLLISIONS)
+			if(!player.USE_PLAYERCOLLISIONS)
 			{
 				t=radians(player.angle.a);
 				tm.y-=(float)EEsin(t)*multi;
@@ -2856,7 +2854,7 @@ void ArxGame::ManagePlayerControls()
 			tm.x-=(float)EEsin(t)*multi;
 			tm.z+=(float)EEcos(t)*multi;
 
-			if(!USE_PLAYERCOLLISIONS)
+			if(!player.USE_PLAYERCOLLISIONS)
 			{
 				t=radians(player.angle.a);
 				tm.y+=(float)EEsin(t)*multi;
@@ -2921,12 +2919,12 @@ void ArxGame::ManagePlayerControls()
 
 		if (GInput->isKeyPressed(Keyboard::Key_A) && (GInput->isKeyPressed(Keyboard::Key_LeftShift) || GInput->isKeyPressed(Keyboard::Key_RightShift)))
 		{
-			BLOCK_PLAYER_CONTROLS=0;
+			player.BLOCK_PLAYER_CONTROLS=0;
 			player.stat.life = player.full.stat.maxlife;
 			player.stat.mana = player.full.stat.maxmana;
 			player.poison = 0.f;
 			player.hunger = 100;
-			DeadTime = 0;
+			player.DeadTime = 0;
 			ARX_SOUND_PlayInterface(SND_PLAYER_FILLLIFEMANA, 0.9F + 0.2F * rnd());
 		}
 	}
@@ -2970,14 +2968,14 @@ void ArxGame::ManagePlayerControls()
 	if ((player.jumpphase==0) &&
 		GInput->actionNowPressed(CONTROLS_CUST_JUMP) )
 	{
-		REQUEST_JUMP = ARXTimeUL();
+		player.REQUEST_JUMP = ARXTimeUL();
 	}
 
 
 	// MAGIC
 	if (GInput->actionPressed(CONTROLS_CUST_MAGICMODE))
 	{
-		if (!(player.Current_Movement & PLAYER_CROUCH) && (!BLOCK_PLAYER_CONTROLS)
+		if (!(player.Current_Movement & PLAYER_CROUCH) && (!player.BLOCK_PLAYER_CONTROLS)
 			&& (ARXmenu.currentmode==AMCM_OFF))
 		{
 			if (!ARX_SOUND_IsPlaying(SND_MAGIC_AMBIENT))
@@ -3002,9 +3000,9 @@ void ArxGame::ManagePlayerControls()
 
 	if (GInput->actionNowPressed(CONTROLS_CUST_TORCH))
 	{
-		if (CURRENT_TORCH)
+		if (player.CURRENT_TORCH)
 		{
-			ARX_PLAYER_KillTorch();
+			player.torch_kill();
 		}
 		else
 		{
@@ -3024,7 +3022,7 @@ void ArxGame::ManagePlayerControls()
 					io->_itemdata->count--;
 				}
 
-				ARX_PLAYER_ClickedOnTorch(ioo);
+				player.torch_clicked(ioo);
 			}
 		}
 	}
@@ -3631,7 +3629,7 @@ void ARX_INTERFACE_Reset()
 {
 	SMOOTHSLID=0;
 	PLAYER_INTERFACE_HIDE_COUNT=0;
-	BLOCK_PLAYER_CONTROLS=0;
+	player.BLOCK_PLAYER_CONTROLS=0;
 	SLID_VALUE=0;
 	CINEMASCOPE=0;
 	CINEMA_INC=0;
@@ -3718,7 +3716,7 @@ void ArxGame::ManageKeyMouse() {
 	{
 		INTERACTIVE_OBJ * pIO = NULL;
 
-		if (!BLOCK_PLAYER_CONTROLS)
+		if (!player.BLOCK_PLAYER_CONTROLS)
 		{
 			if (TRUE_PLAYER_MOUSELOOK_ON && !(player.Interface & INTER_COMBATMODE)
 				&& (eMouseState != MOUSE_IN_NOTE)
@@ -3974,7 +3972,7 @@ void ArxGame::ManageKeyMouse() {
 	}
 
 	LAST_PLAYER_MOUSELOOK_ON=PLAYER_MOUSELOOK_ON;
-	PLAYER_ROTATION=0;
+	player.PLAYER_ROTATION=0;
 
 	long mouseDiffX = GInput->getMousePosRel().x;
 	long mouseDiffY = GInput->getMousePosRel().y;
@@ -3990,7 +3988,7 @@ void ArxGame::ManageKeyMouse() {
 	}
 
 	// Player/Eyeball Freelook Management
-	if (!BLOCK_PLAYER_CONTROLS)
+	if (!player.BLOCK_PLAYER_CONTROLS)
 	{
 		GetInventoryObj_INVENTORYUSE(&DANAEMouse);
 
@@ -4032,7 +4030,7 @@ void ArxGame::ManageKeyMouse() {
 				else flPushTimeX[1]=0;
 			}
 
-			if (USE_PLAYERCOLLISIONS)
+			if (player.USE_PLAYERCOLLISIONS)
 			{
 
 				float fTime = ARX_TIME_Get();
@@ -4206,7 +4204,7 @@ void ArxGame::ManageKeyMouse() {
 
 							player.desiredangle.b=player.angle.b;
 							player.desiredangle.b=MAKEANGLE(player.desiredangle.b-ib);
-							PLAYER_ROTATION=ib;
+							player.PLAYER_ROTATION=ib;
 						}
 				}
 		}
@@ -4214,7 +4212,7 @@ void ArxGame::ManageKeyMouse() {
 
 	{
 
-		if ((!BLOCK_PLAYER_CONTROLS) && !(player.Interface & INTER_COMBATMODE))
+		if ((!player.BLOCK_PLAYER_CONTROLS) && !(player.Interface & INTER_COMBATMODE))
 			{
 				if (DRAGINTER == NULL) {
 					if ((LastMouseClick & 1) && !(EERIEMouseButton & 1) && !(EERIEMouseButton & 4) && !(LastMouseClick & 4))
@@ -4545,7 +4543,7 @@ void ARX_INTERFACE_DrawInventory(short _sNum, int _iX=0, int _iY=0)
 }
 
 extern TextureContainer * stealth_gauge_tc;
-extern float CURRENT_PLAYER_COLOR;
+
 extern long EXTERNALVIEW;
 //-----------------------------------------------------------------------------
 // Stealth Gauge Drawing
@@ -4554,15 +4552,15 @@ void ARX_INTERFACE_Draw_Stealth_Gauge()
 {
 	if ((stealth_gauge_tc) && (!CINEMASCOPE))
 	{
-		float v=GetPlayerStealth();
+		float v = player.get_stealth_for_color();
 
-		if (CURRENT_PLAYER_COLOR<v)
+		if (player.CURRENT_PLAYER_COLOR<v)
 		{
 			float px = INTERFACE_RATIO(InventoryX) + INTERFACE_RATIO(110);
 			if (px < INTERFACE_RATIO(10)) px = INTERFACE_RATIO(10);
 
 			float py = DANAESIZY - INTERFACE_RATIO(126 + 32);
-			float t=v-CURRENT_PLAYER_COLOR;
+			float t=v-player.CURRENT_PLAYER_COLOR;
 
 			if (t>=15) v=1.f;
 			else v=(t*( 1.0f / 15 ))*0.9f+0.1f;
@@ -4582,7 +4580,7 @@ void ARX_INTERFACE_Draw_Stealth_Gauge()
 //-----------------------------------------------------------------------------
 void ARX_INTERFACE_DrawDamagedEquipment()
 {
-	if (CINEMASCOPE || BLOCK_PLAYER_CONTROLS) return;
+	if (CINEMASCOPE || player.BLOCK_PLAYER_CONTROLS) return;
 
 	if (player.Interface & INTER_INVENTORYALL) return;
 
@@ -4962,7 +4960,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 
 			for(size_t i = 0; i < RUNE_COUNT; i++) {
 				
-				if (necklace.runes[i])
+				if (player.necklace.runes[i])
 				{
 					bookcam.centerx = (382 + xpos * 45 + BOOKDECX) * Xratio;
 					bookcam.centery = (100 + ypos * 64 + BOOKDECY) * Yratio;
@@ -4975,19 +4973,19 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 
 					if (player.rune_flags & (RuneFlag)(1<<i))
 					{
-						DrawEERIEInter(necklace.lacet,&angle,&pos,NULL);
+						DrawEERIEInter(player.necklace.lacet,&angle,&pos,NULL);
 
-						if (necklace.runes[i]->angle.b!=0.f)
+						if (player.necklace.runes[i]->angle.b!=0.f)
 						{
-							if (necklace.runes[i]->angle.b>300.f)
-								necklace.runes[i]->angle.b=300.f;
+							if (player.necklace.runes[i]->angle.b>300.f)
+								player.necklace.runes[i]->angle.b=300.f;
 
-							angle.b=EEsin((float)ARX_TIME_Get()*( 1.0f / 200 ))*necklace.runes[i]->angle.b*( 1.0f / 40 );
+							angle.b=EEsin((float)ARX_TIME_Get()*( 1.0f / 200 ))*player.necklace.runes[i]->angle.b*( 1.0f / 40 );
 						}
 
-						necklace.runes[i]->angle.b-=_framedelay*0.2f;
+						player.necklace.runes[i]->angle.b-=_framedelay*0.2f;
 
-						if (necklace.runes[i]->angle.b<0.f) necklace.runes[i]->angle.b=0.f;
+						if (player.necklace.runes[i]->angle.b<0.f) player.necklace.runes[i]->angle.b=0.f;
 
 						DynLight[0].exist=0;
 						float tt;
@@ -5013,7 +5011,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 						PrepareCamera(&bookcam);
 
 						// Now draw the rune
-						DrawEERIEInter(necklace.runes[i],&angle,&pos,NULL);
+						DrawEERIEInter(player.necklace.runes[i],&angle,&pos,NULL);
 
 						PopAllTriangleList();
 
@@ -5031,9 +5029,9 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 						{
 							long r=0;
 
-							for (size_t j=0;j<necklace.runes[i]->facelist.size();j++)
+							for (size_t j=0;j<player.necklace.runes[i]->facelist.size();j++)
 							{
-								n=PtIn2DPolyProj( necklace.runes[i], &necklace.runes[i]->facelist[j] , (float)DANAEMouse.x, (float)DANAEMouse.y);
+								n=PtIn2DPolyProj( player.necklace.runes[i], &player.necklace.runes[i]->facelist[j] , (float)DANAEMouse.x, (float)DANAEMouse.y);
 
 								if (n!=0.f)
 								{
@@ -5046,9 +5044,9 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 							{
 								GRenderer->SetRenderState(Renderer::AlphaBlending, true);
 								GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendOne);
-								DrawEERIEInter(necklace.runes[i],&angle,&pos,NULL);
+								DrawEERIEInter(player.necklace.runes[i],&angle,&pos,NULL);
 
-								necklace.runes[i]->angle.b+=_framedelay*2.f;
+								player.necklace.runes[i]->angle.b+=_framedelay*2.f;
 
 								PopAllTriangleList();
 								
@@ -5228,7 +5226,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 								{
 									pos.x = (240-(count*32)*( 1.0f / 2 )+j*32);
 									pos.y = (306);
-									DrawBookInterfaceItem(necklace.pTexTab[spellicons[i].symbols[j]], pos.x, pos.y);
+									DrawBookInterfaceItem(player.necklace.pTexTab[spellicons[i].symbols[j]], pos.x, pos.y);
 								}
 						}
 
@@ -5298,7 +5296,7 @@ namespace
 /// Update QuestBook_Cache_Text if it needs to. Otherwise does nothing.
 void QuestBook_Update()
 {
-	if(QuestBook_Cache_nbQuests == PlayerQuest.size())
+	if(QuestBook_Cache_nbQuests == player.quest.size())
 		return;
 
 	delete[] QuestBook_Cache_Text;
@@ -5323,16 +5321,16 @@ void QuestBook_Update()
 
 	QuestBook.pages[0] = 0;
 
-	for(size_t i = 0; i < PlayerQuest.size(); ++i) {
-		lLenght += PlayerQuest[i].localised.length();
+	for(size_t i = 0; i < player.quest.size(); ++i) {
+		lLenght += player.quest[i].localised.length();
 	}
 
-	QuestBook_Cache_Text = new char[lLenght+PlayerQuest.size()*2+1];
-	memset(QuestBook_Cache_Text, 0, (lLenght+PlayerQuest.size()*2+1));
+	QuestBook_Cache_Text = new char[lLenght+player.quest.size()*2+1];
+	memset(QuestBook_Cache_Text, 0, (lLenght+player.quest.size()*2+1));
 
-	for(size_t i = 0; i < PlayerQuest.size(); ++i) {
-		if(PlayerQuest[i].localised.size()) {
-			strcat(QuestBook_Cache_Text, PlayerQuest[i].localised.c_str());
+	for(size_t i = 0; i < player.quest.size(); ++i) {
+		if(player.quest[i].localised.size()) {
+			strcat(QuestBook_Cache_Text, player.quest[i].localised.c_str());
 			strcat(QuestBook_Cache_Text, "\n\n");
 			lLenght += 2;
 		}
@@ -5356,7 +5354,7 @@ void QuestBook_Update()
 
 	QuestBook.totpages = lCurPage;
 
-	QuestBook_Cache_nbQuests = PlayerQuest.size();
+	QuestBook_Cache_nbQuests = player.quest.size();
 }
 
 void QuestBook_Render()
@@ -6494,7 +6492,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 	}
 	else if (Book_Mode == BOOKMODE_QUESTS)
 	{
-		if(!PlayerQuest.empty()) {
+		if(!player.quest.empty()) {
 			QuestBook_Update();
 			QuestBook_Render();
 		}
@@ -6956,9 +6954,9 @@ void ARX_INTERFACE_DrawCurrentTorch()
 
 	py = DANAESIZY - INTERFACE_RATIO(158+32);
 
-	EERIEDrawBitmap(px, py, INTERFACE_RATIO_DWORD(CURRENT_TORCH->inv->m_dwWidth),
-	                INTERFACE_RATIO_DWORD(CURRENT_TORCH->inv->m_dwHeight),
-	                0.001f, CURRENT_TORCH->inv, Color::white);
+	EERIEDrawBitmap(px, py, INTERFACE_RATIO_DWORD(player.CURRENT_TORCH->inv->m_dwWidth),
+	                INTERFACE_RATIO_DWORD(player.CURRENT_TORCH->inv->m_dwHeight),
+	                0.001f, player.CURRENT_TORCH->inv, Color::white);
 
 	if ( rnd() > 0.2f )
 	{
@@ -7541,7 +7539,7 @@ void ArxGame::DrawAllInterface()
 			}
 		}
 
-		if (CURRENT_TORCH)
+		if (player.CURRENT_TORCH)
 			ARX_INTERFACE_DrawCurrentTorch();
 	}
 
@@ -7629,11 +7627,11 @@ void ArxGame::DrawAllInterface()
 			if (player.SpellToMemorize.iSpellSymbols[i] != RUNE_NONE)
 			{
 				EERIEDrawBitmap2(pos.x, pos.y, INTERFACE_RATIO(32), INTERFACE_RATIO(32), 0,
-				                 necklace.pTexTab[player.SpellToMemorize.iSpellSymbols[i]], Color::white);
+				                 player.necklace.pTexTab[player.SpellToMemorize.iSpellSymbols[i]], Color::white);
 
 				if (bHalo)
 				{
-					TextureContainer *tc = necklace.pTexTab[player.SpellToMemorize.iSpellSymbols[i]];
+					TextureContainer *tc = player.necklace.pTexTab[player.SpellToMemorize.iSpellSymbols[i]];
 					TextureContainer *tc2;
 
 					tc->CreateHalo();
@@ -7815,7 +7813,7 @@ long CANNOT_PUT_IT_HERE=0;
 
 long Manage3DCursor(long flags)
 {
-	if (BLOCK_PLAYER_CONTROLS)
+	if (player.BLOCK_PLAYER_CONTROLS)
 		return 0;
 
 	float ag=player.angle.a;
@@ -8216,7 +8214,7 @@ void ARX_INTERFACE_RenderCursorInternal(long flag)
 		}
 	}
 
-	if (flag || ((!BLOCK_PLAYER_CONTROLS) &&
+	if (flag || ((!player.BLOCK_PLAYER_CONTROLS) &&
 		(!PLAYER_INTERFACE_HIDE_COUNT)))
 	{
 
@@ -8441,7 +8439,7 @@ void ARX_INTERFACE_RenderCursorInternal(long flag)
 			}
 			else
 			{
-				if (!(player.Current_Movement & PLAYER_CROUCH) && (!BLOCK_PLAYER_CONTROLS
+				if (!(player.Current_Movement & PLAYER_CROUCH) && (!player.BLOCK_PLAYER_CONTROLS
 					&& (GInput->actionPressed(CONTROLS_CUST_MAGICMODE)))
 					&& (ARXmenu.currentmode==AMCM_OFF))
 				{

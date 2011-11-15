@@ -173,7 +173,7 @@ float AM_LASTPOS_x = -999999.f;
 float AM_LASTPOS_z = -999999.f;
 void ARX_MINIMAP_ValidatePlayerPos()
 {
-	if (BLOCK_PLAYER_CONTROLS) return;
+	if (player.BLOCK_PLAYER_CONTROLS) return;
 
 	float req;
 

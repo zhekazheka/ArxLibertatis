@@ -81,9 +81,9 @@ enum Rune {
 	RUNE_RHAA,        // Lower
 	RUNE_FRIDD,       // Ice
 	RUNE_AKBAA,       // Akbaa
+	RUNE_COUNT, // = 21
 	RUNE_NONE = 255
 };
-const size_t RUNE_COUNT = 21;
 
 enum SpellcastFlag {
 	SPELLCAST_FLAG_NODRAW         = (1<<0),

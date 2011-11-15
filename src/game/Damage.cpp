@@ -311,7 +311,7 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 		if (player.stat.life > 0) alive = 1;
 		else alive = 0;
 
-		if (!BLOCK_PLAYER_CONTROLS)
+		if (!player.BLOCK_PLAYER_CONTROLS)
 			player.stat.life -= dmg;
 
 		if (player.stat.life <= 0.f)
@@ -379,7 +379,7 @@ void ARX_DAMAGES_HealPlayer(float dmg)
 
 	if (dmg > 0.f)
 	{
-		if (!BLOCK_PLAYER_CONTROLS)
+		if (!player.BLOCK_PLAYER_CONTROLS)
 			player.stat.life += dmg;
 
 		if (player.stat.life > player.full.stat.maxlife) player.stat.life = player.full.stat.maxlife;

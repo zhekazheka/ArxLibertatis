@@ -86,7 +86,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 using std::string;
 
-extern INTERACTIVE_OBJ * CURRENT_TORCH;
 extern long GLOBAL_MAGIC_MODE;
 float FORCE_TIME_RESTORE = 0;
 extern Vec3f	WILL_RESTORE_PLAYER_POSITION;
@@ -356,7 +355,7 @@ void ARX_CHANGELEVEL_Change(const string & level, const string & target, long an
 		return; // nothing more to do :)
 	}
 
-	ARX_PLAYER_Reset_Fall();
+	player.reset_fall();
 
 	ARX_TIME_Pause();
 	PROGRESS_BAR_COUNT += 1.f;
@@ -465,7 +464,7 @@ bool IsPlayerEquipedWith(INTERACTIVE_OBJ * io) {
 
 	long num = GetInterNum(io);
 
-	if (io == CURRENT_TORCH)
+	if (io == player.CURRENT_TORCH)
 		return true;
 
 	if (ValidIONum(num))
@@ -700,7 +699,7 @@ void FillIOIdent(char (&tofill)[N], const INTERACTIVE_OBJ * io) {
 	}
 }
 
-extern long sp_max;
+
 extern long cur_rf;
 extern long cur_mx;
 extern long cur_mr;
@@ -714,7 +713,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 
 	long allocsize = sizeof(ARX_CHANGELEVEL_PLAYER) + 48000;
 	allocsize += player.keyring.ring.size() * 64;
-	allocsize += 80 * PlayerQuest.size();
+	allocsize += 80 * player.quest.size();
 	allocsize += sizeof(SavedMapMarkerData) * Mapmarkers.size();
 
 	char * dat = new char[allocsize];
@@ -757,7 +756,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	FillIOIdent(asp->equipshieldIO, player.equipshieldIO);
 	FillIOIdent(asp->leftIO, player.leftIO);
 	FillIOIdent(asp->rightIO, player.rightIO);
-	FillIOIdent(asp->curtorch, CURRENT_TORCH);
+	FillIOIdent(asp->curtorch, player.CURRENT_TORCH);
 
 	std::copy(Precast, Precast + SAVED_MAX_PRECAST, asp->precast);
 
@@ -790,7 +789,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	if (player.onfirmground)
 		asp->misc_flags |= 1;
 
-	if (WILLRETURNTOCOMBATMODE)
+	if (player.WILLRETURNTOCOMBATMODE)
 		asp->misc_flags |= 2;
 
 	asp->physics = player.physics;
@@ -808,7 +807,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	if (sp_arm == 3)
 		asp->sp_flags |= SP_ARM3;
 
-	if (sp_max)
+	if (player.sp_max)
 		asp->sp_flags |= SP_MAX;
 
 	if (cur_mr == 3)
@@ -840,7 +839,7 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	asp->skin										= player.skin;
 
 	asp->xp = player.xp;
-	asp->nb_PlayerQuest = PlayerQuest.size();
+	asp->nb_PlayerQuest = player.quest.size();
 	asp->keyring_nb = player.keyring.ring.size();
 	asp->Global_Magic_Mode = GLOBAL_MAGIC_MODE;
 	asp->Nb_Mapmarkers = Mapmarkers.size();
@@ -868,10 +867,10 @@ static long ARX_CHANGELEVEL_Push_Player() {
 			strcpy(asp->equiped[k], "");
 	}
 	
-	for(size_t i = 0; i < PlayerQuest.size(); i++) {
+	for(size_t i = 0; i < player.quest.size(); i++) {
 		memset(dat + pos, 0, 80);
-		assert(PlayerQuest[i].ident.length() < 80);
-		strcpy((char *)(dat + pos), PlayerQuest[i].ident.c_str());
+		assert(player.quest[i].ident.length() < 80);
+		strcpy((char *)(dat + pos), player.quest[i].ident.c_str());
 		pos += 80;
 	}
 	
@@ -1696,7 +1695,7 @@ long ARX_CHANGELEVEL_Pop_Level(ARX_CHANGELEVEL_INDEX * asi, long num, long First
 #ifdef BUILD_EDITOR
 		EDITMODE = 0;
 #endif
-		BLOCK_PLAYER_CONTROLS = 0;
+		player.BLOCK_PLAYER_CONTROLS = 0;
 		ARX_INTERFACE_Reset();
 		EERIE_ANIMMANAGER_PurgeUnused();
 		
@@ -1705,7 +1704,7 @@ long ARX_CHANGELEVEL_Pop_Level(ARX_CHANGELEVEL_INDEX * asi, long num, long First
 #ifdef BUILD_EDITOR
 		EDITMODE = 0;
 #endif
-		BLOCK_PLAYER_CONTROLS = 0;
+		player.BLOCK_PLAYER_CONTROLS = 0;
 		ARX_INTERFACE_Reset();
 		EERIE_ANIMMANAGER_PurgeUnused();
 	}
@@ -1793,7 +1792,7 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	player.stat.maxmana = asp->maxmana;
 	
 	player.onfirmground = (asp->misc_flags & 1) ? 1 : 0;
-	WILLRETURNTOCOMBATMODE = (asp->misc_flags & 2) ? 1 : 0;
+	player.WILLRETURNTOCOMBATMODE = (asp->misc_flags & 2) ? 1 : 0;
 	
 	player.physics = asp->physics;
 	player.poison = asp->poison;
@@ -1812,10 +1811,10 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	
 	if(asp->sp_flags & SP_MAX) {
 		cur_mx = 3;
-		sp_max = 1;
+		player.sp_max = 1;
 	} else {
 		cur_mx = 0;
-		sp_max = 0;
+		player.sp_max = 0;
 	}
 	
 	cur_mr = (asp->sp_flags & SP_MR) ? 3 : 0;
@@ -1891,7 +1890,12 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 		LogError << "truncated data";
 		return -1;
 	}
-	ARX_PLAYER_Quest_Init();
+
+	if (!player.quest.empty())
+	{
+		player.quest.clear();
+	}
+
 	for(int i = 0; i < asp->nb_PlayerQuest; i++) {
 		ARX_PLAYER_Quest_Add(script::loadUnlocalized(toLowercase(safestring(dat + pos, 80))), true);
 		pos += 80;
@@ -1933,7 +1937,7 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	player.equipshieldIO = ConvertToValidIO(asp->equipshieldIO);
 	player.leftIO = ConvertToValidIO(asp->leftIO);
 	player.rightIO = ConvertToValidIO(asp->rightIO);
-	CURRENT_TORCH = ConvertToValidIO(asp->curtorch);
+	player.CURRENT_TORCH = ConvertToValidIO(asp->curtorch);
 	PROGRESS_BAR_COUNT += 1.f;
 	LoadLevelScreen();
 	
@@ -3009,7 +3013,6 @@ static bool ARX_CHANGELEVEL_Get_Player_LevelData(ARX_CHANGELEVEL_PLAYER_LEVEL_DA
 }
 
 long DONT_CLEAR_SCENE;
-extern long STARTED_A_GAME;
 
 long ARX_CHANGELEVEL_Load(long instance) {
 	
@@ -3065,8 +3068,8 @@ long ARX_CHANGELEVEL_Load(long instance) {
 		return -1;
 	}
 	
-	STARTED_A_GAME = 1;
-	BLOCK_PLAYER_CONTROLS = 0;
+	player.STARTED_A_GAME = 1;
+	player.BLOCK_PLAYER_CONTROLS = 0;
 	player.Interface &= ~INTER_COMBATMODE;
 	
 	if (inter.iobj[0]) inter.iobj[0]->animlayer[1].cur_anim = NULL;

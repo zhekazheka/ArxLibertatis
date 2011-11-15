@@ -692,7 +692,7 @@ long ARX_SOUND_PlayCollision(long mat1, long mat2, float volume, float power, Ve
 		channel.position.y = position->y;
 		channel.position.z = position->z;
 	} else {
-		ARX_PLAYER_FrontPos(&channel.position);
+		player.get_front_pos(channel.position);
 	}
 
 	channel.pitch = 0.9F + 0.2F * rnd();
@@ -755,7 +755,7 @@ long ARX_SOUND_PlayCollision(const string & name1, const string & name2, float v
 			return -1;
 		}
 	} else {
-		ARX_PLAYER_FrontPos(&channel.position);
+		player.get_front_pos(channel.position);
 	}
 	
 	channel.pitch = 0.975f + 0.5f * rnd();
@@ -919,7 +919,7 @@ void ARX_SOUND_RefreshPosition(SourceId & sample_id, const Vec3f * position) {
 			audio::setSamplePosition(sample_id, *position);
 		} else {
 			Vec3f pos;
-			ARX_PLAYER_FrontPos(&pos);
+			player.get_front_pos(pos);
 			audio::setSamplePosition(sample_id, pos);
 		}
 	}

@@ -121,7 +121,6 @@ static const float DEC_FOCAL = 50.0f;
 static const float IMPROVED_FOCAL = 320.0f;
 
 void MakeSpCol();
-extern long WILLRETURNTOCOMBATMODE;
 extern long TRUE_PLAYER_MOUSELOOK_ON;
 long passwall=0;
 long WILLRETURNTOFREELOOK = 0;
@@ -154,13 +153,13 @@ static void ApplyCurMr();
 static void ApplyCurSOS(); 
  
  
-extern long FistParticles;
+
 extern long ParticleCount;
-extern long sp_max;
+
 short uw_mode=0;
 short uw_mode_pos=0;
 extern long MAGICMODE;
-extern INTERACTIVE_OBJ * CURRENT_TORCH;
+
 extern float GLOBAL_SLOWDOWN;
 
 extern float sp_max_y[64];
@@ -2230,8 +2229,6 @@ bool No_MagicAllowed()
 	ARX_SOUND_PlaySFX(SND_MAGIC_FIZZLE);
 	return false;
 }
-extern long PLAYER_PARALYSED;
-
 
 static void ARX_SPELLS_Analyse() {
 	
@@ -2373,13 +2370,13 @@ void ARX_SPELLS_ManageMagic()
 
 	snip++;
 
-	if ((!(player.Current_Movement & PLAYER_CROUCH)) && (!BLOCK_PLAYER_CONTROLS && 
-		(GInput->actionPressed(CONTROLS_CUST_MAGICMODE))) && (!PLAYER_PARALYSED))
+	if ((!(player.Current_Movement & PLAYER_CROUCH)) && (!player.BLOCK_PLAYER_CONTROLS && 
+		(GInput->actionPressed(CONTROLS_CUST_MAGICMODE))) && (!player.PLAYER_PARALYSED))
 	{
 		
 		if (player.Interface & INTER_COMBATMODE)
 		{
-			WILLRETURNTOCOMBATMODE=1;
+			player.WILLRETURNTOCOMBATMODE=1;
 
 			ARX_INTERFACE_Combat_Mode(0);
 			bGToggleCombatModeWithKey=false;
@@ -2524,14 +2521,14 @@ void ARX_SPELLS_ManageMagic()
 
 		ARX_FLARES_broken=1;
 
-		if (WILLRETURNTOCOMBATMODE)
+		if (player.WILLRETURNTOCOMBATMODE)
 		{
 			player.Interface|=INTER_COMBATMODE;
 			player.Interface|=INTER_NO_STRIKE;
 
 			ARX_EQUIPMENT_LaunchPlayerReadyWeapon();
 			player.doingmagic=0;
-			WILLRETURNTOCOMBATMODE=0;
+			player.WILLRETURNTOCOMBATMODE=0;
 
 			if(config.misc.newControl) {
 				TRUE_PLAYER_MOUSELOOK_ON|=1;
@@ -2890,7 +2887,7 @@ void ARX_SPELLS_Precast_Check()
 			
 			if (player.Interface & INTER_COMBATMODE)
 			{
-				WILLRETURNTOCOMBATMODE=1;
+				player.WILLRETURNTOCOMBATMODE=1;
 				ARX_INTERFACE_Combat_Mode(0);
 				bGToggleCombatModeWithKey=false;
 				ResetAnim(&inter.iobj[0]->animlayer[1]);
@@ -3200,7 +3197,7 @@ bool ARX_SPELLS_Launch(Spell typ, long source, SpellcastFlags flagss, long level
 		level += 2;
 	}
 
-	if ( sp_max ) 
+	if ( player.sp_max ) 
 	{ 
 		level = std::max( level, 15L );
 	}
@@ -3484,7 +3481,7 @@ bool ARX_SPELLS_Launch(Spell typ, long source, SpellcastFlags flagss, long level
 			CSpellFx *pCSpellFx = NULL;
 			long number;
 
-			if(sp_max || cur_rf == 3) {
+			if(player.sp_max || cur_rf == 3) {
 				number = checked_range_cast<long>(spells[i].caster_level);
 			} else {
 						if ( spells[i].caster_level < 3 ) number = 1;
@@ -3658,8 +3655,8 @@ bool ARX_SPELLS_Launch(Spell typ, long source, SpellcastFlags flagss, long level
 					}
 				}
 
-				if((CURRENT_TORCH) && distSqr(target, player.pos) < square(pDoze->GetPerimetre())) {
-					ARX_PLAYER_ClickedOnTorch(CURRENT_TORCH);
+				if((player.CURRENT_TORCH) && distSqr(target, player.pos) < square(pDoze->GetPerimetre())) {
+					player.torch_clicked(player.CURRENT_TORCH);
 				}
 
 				for(size_t n = 0; n < MAX_SPELLS; n++) {
@@ -7157,7 +7154,7 @@ void ARX_SPELLS_Update()
 
 							if (ii==0) 
 							{
-								if (!BLOCK_PLAYER_CONTROLS)
+								if (!player.BLOCK_PLAYER_CONTROLS)
 									player.stat.life=std::min(player.stat.life+gain,player.full.stat.maxlife);									
 							}
 							else inter.iobj[ii]->_npcdata->life=std::min(inter.iobj[ii]->_npcdata->life+gain,inter.iobj[ii]->_npcdata->maxlife);
@@ -8008,7 +8005,7 @@ void ARX_SPELLS_Update()
 								tokeep=-1;
 							}
 
-							if ((rnd()>0.997f) || (sp_max && (rnd()>0.8f)) || ((cur_mr>=3) && (rnd()>0.3f)))
+							if ((rnd()>0.997f) || (player.sp_max && (rnd()>0.8f)) || ((cur_mr>=3) && (rnd()>0.3f)))
 							{
 								strcpy(tmptext,"graph/obj3d/interactive/npc/y_mx/y_mx.asl");
 								tokeep=0;
@@ -8748,10 +8745,13 @@ static void ApplyPasswall() {
 	sp_max_nb=strlen(sp_max_ch);
 	sp_max_start=ARX_TIME_Get();
 
-	if (USE_PLAYERCOLLISIONS)
-		USE_PLAYERCOLLISIONS=0;
-	else
-		USE_PLAYERCOLLISIONS=1;
+	if (player.USE_PLAYERCOLLISIONS)
+	{
+		player.USE_PLAYERCOLLISIONS = false;
+	} else
+	{
+		player.USE_PLAYERCOLLISIONS = true;
+	}
 }
 
 static void ApplySPRf() {
@@ -8788,9 +8788,9 @@ static void ApplySPuw() {
 static void ApplySPMax() {
 	
 	MakeCoolFx(&player.pos);
-	sp_max=~sp_max;
+	player.sp_max=~player.sp_max;
 
-	if (sp_max)
+	if (player.sp_max)
 	{
 		MakeSpCol();
 		strcpy(sp_max_ch,"!!!_FaNt0mAc1e_!!!");

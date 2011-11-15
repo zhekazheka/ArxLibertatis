@@ -29,6 +29,14 @@
 #include "gui/Interface.h"
 #include "gui/Speech.h"
 
+// constants
+const float arx::character::STEP_DISTANCE = 120.0f;
+const float arx::character::SKILL_STEALTH_MAX = 100.0f;
+
+// globals
+arx::character player;
+
+// externs
 extern bool bBookHalo;
 extern bool bGoldHalo;
 extern unsigned long ulBookHaloTime;
@@ -37,27 +45,59 @@ extern long cur_rf;
 extern long cur_mr;
 extern long SPECIAL_PNUX;
 
-extern long sp_max;
+
 
 extern long DANAESIZX;
 extern long DANAESIZY;
-
 
 float ARX_EQUIPMENT_ApplyPercent(INTERACTIVE_OBJ * io, long ident, float trueval);
 
 arx::character::character()
 {
+	STARTED_A_GAME = false;
 	LastHungerSample = 0;
+	Falling_Height = 0.0f;
+	FALLING_TIME = 0;
+	PLAYER_PARALYSED = false;
+	CURRENT_PLAYER_COLOR = 0;
+	PLAYER_ROTATION = 0;
+	USE_PLAYERCOLLISIONS = true;
+	BLOCK_PLAYER_CONTROLS = false;
+	WILLRETURNTOCOMBATMODE = false;
+	LASTPLAYERA = 0;
+	LAST_ON_PLATFORM = false;
+	LAST_VECT_COUNT = -1;
+	LAST_FIRM_GROUND = true;
+	TRUE_FIRM_GROUND = true;
+	DISABLE_JUMP = false;
+	lastposy = -9999999.f;
+	REQUEST_JUMP = 0;
+	JUMP_DIVIDE = 0;
+	currentdistance = 0.f;
+	Full_Jump_Height = 0;
+	DeadTime = 0;
+	DeadCameraDistance = 0.f;
+	ROTATE_START = 0;
+	LAST_JUMP_ENDTIME = 0;
+	FistParticles = 0;
+	sp_max = 0;
+	CURRENT_TORCH = NULL;
 }
 
-float arx::character::get_stealth(bool modified)
+// Specific for color checks
+float arx::character::get_stealth_for_color() const
+{
+	return 15.0f + player.full.skill.stealth * 1E-1f;
+}
+
+float arx::character::get_stealth(bool modified) const
 {
 	return skill.stealth + 
 		full.attribute.dexterity * 2.0f +
 		(modified ? mod.skill.stealth : 0.0f);
 }
 
-float arx::character::get_mecanism(bool modified)
+float arx::character::get_mecanism(bool modified) const
 {
 	return skill.mecanism + 
 		full.attribute.mind +
@@ -65,21 +105,21 @@ float arx::character::get_mecanism(bool modified)
 		(modified ? mod.skill.mecanism : 0.0f);
 }
 
-float arx::character::get_intuition(bool modified)
+float arx::character::get_intuition(bool modified) const
 {
 	return skill.intuition + 
 		full.attribute.mind * 2.0f +
 		(modified ? mod.skill.intuition : 0.0f);
 }
 
-float arx::character::get_etheral_link(bool modified)
+float arx::character::get_etheral_link(bool modified) const
 {
 	return skill.etheral_link + 
 		full.attribute.mind * 2.0f +
 		(modified ? mod.skill.etheral_link : 0.0f);
 }
 
-float arx::character::get_object_knowledge(bool modified)
+float arx::character::get_object_knowledge(bool modified) const
 {
 	return skill.object_knowledge + 
 		full.attribute.mind * 3.0f +
@@ -88,14 +128,14 @@ float arx::character::get_object_knowledge(bool modified)
 		(modified ? mod.skill.object_knowledge : 0.0f);
 }
 
-float arx::character::get_casting(bool modified)
+float arx::character::get_casting(bool modified) const
 {
 	return skill.casting + 
 		(full.attribute.mind * 2.0f) +
 		(modified ? mod.skill.casting : 0.0f);
 }
 
-float arx::character::get_projectile(bool modified)
+float arx::character::get_projectile(bool modified) const
 {
 	return skill.projectile + 
 		full.attribute.strength +
@@ -103,7 +143,7 @@ float arx::character::get_projectile(bool modified)
 		(modified ? mod.skill.projectile : 0.0f);
 }
 
-float arx::character::get_close_combat(bool modified)
+float arx::character::get_close_combat(bool modified) const
 {
 	return skill.close_combat + 
 		full.attribute.dexterity + 
@@ -111,7 +151,7 @@ float arx::character::get_close_combat(bool modified)
 		(modified ? mod.skill.close_combat : 0.0f);
 }
 
-float arx::character::get_defense(bool modified)
+float arx::character::get_defense(bool modified) const
 {
 	return skill.defense + 
 		full.attribute.constitution * 3.0f +
@@ -785,5 +825,82 @@ void arx::character::frame_check(const float &frame_delta)
 		}
 
 		stat.limit();
+	}
+}
+
+void arx::character::start_fall()
+{
+	FALLING_TIME = ARXTimeUL();
+	Falling_Height = 50.f;
+
+	float yy;
+	if (CheckInPoly(pos.x, pos.y, pos.z, &yy))
+	{
+		Falling_Height = pos.y;
+	}
+}
+
+void arx::character::reset_fall()
+{
+	FALLING_TIME = 0;
+	Falling_Height = 50.f;
+	falling = 0;
+}
+
+// Fills "pos" with player "front pos" for sound purpose
+void arx::character::get_front_pos(Vec3f &pos) const
+{
+	pos = player.pos + Vec3f(EEsin(radians(MAKEANGLE(angle.b))) * -100.0f, 100.0f, EEcos(radians(MAKEANGLE(angle.b))) * 100.f);
+}
+
+// Forces player orientation to look at an IO
+void arx::character::look_at(INTERACTIVE_OBJ *io)
+{
+	// Validity Check
+	if (io)
+	{
+		EERIE_CAMERA tcam;
+		Vec3f target;
+
+		long id = inter.iobj[0]->obj->fastaccess.view_attach;
+
+		if(id != -1) {
+			tcam.pos = inter.iobj[0]->obj->vertexlist3[id].v;
+		} else {
+			tcam.pos = pos;
+		}
+
+		id = io->obj->fastaccess.view_attach;
+
+		if(id != -1) {
+			target = io->obj->vertexlist3[id].v;
+		}
+		else
+		{
+			target = io->pos;
+		}
+
+		// For the case of not already computed Vlist3... !
+		if(fartherThan(target, io->pos, 400.f)) 
+		{
+			target = io->pos;
+		}
+
+		SetTargetCamera(&tcam, target.x, target.y, target.z);
+		desiredangle.a = angle.a = MAKEANGLE(-tcam.angle.a);
+		desiredangle.b = angle.b = MAKEANGLE(tcam.angle.b - 180.f);
+		angle.g = 0;
+	}
+}
+
+// Removes player invisibility by killing Invisibility spells on him
+void arx::character::remove_invisibility() 
+{
+	for (int i = 0; i < MAX_SPELLS; i++) 
+	{
+		if (spells[i].exist && spells[i].type == SPELL_INVISIBILITY && spells[i].caster == 0) 
+		{
+			spells[i].tolive = 0;
+		}
 	}
 }

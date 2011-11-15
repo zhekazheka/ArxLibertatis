@@ -1046,7 +1046,7 @@ long DanaeLoadLevel(const fs::path & file) {
 	if(!dat) {
 		LOADEDD = 1;
 		FASTmse = 0;
-		USE_PLAYERCOLLISIONS = 1;
+		player.USE_PLAYERCOLLISIONS = 1;
 		LogInfo << "Done loading level";
 		return 1;
 	}
@@ -1155,7 +1155,7 @@ long DanaeLoadLevel(const fs::path & file) {
 	
 	LOADEDD = 1;
 	FASTmse = 0;
-	USE_PLAYERCOLLISIONS = 1;
+	player.USE_PLAYERCOLLISIONS = true;
 	
 	LogInfo << "Done loading level";
 	
@@ -1169,7 +1169,6 @@ extern long DONT_CLEAR_SCENE;
 long FAST_RELEASE = 0;
 extern INTERACTIVE_OBJ * FlyingOverIO;
 extern void ARX_SOUND_Reinit();
-extern unsigned long LAST_JUMP_ENDTIME;
 
 extern EERIE_3DOBJ * stone0;
 extern long stone0_count;
@@ -1273,11 +1272,11 @@ void DanaeClearLevel(long flag)
 
 	FADEDIR = 0;
 	FADEDURATION = 0;
-	LAST_JUMP_ENDTIME = 0;
+	player.LAST_JUMP_ENDTIME = 0;
 	FAST_RELEASE = 1;
 	MCache_ClearAll();
 	ARX_MINIMAP_PurgeTC();
-	ARX_GAME_Reset(flag);
+	arx::game::reset(flag);
 	FlyingOverIO = NULL;
 
 	EERIE_PATHFINDER_Release();
