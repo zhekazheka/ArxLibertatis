@@ -22,7 +22,7 @@
 #include "core/GameTime.h"
 #include "game/Inventory.h"
 #include "game/Player.h"
-#include "graphics/math.h"
+#include "graphics/Math.h"
 #include "graphics/particle/ParticleEffects.h"
 #include "scene/Interactive.h"
 #include "scene/GameSound.h"
