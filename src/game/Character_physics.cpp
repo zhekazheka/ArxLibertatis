@@ -136,41 +136,39 @@ void arx::character::manage_movement()
 		// Compute current player speedfactor
 		float speedfactor = inter.iobj[0]->basespeed + inter.iobj[0]->speed_modif;
 
-		if (cur_mr == 3)
+		if (speedfactor < 0) speedfactor = 0;
+		if (cur_mr == 3) speedfactor += 0.5f;
+		if (cur_rf == 3) speedfactor += 1.5f;
+
+		// Compute time things
+		static float StoredTime = 0;
+		float DeltaTime = StoredTime;
+
+		if (Original_framedelay > 0)
 		{
-			speedfactor += 0.5f;
+			DeltaTime = StoredTime + (float)Original_framedelay * speedfactor; //FrameDiff;
 		}
 
-		if (cur_rf == 3)
+		if (EDITMODE) 
 		{
-			speedfactor += 1.5f;
+			DeltaTime = 25.f;
 		}
 
-		if (speedfactor < 0)
+		if (player.jumpphase)
 		{
-			speedfactor = 0;
-		}
-
-		float delta = Original_framedelay * speedfactor;
-
-		// sub-divide frames to ensure the maximum delta remains
-		// equal or below it's 10fps equivalant.
-		const float minimum_rate = 1000.0f / 60.0f;
-		int sub_divisions = 1 + (int)floorf(delta / minimum_rate);
-
-		// don't compute player physics at all this frame if the delta is ridiculously high
-		if (sub_divisions < 10)
-		{
-			if (sub_divisions > 1)
+			while (DeltaTime > 25.f)
 			{
-				delta /= (float)sub_divisions;
-			}
-
-			for (int i = 0; i < sub_divisions; i++)
-			{
-				do_physics(delta);
+				PlayerMovementIterate(DeltaTime);
+				DeltaTime -= 25.f;
 			}
 		}
+		else
+		{
+			PlayerMovementIterate(DeltaTime);
+			DeltaTime = 0;
+		}
+
+		StoredTime = DeltaTime;
 	}
 }
 
