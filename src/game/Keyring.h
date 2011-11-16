@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #pragma once
 
 #ifndef ARX_GAME_KEYRING_H
 #define ARX_GAME_KEYRING_H
 
+#include <string.h>
 #include <string>
 #include <vector>
 
@@ -31,7 +32,7 @@ namespace arx
 {
 	class keyring
 	{
-	public:
+public:
 
 		struct KEYRING_SLOT {
 			void init()
@@ -44,9 +45,13 @@ namespace arx
 			char slot[64];
 		};
 
-		keyring() {}
-		~keyring() {}
-	
+		keyring()
+		{
+		}
+		~keyring()
+		{
+		}
+
 		// Init/Reset player Keyring structures
 		void init()
 		{
@@ -55,7 +60,7 @@ namespace arx
 				ring.clear();
 			}
 		}
-		
+
 		// Add a key to Keyring
 		void add(const std::string &key)
 		{
@@ -65,11 +70,11 @@ namespace arx
 		}
 
 		// Sends COMBINE event to "io" for each keyring entry
-		void combine(INTERACTIVE_OBJ * io)
+		void combine(INTERACTIVE_OBJ *io)
 		{
-			for (int i = 0; i < ring.size(); i++) 
+			for (size_t i = 0; i < ring.size(); i++)
 			{
-				if (SendIOScriptEvent(io, SM_COMBINE, ring[i].slot) == REFUSE) 
+				if (SendIOScriptEvent(io, SM_COMBINE, ring[i].slot) == REFUSE)
 				{
 					break;
 				}

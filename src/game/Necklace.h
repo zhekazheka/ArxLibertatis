@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #pragma once
 
 #ifndef ARX_GAME_NECKLACE_H
@@ -31,8 +31,8 @@ namespace arx
 {
 	class necklace
 	{
-	public:
-		necklace() 
+public:
+		necklace()
 		{
 			lacet = 0;
 			for (int i = 0; i < RUNE_COUNT; i++)
@@ -42,11 +42,11 @@ namespace arx
 			}
 		}
 
-		~necklace() 
-		{ 
-			clear(); 
+		~necklace()
+		{
+			clear();
 		}
-		
+
 		void clear();
 		void init();
 

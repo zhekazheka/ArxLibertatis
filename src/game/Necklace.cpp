@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #include "game/Necklace.h"
 
 #include "game/Spells.h"
-#include "scene/Object.h"
 #include "graphics/data/TextureContainer.h"
+#include "scene/Object.h"
 
 void arx::necklace::clear()
 {
@@ -31,9 +31,9 @@ void arx::necklace::clear()
 		lacet = NULL;
 	}
 
-	for (long i=0; i<20; i++)
+	for (long i = 0; i < 20; i++)
 	{
-		if (runes[i]) 
+		if (runes[i])
 		{
 			delete runes[i];
 			runes[i] = NULL;
@@ -49,7 +49,7 @@ void arx::necklace::clear()
 void arx::necklace::init()
 {
 	lacet = loadObject("graph/interface/book/runes/lacet.teo");
-	
+
 	runes[RUNE_AAM]         = loadObject("graph/interface/book/runes/runes_aam.teo");
 	runes[RUNE_CETRIUS]     = loadObject("graph/interface/book/runes/runes_citrius.teo");
 	runes[RUNE_COMUNICATUM] = loadObject("graph/interface/book/runes/runes_comunicatum.teo");
@@ -70,7 +70,7 @@ void arx::necklace::init()
 	runes[RUNE_VISTA]       = loadObject("graph/interface/book/runes/runes_vista.teo");
 	runes[RUNE_VITAE]       = loadObject("graph/interface/book/runes/runes_vitae.teo");
 	runes[RUNE_YOK]         = loadObject("graph/interface/book/runes/runes_yok.teo");
-	
+
 	pTexTab[RUNE_AAM]         = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_aam[icon]");
 	pTexTab[RUNE_CETRIUS]     = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_cetrius[icon]");
 	pTexTab[RUNE_COMUNICATUM] = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_comunicatum[icon]");
@@ -91,14 +91,14 @@ void arx::necklace::init()
 	pTexTab[RUNE_VISTA]       = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_vista[icon]");
 	pTexTab[RUNE_VITAE]       = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_vitae[icon]");
 	pTexTab[RUNE_YOK]         = TextureContainer::LoadUI("graph/obj3d/interactive/items/magic/rune_aam/rune_yok[icon]");
-	
+
 	// TODO why -1?
-	// adejr: last rune is RUNE_AKBAA, which doesn't require a halo as 
+	// adejr: last rune is RUNE_AKBAA, which doesn't require a halo as
 	// it is never displayed to the user in the questbook.
 	// although i don't see the harm in creating one, i assume it would be useless.
-	for (size_t i = 0; i < RUNE_COUNT - 1; i++) 
-	{ 
-		if (pTexTab[i]) 
+	for (size_t i = 0; i < RUNE_COUNT - 1; i++)
+	{
+		if (pTexTab[i])
 		{
 			pTexTab[i]->CreateHalo();
 		}

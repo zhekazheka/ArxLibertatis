@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2011 Arx Libertatis Team (see the AUTHORS file)
  *
@@ -26,23 +25,23 @@
 #include "platform/Flags.h"
 
 enum PlayerMovementFlag {
-	PLAYER_MOVE_WALK_FORWARD  = (1<<0),
-	PLAYER_MOVE_WALK_BACKWARD = (1<<1),
-	PLAYER_MOVE_STRAFE_LEFT   = (1<<2),
-	PLAYER_MOVE_STRAFE_RIGHT  = (1<<3),
-	PLAYER_MOVE_JUMP          = (1<<4),
-	PLAYER_MOVE_STEALTH       = (1<<5),
-	PLAYER_ROTATE             = (1<<6),
-	PLAYER_CROUCH             = (1<<7),
-	PLAYER_LEAN_LEFT          = (1<<8),
-	PLAYER_LEAN_RIGHT         = (1<<9)
+	PLAYER_MOVE_WALK_FORWARD  = (1 << 0),
+	PLAYER_MOVE_WALK_BACKWARD = (1 << 1),
+	PLAYER_MOVE_STRAFE_LEFT   = (1 << 2),
+	PLAYER_MOVE_STRAFE_RIGHT  = (1 << 3),
+	PLAYER_MOVE_JUMP          = (1 << 4),
+	PLAYER_MOVE_STEALTH       = (1 << 5),
+	PLAYER_ROTATE             = (1 << 6),
+	PLAYER_CROUCH             = (1 << 7),
+	PLAYER_LEAN_LEFT          = (1 << 8),
+	PLAYER_LEAN_RIGHT         = (1 << 9)
 };
 DECLARE_FLAGS(PlayerMovementFlag, PlayerMovement)
 DECLARE_FLAGS_OPERATORS(PlayerMovement)
 
 enum PlayerFlag {
-	PLAYERFLAGS_NO_MANA_DRAIN   = (1<<0),
-	PLAYERFLAGS_INVULNERABILITY = (1<<1)
+	PLAYERFLAGS_NO_MANA_DRAIN   = (1 << 0),
+	PLAYERFLAGS_INVULNERABILITY = (1 << 1)
 };
 DECLARE_FLAGS(PlayerFlag, PlayerFlags)
 DECLARE_FLAGS_OPERATORS(PlayerFlags)

@@ -16,25 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #include "game/Character.h"
 
 #include "core/Core.h"
 #include "core/GameTime.h"
-#include "game/NPC.h"
 #include "game/Inventory.h"
+#include "game/NPC.h"
 #include "game/Player.h"
-#include "gui/Speech.h"
-#include "gui/Interface.h"
 #include "graphics/particle/ParticleEffects.h"
+#include "gui/Interface.h"
+#include "gui/Speech.h"
 #include "physics/Attractors.h"
 #include "physics/Collisions.h"
 #include "scene/Interactive.h"
-
-// constants
-static const float WORLD_DAMPING = 0.35f;
-static const float WORLD_GRAVITY = 0.1f;
-static const float JUMP_GRAVITY = 0.02f; //OLD SETTING 0.03f
 
 // externs
 extern float InventoryX;
@@ -52,7 +47,9 @@ extern long APPLY_PUSH;
 void arx::character::make_step_noise()
 {
 	if (ARX_SPELLS_GetSpellOn(inter.iobj[0], SPELL_LEVITATE) >= 0)
+	{
 		return;
+	}
 
 	if (USE_PLAYERCOLLISIONS)
 	{
@@ -71,7 +68,7 @@ void arx::character::make_step_noise()
 		ARX_NPC_NeedStepSound(inter.iobj[0], &_pos, volume, factor);
 	}
 
-	if (currentdistance >= STEP_DISTANCE) 
+	if (currentdistance >= STEP_DISTANCE)
 	{
 		currentdistance -= STEP_DISTANCE * floorf(currentdistance / STEP_DISTANCE);
 	}
@@ -102,7 +99,7 @@ bool arx::character::valid_jump_pos()
 	{
 		tmpp.origin = pos + Vec3f(EEsin(radians(vv)) * -20.0f, -PLAYER_BASE_HEIGHT, EEcos(radians(vv)) * 20.0f);
 		tmpp.radius = physics.cyl.radius;
-		float anything = CheckAnythingInCylinder(&tmpp, inter.iobj[0], CFLAG_JUST_TEST); //-cyl->origin.y;
+		float anything = CheckAnythingInCylinder(&tmpp, inter.iobj[0], CFLAG_JUST_TEST); // -cyl->origin.y;
 
 		if (anything > 10)
 		{
@@ -138,17 +135,29 @@ void arx::character::manage_movement()
 	{
 		// Compute current player speedfactor
 		float speedfactor = inter.iobj[0]->basespeed + inter.iobj[0]->speed_modif;
-		if (cur_mr == 3) speedfactor += 0.5f;
-		if (cur_rf == 3) speedfactor += 1.5f;
-		if (speedfactor < 0) speedfactor = 0;
+
+		if (cur_mr == 3)
+		{
+			speedfactor += 0.5f;
+		}
+
+		if (cur_rf == 3)
+		{
+			speedfactor += 1.5f;
+		}
+
+		if (speedfactor < 0)
+		{
+			speedfactor = 0;
+		}
 
 		float delta = Original_framedelay * speedfactor;
 
-		// sub-divide frames to ensure the maximum delta remains 
+		// sub-divide frames to ensure the maximum delta remains
 		// equal or below it's 10fps equivalant.
 		const float minimum_rate = 1000.0f / 60.0f;
 		int sub_divisions = 1 + (int)floorf(delta / minimum_rate);
-		
+
 		// don't compute player physics at all this frame if the delta is ridiculously high
 		if (sub_divisions < 10)
 		{
@@ -175,14 +184,15 @@ void arx::character::do_physics(const float &DeltaTime)
 			float old = physics.cyl.height;
 			physics.cyl.height = PLAYER_BASE_HEIGHT;
 			physics.cyl.origin = pos + Vec3f(0, -PLAYER_BASE_HEIGHT, 0);
-			float anything = CheckAnythingInCylinder(&physics.cyl, inter.iobj[0], CFLAG_JUST_TEST); //-cyl->origin.y;
+			float anything = CheckAnythingInCylinder(&physics.cyl, inter.iobj[0], CFLAG_JUST_TEST); // -cyl->origin.y;
 
 			if (anything < 0.f)
 			{
 				Current_Movement |= PLAYER_CROUCH;
 				physics.cyl.height = old;
 				REQUEST_JUMP = 0;
-			} else
+			}
+			else
 			{
 				bGCroucheToggle = false;
 				Current_Movement &= ~PLAYER_CROUCH;
@@ -206,7 +216,6 @@ void arx::character::do_physics(const float &DeltaTime)
 				ARX_SPEECH_Launch_No_Unicode_Seek("player_jump", inter.iobj[0]);
 				onfirmground = 0;
 				jumpphase = 1;
-
 			}
 		}
 	}
@@ -214,9 +223,12 @@ void arx::character::do_physics(const float &DeltaTime)
 
 	if ((inter.iobj[0]->_npcdata->climb_count != 0.f) && (FrameDiff > 0))
 	{
-		inter.iobj[0]->_npcdata->climb_count -= MAX_ALLOWED_PER_SECOND * (float)FrameDiff * ( 1.0f / 10 );
+		inter.iobj[0]->_npcdata->climb_count -= MAX_ALLOWED_PER_SECOND * (float)FrameDiff * (1.0f / 10);
 
-		if (inter.iobj[0]->_npcdata->climb_count < 0) inter.iobj[0]->_npcdata->climb_count = 0.f;
+		if (inter.iobj[0]->_npcdata->climb_count < 0)
+		{
+			inter.iobj[0]->_npcdata->climb_count = 0.f;
+		}
 	}
 
 	float d = 0;
@@ -227,7 +239,7 @@ void arx::character::do_physics(const float &DeltaTime)
 	{
 		CollisionFlags levitate = 0;
 
-		if(climbing) 
+		if(climbing)
 		{
 			levitate = CFLAG_LEVITATE;
 		}
@@ -253,14 +265,15 @@ void arx::character::do_physics(const float &DeltaTime)
 				}
 			}
 
-			if (physics.cyl.height == PLAYER_LEVITATE_HEIGHT) 
+			if (physics.cyl.height == PLAYER_LEVITATE_HEIGHT)
 			{
 				levitate = CFLAG_LEVITATE;
 				climbing = 0;
 				bGCroucheToggle = false;
 				Current_Movement &= ~PLAYER_CROUCH;
 			}
-		} else if (physics.cyl.height == PLAYER_LEVITATE_HEIGHT)
+		}
+		else if (physics.cyl.height == PLAYER_LEVITATE_HEIGHT)
 		{
 			physics.cyl.height = PLAYER_BASE_HEIGHT;
 		}
@@ -287,7 +300,8 @@ void arx::character::do_physics(const float &DeltaTime)
 			if (anything >= 0.f)
 			{
 				TRUE_FIRM_GROUND = false;
-			} else
+			}
+			else
 			{
 				TRUE_FIRM_GROUND = true;
 				testcyl.radius -= 30.f;
@@ -299,7 +313,8 @@ void arx::character::do_physics(const float &DeltaTime)
 					DISABLE_JUMP = true;
 				}
 			}
-		} else
+		}
+		else
 		{
 			TRUE_FIRM_GROUND = false;
 			LAST_ON_PLATFORM = false;
@@ -309,16 +324,16 @@ void arx::character::do_physics(const float &DeltaTime)
 		cyl.origin = pos + Vec3f(0, 1.0f - PLAYER_BASE_HEIGHT, 0);
 		cyl.radius = physics.cyl.radius;
 		cyl.height = physics.cyl.height;
-		float anything2 = CheckAnythingInCylinder(&cyl, inter.iobj[0], CFLAG_JUST_TEST | CFLAG_PLAYER); //-cyl->origin.y;
+		float anything2 = CheckAnythingInCylinder(&cyl, inter.iobj[0], CFLAG_JUST_TEST | CFLAG_PLAYER); // -cyl->origin.y;
 
 
 		if ((anything2 > -5)
-			&&  (physics.velocity.y > 15.f)
-			&& !LAST_ON_PLATFORM
-			&& !TRUE_FIRM_GROUND
-			&& !jumpphase
-			&& !levitate
-			&& (anything > 80.f))
+		    &&  (physics.velocity.y > 15.f)
+		    && !LAST_ON_PLATFORM
+		    && !TRUE_FIRM_GROUND
+		    && !jumpphase
+		    && !levitate
+		    && (anything > 80.f))
 		{
 			jumpphase = 4;
 
@@ -327,7 +342,8 @@ void arx::character::do_physics(const float &DeltaTime)
 				falling = 1;
 				start_fall();
 			}
-		} else if (!falling)
+		}
+		else if (!falling)
 		{
 			FALLING_TIME = 0;
 		}
@@ -344,7 +360,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		{
 			jumpphase = 0;
 
-			if (FALLING_TIME > 0 && falling)
+			if ((FALLING_TIME > 0) && falling)
 			{
 				physics.velocity.x = 0.f;
 				physics.velocity.z = 0.f;
@@ -356,7 +372,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 				if (fh > 400.f)
 				{
-					float dmg = (fh - 400.f) * ( 1.0f / 15 );
+					float dmg = (fh - 400.f) * (1.0f / 15);
 
 					if (dmg > 0.f)
 					{
@@ -392,12 +408,13 @@ void arx::character::do_physics(const float &DeltaTime)
 			if (LAST_JUMP_ENDTIME + 300 > ARXTime)
 			{
 				jump_mul = 0.5f;
-			} else
+			}
+			else
 			{
 				jump_mul = 0.5f;
-				jump_mul += (float)(LAST_JUMP_ENDTIME + 300 - ARXTime) * ( 1.0f / 300 );
+				jump_mul += (float)(LAST_JUMP_ENDTIME + 300 - ARXTime) * (1.0f / 300);
 
-				if (jump_mul > 1.f) 
+				if (jump_mul > 1.f)
 				{
 					jump_mul = 1.f;
 				}
@@ -434,10 +451,12 @@ void arx::character::do_physics(const float &DeltaTime)
 					{
 						TheoricalMove = 420;
 					}
-				} else if (Current_Movement & PLAYER_MOVE_STRAFE_LEFT)
+				}
+				else if (Current_Movement & PLAYER_MOVE_STRAFE_LEFT)
 				{
 					TheoricalMove = 140.f;
-				} else if (Current_Movement & PLAYER_MOVE_STRAFE_RIGHT)
+				}
+				else if (Current_Movement & PLAYER_MOVE_STRAFE_RIGHT)
 				{
 					TheoricalMove = 140.f;
 				}
@@ -449,7 +468,8 @@ void arx::character::do_physics(const float &DeltaTime)
 
 				time = 1000;
 			}
-		} else
+		}
+		else
 		{
 			TheoricalMove = 100;
 			time = 1000;
@@ -468,12 +488,13 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		if (climbing)
 		{
-			physics.velocity.y *= ( 1.0f / 2 );
+			physics.velocity.y *= (1.0f / 2);
 		}
 
 		if (mv2 == Vec3f::ZERO)
 		{
-		} else
+		}
+		else
 		{
 			mv2 *= 1.f / mv2.length() * mval * (1.0f / 80.0f);
 		}
@@ -509,8 +530,12 @@ void arx::character::do_physics(const float &DeltaTime)
 		}
 
 		// Apply Gravity force if not LEVITATING or JUMPING
-		if (!levitate && jumpphase != 2 && !LAST_ON_PLATFORM)
+		if (!levitate && (jumpphase != 2) && !LAST_ON_PLATFORM)
 		{
+			// constants
+			const float WORLD_GRAVITY = 0.1f;
+			const float JUMP_GRAVITY = 0.02f; // OLD SETTING 0.03f
+
 			physics.forces.y += (falling ? JUMP_GRAVITY : WORLD_GRAVITY);
 
 			Vec3f mod_vect(0, 0, 0);
@@ -518,15 +543,15 @@ void arx::character::do_physics(const float &DeltaTime)
 
 			// Check for LAVA Damage !!!
 			float epcentery;
-			EERIEPOLY * ep = CheckInPoly(pos.x, pos.y + 150.f, pos.z, &epcentery);
+			EERIEPOLY *ep = CheckInPoly(pos.x, pos.y + 150.f, pos.z, &epcentery);
 
 			if (ep)
 			{
 				if ((ep->type & POLY_LAVA) && (EEfabs(epcentery - (pos.y - PLAYER_BASE_HEIGHT)) < 30))
 				{
 					const float LAVA_DAMAGE = 10.f;
-					float mul = 1.f - (EEfabs(epcentery - (pos.y - PLAYER_BASE_HEIGHT)) * ( 1.0f / 30 ));
-					float damages = LAVA_DAMAGE * FrameDiff * ( 1.0f / 100 ) * mul;
+					float mul = 1.f - (EEfabs(epcentery - (pos.y - PLAYER_BASE_HEIGHT)) * (1.0f / 30));
+					float damages = LAVA_DAMAGE * FrameDiff * (1.0f / 100) * mul;
 					damages = ARX_SPELLS_ApplyFireProtection(inter.iobj[0], damages);
 					ARX_DAMAGES_DamagePlayer(damages, DAMAGE_TYPE_FIRE, 0);
 					ARX_DAMAGES_DamagePlayerEquipment(damages);
@@ -544,7 +569,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		// Apply Velocity Damping (Natural Velocity Attenuation. Stands for friction)
 		float dampen = 1.f - (0.009f * DeltaTime);
 
-		if (dampen < 0.001f) 
+		if (dampen < 0.001f)
 		{
 			dampen = 0.f;
 		}
@@ -590,15 +615,15 @@ void arx::character::do_physics(const float &DeltaTime)
 		}
 
 		// Removes Y Velocity if onfirmground...
-		if (onfirmground == 1 && !climbing)
+		if ((onfirmground == 1) && !climbing)
 		{
 			physics.velocity.y = 0.f;
 		}
 
 		float posy;
-		EERIEPOLY * ep = CheckInPolyPrecis(pos.x, pos.y, pos.z, &posy);
+		EERIEPOLY *ep = CheckInPolyPrecis(pos.x, pos.y, pos.z, &posy);
 
-		if (ep == NULL || (!climbing && pos.y >= posy))
+		if ((ep == NULL) || (!climbing && (pos.y >= posy)))
 		{
 			physics.velocity.y = 0;
 		}
@@ -608,12 +633,13 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		// Check if player is already on firm ground AND not moving
 		if ((EEfabs(physics.velocity.x) < 0.001f) &&
-			(EEfabs(physics.velocity.z) < 0.001f) && (onfirmground == 1)
-			&& (jumpphase == 0))
+		    (EEfabs(physics.velocity.z) < 0.001f) && (onfirmground == 1)
+		    && (jumpphase == 0))
 		{
 			moveto = pos;
 			goto lasuite;
-		} else // Need to apply some physics/collision tests
+		}
+		else   // Need to apply some physics/collision tests
 		{
 			physics.startpos = physics.cyl.origin = pos + Vec3f(0, -PLAYER_BASE_HEIGHT, 0);
 			physics.targetpos = physics.startpos + physics.velocity + modifplayermove * DeltaTime;
@@ -634,9 +660,15 @@ void arx::character::do_physics(const float &DeltaTime)
 				float divider   = 1.f / jump_up_time;
 				float position    = (float)offset_time * divider;
 
-				if (position > 1.f) position = 1.f;
+				if (position > 1.f)
+				{
+					position = 1.f;
+				}
 
-				if (position < 0.f) position = 0.f;
+				if (position < 0.f)
+				{
+					position = 0.f;
+				}
 
 				float p1 = position;
 				float p2 = jumplastposition;
@@ -655,13 +687,16 @@ void arx::character::do_physics(const float &DeltaTime)
 				test = ARX_COLLISION_Move_Cylinder(&physics, inter.iobj[0], PLAYER_CYLINDER_STEP, CFLAG_EASY_SLIDING | CFLAG_CLIMBING | CFLAG_PLAYER);
 
 				if (!COLLIDED_CLIMB_POLY)
+				{
 					climbing = 0;
-			} else
+				}
+			}
+			else
 			{
 				test = ARX_COLLISION_Move_Cylinder(&physics, inter.iobj[0], PLAYER_CYLINDER_STEP, levitate | CFLAG_EASY_SLIDING | CFLAG_PLAYER);
 
 				if ((!test)
-					&&  ((!LAST_FIRM_GROUND) && (!TRUE_FIRM_GROUND)))
+				    &&  ((!LAST_FIRM_GROUND) && (!TRUE_FIRM_GROUND)))
 				{
 					physics.velocity.x = 0.f;
 					physics.velocity.z = 0.f;
@@ -674,11 +709,11 @@ void arx::character::do_physics(const float &DeltaTime)
 
 						if (fh > 400.f)
 						{
-							float dmg = (fh - 400.f) * ( 1.0f / 15 );
+							float dmg = (fh - 400.f) * (1.0f / 15);
 
 							if (dmg > 0.f)
 							{
-								Falling_Height = (pos.y + Falling_Height * 2) * ( 1.0f / 3 );
+								Falling_Height = (pos.y + Falling_Height * 2) * (1.0f / 3);
 								ARX_DAMAGES_DamagePlayer(dmg, 0, -1);
 								ARX_DAMAGES_DamagePlayerEquipment(dmg);
 							}
@@ -688,7 +723,6 @@ void arx::character::do_physics(const float &DeltaTime)
 
 				if ((test == false) && (jumpphase > 0))
 				{
-
 					physics.startpos.x = physics.cyl.origin.x = pos.x;
 					physics.startpos.z = physics.cyl.origin.z = pos.z;
 					physics.targetpos.x = physics.startpos.x;
@@ -702,19 +736,25 @@ void arx::character::do_physics(const float &DeltaTime)
 				}
 			}
 
-			//LAST_ON_PLATFORM=ON_PLATFORM;
+			// LAST_ON_PLATFORM=ON_PLATFORM;
 			if (COLLIDED_CLIMB_POLY)
+			{
 				climbing = 1;
+			}
 
 			if (climbing)
 			{
 				if ((Current_Movement != 0) && (Current_Movement != PLAYER_ROTATE)
-					&& !(Current_Movement & PLAYER_MOVE_WALK_FORWARD)
-					&& !(Current_Movement & PLAYER_MOVE_WALK_BACKWARD))
+				    && !(Current_Movement & PLAYER_MOVE_WALK_FORWARD)
+				    && !(Current_Movement & PLAYER_MOVE_WALK_BACKWARD))
+				{
 					climbing = 0;
+				}
 
 				if ((Current_Movement & PLAYER_MOVE_WALK_BACKWARD)  && !test)
+				{
 					climbing = 0;
+				}
 
 				if (climbing)
 				{
@@ -736,7 +776,8 @@ void arx::character::do_physics(const float &DeltaTime)
 			moveto.z = physics.cyl.origin.z;
 			d = dist(pos, moveto);
 		}
-	} else
+	}
+	else
 	{
 		if (!EDITMODE)
 		{
@@ -745,7 +786,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 			if (divv > 0.f)
 			{
-				float mul = (float)FrameDiff * ( 1.0f / 1000 ) * 200.f;
+				float mul = (float)FrameDiff * (1.0f / 1000) * 200.f;
 				divv = mul / divv;
 				vect *= divv;
 				moveto = pos + vect;
@@ -755,7 +796,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		onfirmground = 0;
 	}
 
-	if (pos == moveto) 
+	if (pos == moveto)
 	{
 		d = 0.f;
 	}
@@ -770,7 +811,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		currentdistance += d;
 
-		if (!jumpphase && !falling && currentdistance >= STEP_DISTANCE)
+		if (!jumpphase && !falling && (currentdistance >= STEP_DISTANCE))
 		{
 			make_step_noise();
 		}
@@ -783,16 +824,17 @@ lasuite:;
 
 	// Get Player position color
 	grnd_color = GetColorz(pos.x, pos.y + 90, pos.z);
-	grnd_color -= 15.f; 
+	grnd_color -= 15.f;
+
 	if (CURRENT_PLAYER_COLOR < grnd_color)
 	{
-		CURRENT_PLAYER_COLOR += FrameDiff * ( 1.0f / 8 );
+		CURRENT_PLAYER_COLOR += FrameDiff * (1.0f / 8);
 		CURRENT_PLAYER_COLOR = std::min(CURRENT_PLAYER_COLOR, grnd_color);
 	}
 
 	if (CURRENT_PLAYER_COLOR > grnd_color)
 	{
-		CURRENT_PLAYER_COLOR -= FrameDiff * ( 1.0f / 4 );
+		CURRENT_PLAYER_COLOR -= FrameDiff * (1.0f / 4);
 		CURRENT_PLAYER_COLOR = std::max(CURRENT_PLAYER_COLOR, grnd_color);
 	}
 
@@ -802,13 +844,14 @@ lasuite:;
 		{
 			if (InventoryX > -160)
 			{
-				InventoryX -= INTERFACE_RATIO(FrameDiff * ( 1.0f / 3 ));
+				InventoryX -= INTERFACE_RATIO(FrameDiff * (1.0f / 3));
 			}
-		} else
+		}
+		else
 		{
 			if (InventoryX < 0)
 			{
-				InventoryX += InventoryDir * INTERFACE_RATIO(FrameDiff * ( 1.0f / 3 ));
+				InventoryX += InventoryDir * INTERFACE_RATIO(FrameDiff * (1.0f / 3));
 			}
 		}
 
@@ -827,7 +870,8 @@ lasuite:;
 			SecondaryInventory = NULL;
 			TSecondaryInventory = NULL;
 			InventoryDir = 0;
-		} else if (InventoryX >= 0)
+		}
+		else if (InventoryX >= 0)
 		{
 			InventoryX = 0;
 			InventoryDir = 0;

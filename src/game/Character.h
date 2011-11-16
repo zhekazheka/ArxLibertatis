@@ -25,30 +25,36 @@
 #include <string>
 #include <vector>
 
-#include "graphics/data/Mesh.h"
-#include "math/MathFwd.h"
-#include "game/Spells.h"
 #include "game/Keyring.h"
-#include "game/Runes.h"
 #include "game/Necklace.h"
 #include "game/Playerflags.h"
 #include "game/Quest.h"
+#include "game/Runes.h"
+#include "game/Spells.h"
+#include "graphics/data/Mesh.h"
+#include "math/MathFwd.h"
 
 namespace arx
 {
 	template <class T>
-	T limit(const T &v, const T &l, const T &h) { return (v < l ? l : v > h ? h : v); }
-
-	class character 
+	T limit(const T &v, const T &l, const T &h)
 	{
-	public:
+		return (v < l ? l : v > h ? h : v);
+	}
+
+	class character
+	{
+public:
 
 		static const float STEP_DISTANCE;
 		static const float SKILL_STEALTH_MAX;
 
 		struct attributes
 		{
-			float &operator[](const int &i) { return val[i]; }
+			float &operator[](const int &i)
+			{
+				return val[i];
+			}
 
 			void operator+=(const float &v)
 			{
@@ -66,9 +72,9 @@ namespace arx
 				}
 			}
 
-			union 
+			union
 			{
-				struct 
+				struct
 				{
 					float strength;
 					float dexterity;
@@ -82,7 +88,10 @@ namespace arx
 
 		struct skills
 		{
-			float &operator[](const int &i) { return val[i]; }
+			float &operator[](const int &i)
+			{
+				return val[i];
+			}
 
 			void operator+=(const float &v)
 			{
@@ -102,7 +111,7 @@ namespace arx
 
 			union
 			{
-				struct 
+				struct
 				{
 					float stealth;
 					float mecanism;
@@ -129,9 +138,18 @@ namespace arx
 				maxmana = v;
 			}
 
-			void limit_life() { life = arx::limit(life, 0.0f, maxlife); }
-			void limit_mana() { mana = arx::limit(mana, 0.0f, maxmana); }
-			void limit() { limit_life(); limit_mana(); }
+			void limit_life()
+			{
+				life = arx::limit(life, 0.0f, maxlife);
+			}
+			void limit_mana()
+			{
+				mana = arx::limit(mana, 0.0f, maxmana);
+			}
+			void limit()
+			{
+				limit_life(); limit_mana();
+			}
 
 			float life;
 			float maxlife;
@@ -177,7 +195,9 @@ namespace arx
 		};
 
 		character();
-		~character() {}
+		~character()
+		{
+		}
 
 		static int get_xp_for_level(const int &level);
 
@@ -244,7 +264,7 @@ namespace arx
 		attributes attribute;
 		skills skill;
 		stats stat;
-		
+
 		skills old;
 
 		mod_stats mod;
@@ -268,24 +288,24 @@ namespace arx
 		Anglef angle;
 		ANIM_USE useanim;
 		IO_PHYSICS physics;
-		
+
 		std::vector<STRUCT_QUEST> quest;
 
 		// Jump Sub-data
 		unsigned long jumpstarttime;
 		float jumplastposition;
-		long jumpphase; //!< 0 no jump, 1 doing anticipation anim, 2 moving_up, 3 moving_down, 4 finish_anim
+		long jumpphase; // !< 0 no jump, 1 doing anticipation anim, 2 moving_up, 3 moving_down, 4 finish_anim
 
 		Anglef desiredangle;
 		Vec3f size;
 		void *inzone;
 
 		long falling;
-		
+
 		PlayerMovement Current_Movement;
 		PlayerMovement Last_Movement;
 		long onfirmground;
-		
+
 		INTERACTIVE_OBJ *rightIO;
 		INTERACTIVE_OBJ *leftIO;
 		INTERACTIVE_OBJ *equipsecondaryIO;
@@ -326,7 +346,7 @@ namespace arx
 		long FistParticles;
 		long sp_max;
 
-		short equiped[MAX_EQUIPED]; 
+		short equiped[MAX_EQUIPED];
 		short bag;
 		short doingmagic;
 		short Interface;
@@ -347,8 +367,8 @@ namespace arx
 		bool DISABLE_JUMP;
 		bool STARTED_A_GAME;
 
-	private:
-			
+private:
+
 		void do_physics(const float &DeltaTime);
 		bool valid_jump_pos();
 	};

@@ -36,11 +36,6 @@
 #include "scene/Light.h"
 #include "scene/Object.h"
 
-// constants
-static const float WORLD_DAMPING = 0.35f;
-static const float WORLD_GRAVITY = 0.1f;
-static const float JUMP_GRAVITY = 0.02f; //OLD SETTING 0.03f
-
 // externs
 extern float InventoryX;
 extern float InventoryDir;
@@ -103,27 +98,27 @@ void arx::character::frame_update()
 		{
 			if (ARX_EQUIPMENT_GetPlayerWeaponType() == WEAPON_BOW)
 			{
-				io->_npcdata->ex_rotate->group_rotate[0].a = 0; //head
-				io->_npcdata->ex_rotate->group_rotate[1].a = 0; //neck
-				io->_npcdata->ex_rotate->group_rotate[2].a = 0; //chest
-				io->_npcdata->ex_rotate->group_rotate[3].a = v; //belt
+				io->_npcdata->ex_rotate->group_rotate[0].a = 0; // head
+				io->_npcdata->ex_rotate->group_rotate[1].a = 0; // neck
+				io->_npcdata->ex_rotate->group_rotate[2].a = 0; // chest
+				io->_npcdata->ex_rotate->group_rotate[3].a = v; // belt
 			}
 			else
 			{
 				v *= (1.0f / 10);
-				io->_npcdata->ex_rotate->group_rotate[0].a = v; //head
-				io->_npcdata->ex_rotate->group_rotate[1].a = v; //neck
-				io->_npcdata->ex_rotate->group_rotate[2].a = v * 4; //chest
-				io->_npcdata->ex_rotate->group_rotate[3].a = v * 4; //belt
+				io->_npcdata->ex_rotate->group_rotate[0].a = v; // head
+				io->_npcdata->ex_rotate->group_rotate[1].a = v; // neck
+				io->_npcdata->ex_rotate->group_rotate[2].a = v * 4; // chest
+				io->_npcdata->ex_rotate->group_rotate[3].a = v * 4; // belt
 			}
 		}
 		else
 		{
 			v *= (1.0f / 4);
-			io->_npcdata->ex_rotate->group_rotate[0].a = v; //head
-			io->_npcdata->ex_rotate->group_rotate[1].a = v; //neck
-			io->_npcdata->ex_rotate->group_rotate[2].a = v; //chest
-			io->_npcdata->ex_rotate->group_rotate[3].a = v; //belt*/
+			io->_npcdata->ex_rotate->group_rotate[0].a = v; // head
+			io->_npcdata->ex_rotate->group_rotate[1].a = v; // neck
+			io->_npcdata->ex_rotate->group_rotate[2].a = v; // chest
+			io->_npcdata->ex_rotate->group_rotate[3].a = v; // belt*/
 		}
 
 		if ((Interface & INTER_COMBATMODE) || (doingmagic == 2))
@@ -254,7 +249,7 @@ void arx::character::manage_visual()
 		if (stat.life > 0)
 		{
 			io->angle.a = 0;
-			io->angle.b = 180.f - angle.b; //+90.f;
+			io->angle.b = 180.f - angle.b; // +90.f;
 			io->angle.g = 0;
 		}
 
@@ -523,9 +518,9 @@ void arx::character::manage_visual()
 		}
 
 		// Finally update anim
-		if (ause1->cur_anim == NULL && 
-			(ause0->cur_anim == alist[ANIM_WAIT] || ause0->cur_anim == alist[ANIM_WAIT_SHORT]) && 
-			!(Current_Movement & PLAYER_CROUCH))
+		if ((ause1->cur_anim == NULL) &&
+		    ((ause0->cur_anim == alist[ANIM_WAIT]) || (ause0->cur_anim == alist[ANIM_WAIT_SHORT])) &&
+		    !(Current_Movement & PLAYER_CROUCH))
 		{
 			if ((Current_Movement & PLAYER_LEAN_LEFT) && (Current_Movement & PLAYER_LEAN_RIGHT))
 			{
@@ -535,7 +530,7 @@ void arx::character::manage_visual()
 				if (Current_Movement & PLAYER_LEAN_LEFT)
 				{
 					ChangeMoveAnim2 = alist[ANIM_LEAN_LEFT];
-					//ChangeMA_Loop=0;
+					// ChangeMA_Loop=0;
 				}
 
 				if (Current_Movement & PLAYER_LEAN_RIGHT)
@@ -545,9 +540,9 @@ void arx::character::manage_visual()
 			}
 		}
 
-		if (ChangeMoveAnim2 == NULL && ause3->cur_anim && 
-			(ause3->cur_anim == alist[ANIM_LEAN_RIGHT] || 
-			 ause3->cur_anim == alist[ANIM_LEAN_LEFT]))
+		if ((ChangeMoveAnim2 == NULL) && ause3->cur_anim &&
+		    ((ause3->cur_anim == alist[ANIM_LEAN_RIGHT]) ||
+		     (ause3->cur_anim == alist[ANIM_LEAN_LEFT])))
 		{
 			AcquireLastAnim(io);
 			ause3->cur_anim = NULL;
@@ -650,8 +645,7 @@ retry:;
 			EERIE_3DOBJ *eobj = io->obj;
 			long pouet = 2;
 
-			while (pouet) 
-			{
+			while (pouet) {
 				long id;
 
 				if (pouet == 2)
@@ -713,7 +707,7 @@ retry:;
 						 */
 					}
 
-					for (long kk = 0; kk < 2; kk++) 
+					for (long kk = 0; kk < 2; kk++)
 					{
 						Vec3f  target;
 						target.x = eobj->vertexlist3[id].v.x;
@@ -834,17 +828,17 @@ retry:;
 				break;
 			}
 
-			if (ChangeMoveAnim && ChangeMoveAnim != ause0->cur_anim)
+			if (ChangeMoveAnim && (ChangeMoveAnim != ause0->cur_anim))
 			{
 				AcquireLastAnim(io);
 				ResetAnim(ause0);
 				ause0->cur_anim = ChangeMoveAnim;
 				ause0->flags = EA_STATICANIM;
 
-				if (ChangeMoveAnim == alist[ANIM_U_TURN_LEFT] || 
-					 ChangeMoveAnim == alist[ANIM_U_TURN_RIGHT] ||
-					 ChangeMoveAnim == alist[ANIM_U_TURN_RIGHT_FIGHT] ||
-					 ChangeMoveAnim == alist[ANIM_U_TURN_LEFT_FIGHT])
+				if ((ChangeMoveAnim == alist[ANIM_U_TURN_LEFT]) ||
+				    (ChangeMoveAnim == alist[ANIM_U_TURN_RIGHT]) ||
+				    (ChangeMoveAnim == alist[ANIM_U_TURN_RIGHT_FIGHT]) ||
+				    (ChangeMoveAnim == alist[ANIM_U_TURN_LEFT_FIGHT]))
 				{
 					ause0->flags |= EA_EXCONTROL;
 				}
