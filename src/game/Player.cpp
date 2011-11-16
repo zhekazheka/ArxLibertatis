@@ -532,7 +532,7 @@ void ARX_PLAYER_PutPlayerInNormalStance(long val)
 	player.Current_Movement = 0;
 	ARX_PLAYER_RectifyPosition();
 
-	if (player.jumpphase || player.falling)
+	if (player.jump.phase || player.falling)
 	{
 		player.physics.cyl.origin = player.pos + Vec3f(0.0f, 170.0f, 0.0f);
 
@@ -540,7 +540,7 @@ void ARX_PLAYER_PutPlayerInNormalStance(long val)
 		memcpy(&phys, &player.physics, sizeof(IO_PHYSICS));
 		AttemptValidCylinderPos(&phys.cyl, inter.iobj[0], CFLAG_RETURN_HEIGHT);
 		player.pos.y = phys.cyl.origin.y - 170.f;
-		player.jumpphase = 0;
+		player.jump.phase = arx::character::jump_data::none;
 		player.falling = 0;
 	}
 

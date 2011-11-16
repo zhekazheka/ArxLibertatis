@@ -1512,7 +1512,7 @@ bool AttemptValidCylinderPos(EERIE_CYLINDER * cyl, INTERACTIVE_OBJ * io, Collisi
 			float tolerate;
 			
 			if ((flags & CFLAG_PLAYER)
-				&&	(player.jumpphase)	)
+				&&	(player.jump.phase)	)
 			{
 				tolerate=0;
 			}
@@ -1563,7 +1563,7 @@ bool AttemptValidCylinderPos(EERIE_CYLINDER * cyl, INTERACTIVE_OBJ * io, Collisi
 		{
 			if ((flags & CFLAG_PLAYER) && (anything<0.f))
 			{
-				if (player.jumpphase)
+				if (player.jump.phase)
 				{
 					io->_npcdata->climb_count=MAX_ALLOWED_PER_SECOND;
 					return false;

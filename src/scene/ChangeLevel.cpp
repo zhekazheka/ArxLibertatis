@@ -776,8 +776,8 @@ static long ARX_CHANGELEVEL_Push_Player() {
 	asp->gold = player.gold;
 	asp->invisibility = inter.iobj[0]->invisibility;
 
-	asp->jumpphase = player.jumpphase;
-	asp->jumpstarttime = player.jumpstarttime;
+	asp->jumpphase = player.jump.phase;
+	asp->jumpstarttime = player.jump.start_time;
 	asp->Last_Movement = player.Last_Movement;
 	asp->level = player.level;
 	asp->life = player.stat.life;
@@ -1780,8 +1780,8 @@ static long ARX_CHANGELEVEL_Pop_Player(long instance) {
 	player.gold = asp->gold;
 	inter.iobj[0]->invisibility = asp->invisibility;
 	player.inzone = ARX_PATH_GetAddressByName(toLowercase(safestring(asp->inzone)));
-	player.jumpphase = asp->jumpphase;
-	player.jumpstarttime = asp->jumpstarttime;
+	player.jump.phase = (arx::character::jump_data::jump_phase)asp->jumpphase;
+	player.jump.start_time = asp->jumpstarttime;
 	player.Last_Movement = PlayerMovement::load(asp->Last_Movement); // TODO save/load flags
 	
 	player.level = checked_range_cast<unsigned char>(asp->level);

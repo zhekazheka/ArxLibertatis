@@ -2550,9 +2550,9 @@ void arx::game::reset(const int &type)
 
 	player.PUSH_PLAYER_FORCE = Vec3f::ZERO;
 	
-	player.jumplastposition = 0;
-	player.jumpstarttime = 0;
-	player.jumpphase = 0;
+	player.jump.last_position = 0;
+	player.jump.start_time = 0;
+	player.jump.phase = arx::character::jump_data::none;
 	
 	player.inzone = NULL;
 

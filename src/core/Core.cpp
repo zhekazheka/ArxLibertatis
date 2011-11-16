@@ -328,7 +328,6 @@ float FrameDiff=0;
 float GLOBAL_LIGHT_FACTOR=0.85f;
 
 float IN_FRONT_DIVIDER_ITEMS	=0.7505f;
-long USE_NEW_SKILLS=1;
 
 long USE_LIGHT_OPTIM	=1;
 // set to 0 for dev mode
@@ -3766,7 +3765,7 @@ void ShowInfoText() {
 
 	if (player.onfirmground==0) mainApp->OutputText( 200, 280, "OFFGRND" );
 
-	sprintf(tex,"Jump %f cinema %f %d %d - Pathfind %ld(%s)",player.jumplastposition,CINEMA_DECAL,DANAEMouse.x,DANAEMouse.y,EERIE_PATHFINDER_Get_Queued_Number(), PATHFINDER_WORKING ? "Working" : "Idled");
+	sprintf(tex,"Jump %f cinema %f %d %d - Pathfind %ld(%s)",player.jump.last_position,CINEMA_DECAL,DANAEMouse.x,DANAEMouse.y,EERIE_PATHFINDER_Get_Queued_Number(), PATHFINDER_WORKING ? "Working" : "Idled");
 	mainApp->OutputText( 70, 80, tex );
 	INTERACTIVE_OBJ * io=ARX_SCRIPT_Get_IO_Max_Events();
 

@@ -215,7 +215,7 @@ void arx::character::do_physics(const float &DeltaTime)
 				ARX_NPC_SpawnAudibleSound(&pos, inter.iobj[0]);
 				ARX_SPEECH_Launch_No_Unicode_Seek("player_jump", inter.iobj[0]);
 				onfirmground = 0;
-				jumpphase = 1;
+				jump.phase = arx::character::jump_data::anticipation;
 			}
 		}
 	}
@@ -278,7 +278,7 @@ void arx::character::do_physics(const float &DeltaTime)
 			physics.cyl.height = PLAYER_BASE_HEIGHT;
 		}
 
-		if ((jumpphase != 2) && !levitate)
+		if ((jump.phase != jump_data::moving_up) && !levitate)
 		{
 			physics.cyl.origin = pos + Vec3f(0, 170.f, 0);
 		}
@@ -295,7 +295,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		anything = CheckAnythingInCylinder(&testcyl, inter.iobj[0], 0);
 		LAST_ON_PLATFORM = ON_PLATFORM;
 
-		if (jumpphase != 2)
+		if (jump.phase != jump_data::moving_up)
 		{
 			if (anything >= 0.f)
 			{
@@ -331,11 +331,11 @@ void arx::character::do_physics(const float &DeltaTime)
 		    &&  (physics.velocity.y > 15.f)
 		    && !LAST_ON_PLATFORM
 		    && !TRUE_FIRM_GROUND
-		    && !jumpphase
+		    && !jump.phase
 		    && !levitate
 		    && (anything > 80.f))
 		{
-			jumpphase = 4;
+			jump.phase = jump_data::finished;
 
 			if (!falling)
 			{
@@ -348,9 +348,9 @@ void arx::character::do_physics(const float &DeltaTime)
 			FALLING_TIME = 0;
 		}
 
-		if (jumpphase && levitate)
+		if (jump.phase && levitate)
 		{
-			jumpphase = 0;
+			jump.phase = jump_data::none;
 			falling = 0;
 			Falling_Height = pos.y;
 			FALLING_TIME = 0;
@@ -358,7 +358,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		if (!LAST_FIRM_GROUND && TRUE_FIRM_GROUND)
 		{
-			jumpphase = 0;
+			jump.phase = jump_data::none;
 
 			if ((FALLING_TIME > 0) && falling)
 			{
@@ -434,7 +434,7 @@ void arx::character::do_physics(const float &DeltaTime)
 				time = 1000;
 			}
 
-			if (jumpphase)
+			if (jump.phase)
 			{
 				TheoricalMove = 10;
 
@@ -478,7 +478,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		TheoricalMove *= jump_mul;
 		float mval = TheoricalMove / time * DeltaTime;
 
-		if (jumpphase == 2)
+		if (jump.phase == 2)
 		{
 			moveto.y = pos.y;
 			physics.velocity.y = 0;
@@ -524,13 +524,13 @@ void arx::character::do_physics(const float &DeltaTime)
 		Vec3f modifplayermove(0, 0, 0);
 
 		// No Vertical Interpolation
-		if (jumpphase)
+		if (jump.phase)
 		{
 			inter.iobj[0]->_npcdata->vvpos = -99999.f;
 		}
 
 		// Apply Gravity force if not LEVITATING or JUMPING
-		if (!levitate && (jumpphase != 2) && !LAST_ON_PLATFORM)
+		if (!levitate && (jump.phase != 2) && !LAST_ON_PLATFORM)
 		{
 			// constants
 			const float WORLD_GRAVITY = 0.1f;
@@ -634,7 +634,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		// Check if player is already on firm ground AND not moving
 		if ((EEfabs(physics.velocity.x) < 0.001f) &&
 		    (EEfabs(physics.velocity.z) < 0.001f) && (onfirmground == 1)
-		    && (jumpphase == 0))
+		    && (jump.phase == 0))
 		{
 			moveto = pos;
 			goto lasuite;
@@ -645,18 +645,18 @@ void arx::character::do_physics(const float &DeltaTime)
 			physics.targetpos = physics.startpos + physics.velocity + modifplayermove * DeltaTime;
 
 			// Jump Impulse
-			if (jumpphase == 2)
+			if (jump.phase == 2)
 			{
-				if (jumplastposition == -1.f)
+				if (jump.last_position == -1.f)
 				{
-					jumplastposition = 0;
-					jumpstarttime = ARXTimeUL();
+					jump.last_position = 0;
+					jump.start_time = ARXTimeUL();
 				}
 
 				float jump_up_time  = 200.f;
 				float jump_up_height =  130.f;
 				long timee      = lARXTime;
-				float offset_time = (float)timee - (float)jumpstarttime;
+				float offset_time = (float)timee - (float)jump.start_time;
 				float divider   = 1.f / jump_up_time;
 				float position    = (float)offset_time * divider;
 
@@ -671,10 +671,10 @@ void arx::character::do_physics(const float &DeltaTime)
 				}
 
 				float p1 = position;
-				float p2 = jumplastposition;
+				float p2 = jump.last_position;
 				physics.targetpos.y -= (p1 - p2) * jump_up_height;
 				Full_Jump_Height += (p1 - p2) * jump_up_height;
-				jumplastposition = position;
+				jump.last_position = position;
 				levitate = 0;
 			}
 
@@ -721,7 +721,7 @@ void arx::character::do_physics(const float &DeltaTime)
 					}
 				}
 
-				if ((test == false) && (jumpphase > 0))
+				if ((test == false) && (jump.phase > 0))
 				{
 					physics.startpos.x = physics.cyl.origin.x = pos.x;
 					physics.startpos.z = physics.cyl.origin.z = pos.z;
@@ -758,14 +758,14 @@ void arx::character::do_physics(const float &DeltaTime)
 
 				if (climbing)
 				{
-					jumpphase = 0;
+					jump.phase = jump_data::none;
 					falling = 0;
 					FALLING_TIME = 0;
 					Falling_Height = pos.y;
 				}
 			}
 
-			if (jumpphase == 2)
+			if (jump.phase == 2)
 			{
 				climbing = 0;
 			}
@@ -811,7 +811,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		currentdistance += d;
 
-		if (!jumpphase && !falling && (currentdistance >= STEP_DISTANCE))
+		if (!jump.phase && !falling && (currentdistance >= STEP_DISTANCE))
 		{
 			make_step_noise();
 		}

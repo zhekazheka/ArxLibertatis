@@ -215,7 +215,7 @@ void arx::character::manage_visual()
 		io->pos.y = pos.y - PLAYER_BASE_HEIGHT;
 		io->pos.z = pos.z;
 
-		if ((jumpphase == 0) && (!LAST_ON_PLATFORM))
+		if ((jump.phase == 0) && (!LAST_ON_PLATFORM))
 		{
 			float tempo;
 
@@ -760,39 +760,39 @@ retry:;
 			ChangeMA_Loop = 1;
 			goto makechanges;
 		}
-		else if (jumpphase)
+		else if (jump.phase)
 		{
-			switch (jumpphase)
+			switch (jump.phase)
 			{
-			case 1: // Anticipation
+			case jump_data::anticipation:
 				FALLING_TIME = 0;
 				Full_Jump_Height = 0;
-				jumpphase = 2;
+				jump.phase = jump_data::moving_up;
 				ChangeMoveAnim = alist[ANIM_JUMP_UP];
-				jumpstarttime = ARXTimeUL();
-				jumplastposition = -1.f;
+				jump.start_time = ARXTimeUL();
+				jump.last_position = -1.f;
 				break;
 
-			case 2: // Moving Up
+			case jump_data::moving_up:
 				ChangeMoveAnim = alist[ANIM_JUMP_UP];
 
-				if (jumplastposition >= 1.f)
+				if (jump.last_position >= 1.f)
 				{
-					jumpphase = 4;
+					jump.phase = jump_data::finished;
 					ChangeMoveAnim = alist[ANIM_JUMP_CYCLE];
 					start_fall();
 				}
 
 				break;
 
-			case 4: // Post-synch
+			case jump_data::finished:
 				LAST_JUMP_ENDTIME = ARXTimeUL();
 
 				if (((ause0->cur_anim == alist[ANIM_JUMP_END])
 				     && (ause0->flags & EA_ANIMEND))
 				    || onfirmground)
 				{
-					jumpphase = 5;
+					jump.phase = jump_data::post_sync;
 					ChangeMoveAnim = alist[ANIM_JUMP_END_PART2];
 				}
 				else
@@ -802,14 +802,14 @@ retry:;
 
 				break;
 
-			case 5: // Post-synch
+			case jump_data::post_sync:
 				LAST_JUMP_ENDTIME = ARXTimeUL();
 
 				if ((ause0->cur_anim == alist[ANIM_JUMP_END_PART2])
 				    && (ause0->flags & EA_ANIMEND))
 				{
 					AcquireLastAnim(io);
-					jumpphase = 0;
+					jump.phase = jump_data::none;
 					goto retry;
 				}
 				else if ((ause0->cur_anim == alist[ANIM_JUMP_END_PART2])
@@ -817,7 +817,7 @@ retry:;
 				         && (ause0->ctime > 1))
 				{
 					AcquireLastAnim(io);
-					jumpphase = 0;
+					jump.phase = jump_data::none;
 					goto retry;
 				}
 				else
