@@ -215,7 +215,7 @@ void arx::character::manage_visual()
 		io->pos.y = pos.y - PLAYER_BASE_HEIGHT;
 		io->pos.z = pos.z;
 
-		if ((jump.phase == 0) && (!LAST_ON_PLATFORM))
+		if ((jump.phase == jump_data::not_jumping) && (!LAST_ON_PLATFORM))
 		{
 			float tempo;
 
@@ -809,7 +809,7 @@ retry:;
 				    && (ause0->flags & EA_ANIMEND))
 				{
 					AcquireLastAnim(io);
-					jump.phase = jump_data::none;
+					jump.phase = jump_data::not_jumping;
 					goto retry;
 				}
 				else if ((ause0->cur_anim == alist[ANIM_JUMP_END_PART2])
@@ -817,7 +817,7 @@ retry:;
 				         && (ause0->ctime > 1))
 				{
 					AcquireLastAnim(io);
-					jump.phase = jump_data::none;
+					jump.phase = jump_data::not_jumping;
 					goto retry;
 				}
 				else

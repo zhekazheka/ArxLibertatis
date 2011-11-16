@@ -493,7 +493,8 @@ void arx::character::hero_generate_random()
 	hero_generate_fresh();
 	skin = old_skin;
 
-	while (redistribute.attribute) {
+	while (redistribute.attribute) 
+	{
 		unsigned int i = rand() % 4;
 
 		if (attribute[i] < 18)
@@ -503,7 +504,8 @@ void arx::character::hero_generate_random()
 		}
 	}
 
-	while (redistribute.skill) {
+	while (redistribute.skill) 
+	{
 		unsigned int i = rand() % 9;
 
 		if (skill[i] < 18)
@@ -520,7 +522,7 @@ void arx::character::hero_generate_random()
 	compute_stats();
 }
 
-// Returns necessary Experience for a given level
+// returns experience needed for a given level
 int arx::character::get_xp_for_level(const int &level)
 {
 	int level_xp[] =
@@ -533,7 +535,7 @@ int arx::character::get_xp_for_level(const int &level)
 	return (level < 15 ? level_xp[level] : level * 60000);
 }
 
-// Manages Player Level Up event
+// manages player level-up
 void arx::character::level_up()
 {
 	ARX_SOUND_PlayInterface(SND_PLAYER_LEVEL_UP);
@@ -558,7 +560,8 @@ void arx::character::add_xp(const int &v)
 {
 	xp += v;
 
-	while (xp >= get_xp_for_level(level + 1)) {
+	while (xp >= get_xp_for_level(level + 1)) 
+	{
 		level_up();
 	}
 }
@@ -624,12 +627,13 @@ void arx::character::add_rune(RuneFlag _ulRune)
 
 	for (size_t i = 0; i < SPELL_COUNT; i++)
 	{
-		if (spellicons[i].bSecret == false)
+		//if (spellicons[i].bSecret == false)
 		{
 			long j = 0;
 			bool bOk = true;
 
-			while ((j < 4) && (spellicons[i].symbols[j] != 255)) {
+			while ((j < 4) && (spellicons[i].symbols[j] != 255)) 
+			{
 				if (!(rune_flags & (RuneFlag)(1 << spellicons[i].symbols[j])))
 				{
 					bOk = false;
@@ -649,12 +653,13 @@ void arx::character::add_rune(RuneFlag _ulRune)
 
 	for (size_t i = 0; i < SPELL_COUNT; i++)
 	{
-		if (spellicons[i].bSecret == false)
+		//if (spellicons[i].bSecret == false)
 		{
 			long j = 0;
 			bool bOk = true;
 
-			while ((j < 4) && (spellicons[i].symbols[j] != 255)) {
+			while ((j < 4) && (spellicons[i].symbols[j] != 255)) 
+			{
 				if (!(rune_flags & (RuneFlag)(1 << spellicons[i].symbols[j])))
 				{
 					bOk = false;

@@ -154,17 +154,17 @@ void arx::character::manage_movement()
 			DeltaTime = 25.f;
 		}
 
-		if (player.jumpphase)
+		if (player.jump.phase)
 		{
 			while (DeltaTime > 25.f)
 			{
-				PlayerMovementIterate(DeltaTime);
+				player.do_physics(DeltaTime);
 				DeltaTime -= 25.f;
 			}
 		}
 		else
 		{
-			PlayerMovementIterate(DeltaTime);
+			player.do_physics(DeltaTime);
 			DeltaTime = 0;
 		}
 
@@ -348,7 +348,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		if (jump.phase && levitate)
 		{
-			jump.phase = jump_data::none;
+			jump.phase = jump_data::not_jumping;
 			falling = 0;
 			Falling_Height = pos.y;
 			FALLING_TIME = 0;
@@ -356,7 +356,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		if (!LAST_FIRM_GROUND && TRUE_FIRM_GROUND)
 		{
-			jump.phase = jump_data::none;
+			jump.phase = jump_data::not_jumping;
 
 			if ((FALLING_TIME > 0) && falling)
 			{
@@ -476,7 +476,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		TheoricalMove *= jump_mul;
 		float mval = TheoricalMove / time * DeltaTime;
 
-		if (jump.phase == 2)
+		if (jump.phase == jump_data::moving_up)
 		{
 			moveto.y = pos.y;
 			physics.velocity.y = 0;
@@ -528,7 +528,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		}
 
 		// Apply Gravity force if not LEVITATING or JUMPING
-		if (!levitate && (jump.phase != 2) && !LAST_ON_PLATFORM)
+		if (!levitate && (jump.phase != jump_data::moving_up) && !LAST_ON_PLATFORM)
 		{
 			// constants
 			const float WORLD_GRAVITY = 0.1f;
@@ -632,7 +632,7 @@ void arx::character::do_physics(const float &DeltaTime)
 		// Check if player is already on firm ground AND not moving
 		if ((EEfabs(physics.velocity.x) < 0.001f) &&
 		    (EEfabs(physics.velocity.z) < 0.001f) && (onfirmground == 1)
-		    && (jump.phase == 0))
+			 && (jump.phase == jump_data::not_jumping))
 		{
 			moveto = pos;
 			goto lasuite;
@@ -643,7 +643,7 @@ void arx::character::do_physics(const float &DeltaTime)
 			physics.targetpos = physics.startpos + physics.velocity + modifplayermove * DeltaTime;
 
 			// Jump Impulse
-			if (jump.phase == 2)
+			if (jump.phase == jump_data::moving_up)
 			{
 				if (jump.last_position == -1.f)
 				{
@@ -719,7 +719,7 @@ void arx::character::do_physics(const float &DeltaTime)
 					}
 				}
 
-				if ((test == false) && (jump.phase > 0))
+				if ((test == false) && (jump.phase > jump_data::not_jumping))
 				{
 					physics.startpos.x = physics.cyl.origin.x = pos.x;
 					physics.startpos.z = physics.cyl.origin.z = pos.z;
@@ -756,14 +756,14 @@ void arx::character::do_physics(const float &DeltaTime)
 
 				if (climbing)
 				{
-					jump.phase = jump_data::none;
+					jump.phase = jump_data::not_jumping;
 					falling = 0;
 					FALLING_TIME = 0;
 					Falling_Height = pos.y;
 				}
 			}
 
-			if (jump.phase == 2)
+			if (jump.phase == jump_data::moving_up)
 			{
 				climbing = 0;
 			}

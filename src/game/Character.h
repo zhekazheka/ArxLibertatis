@@ -199,7 +199,7 @@ namespace arx
 		{
 			enum jump_phase
 			{
-				none = 0,
+				not_jumping = 0,
 				anticipation,
 				moving_up,
 				moving_down,

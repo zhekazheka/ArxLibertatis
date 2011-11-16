@@ -2552,7 +2552,7 @@ void arx::game::reset(const int &type)
 	
 	player.jump.last_position = 0;
 	player.jump.start_time = 0;
-	player.jump.phase = arx::character::jump_data::none;
+	player.jump.phase = arx::character::jump_data::not_jumping;
 	
 	player.inzone = NULL;
 

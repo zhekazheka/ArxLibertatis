@@ -2965,7 +2965,7 @@ void ArxGame::ManagePlayerControls()
 	}
 
 	// Checks JUMP Key Status.
-	if (player.jump.phase == 0 && GInput->actionNowPressed(CONTROLS_CUST_JUMP))
+	if (player.jump.phase == arx::character::jump_data::not_jumping && GInput->actionNowPressed(CONTROLS_CUST_JUMP))
 	{
 		player.REQUEST_JUMP = ARXTimeUL();
 	}
