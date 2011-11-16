@@ -247,6 +247,7 @@ void arx::character::compute_full_stats()
 
 	// Check for spell modulators
 	if (inter.iobj[0])
+	{
 		for (long i = 0; i < inter.iobj[0]->nb_spells_on; i++)
 		{
 			long n = inter.iobj[0]->spells_on[i];
@@ -282,7 +283,7 @@ void arx::character::compute_full_stats()
 				}
 			}
 		}
-
+	}
 		if (cur_mr == 3)
 		{
 			mod.attribute.strength     += 1.0f;
@@ -695,7 +696,8 @@ void arx::character::set_invulnerable(const bool &b)
 	if (b)
 	{
 		playerflags |= PLAYERFLAGS_INVULNERABILITY;
-	} else
+	} 
+	else
 	{
 		playerflags &= ~PLAYERFLAGS_INVULNERABILITY;
 	}
@@ -804,7 +806,8 @@ void arx::character::frame_check(const float &frame_delta)
 					if (stat.life - dmg <= 0.0f) 
 					{
 						ARX_DAMAGES_DamagePlayer(dmg, DAMAGE_TYPE_POISON, -1);
-					} else 
+					} 
+					else 
 					{
 						stat.life -= dmg;
 					}

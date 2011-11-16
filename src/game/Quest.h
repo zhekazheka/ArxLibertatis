@@ -28,4 +28,4 @@ struct STRUCT_QUEST {
 	std::string localised;
 };
 
-#endif
+#endif // ARX_GAME_QUEST_H

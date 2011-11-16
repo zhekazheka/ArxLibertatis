@@ -1,3 +1,22 @@
+/*
+ * Copyright 2011 Arx Libertatis Team (see the AUTHORS file)
+ *
+ * This file is part of Arx Libertatis.
+ *
+ * Arx Libertatis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Arx Libertatis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Arx Libertatis.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
 #include "game/Character.h"
 
 #include "core/Core.h"
@@ -114,45 +133,35 @@ bool arx::character::valid_jump_pos()
 
 void arx::character::manage_movement()
 {
-	static float StoredTime = 0;
-
 	// Is our player able to move ?
 	if (!CINEMASCOPE && !BLOCK_PLAYER_CONTROLS && inter.iobj[0])
 	{
 		// Compute current player speedfactor
 		float speedfactor = inter.iobj[0]->basespeed + inter.iobj[0]->speed_modif;
-
-		if (speedfactor < 0) speedfactor = 0;
 		if (cur_mr == 3) speedfactor += 0.5f;
 		if (cur_rf == 3) speedfactor += 1.5f;
+		if (speedfactor < 0) speedfactor = 0;
 
-		// Compute time things
-		float DeltaTime = StoredTime;
+		float delta = Original_framedelay * speedfactor;
 
-		if (Original_framedelay > 0)
+		// sub-divide frames to ensure the maximum delta remains 
+		// equal or below it's 10fps equivalant.
+		const float minimum_rate = 1000.0f / 60.0f;
+		int sub_divisions = 1 + (int)floorf(delta / minimum_rate);
+		
+		// don't compute player physics at all this frame if the delta is ridiculously high
+		if (sub_divisions < 10)
 		{
-			DeltaTime = StoredTime + (float)Original_framedelay * speedfactor; //FrameDiff;
-		}
-
-		if (EDITMODE) 
-		{
-			DeltaTime = 25.f;
-		}
-
-		if (jumpphase)
-		{
-			while (DeltaTime > 25.f)
+			if (sub_divisions > 1)
 			{
-				do_physics(DeltaTime);
-				DeltaTime -= 25.f;
+				delta /= (float)sub_divisions;
 			}
-		} else
-		{
-			do_physics(DeltaTime);
-			DeltaTime = 0;
-		}
 
-		StoredTime = DeltaTime;
+			for (int i = 0; i < sub_divisions; i++)
+			{
+				do_physics(delta);
+			}
+		}
 	}
 }
 

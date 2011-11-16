@@ -754,7 +754,7 @@ static float _AvgFrameDiff = 150.f;
 		_AvgFrameDiff+= (FrameDiff - _AvgFrameDiff )*0.01f;
 	}
 
-	if( GInput->isKeyPressedNowPressed(Keyboard::Key_F12) )
+	if (GInput->isKeyPressedNowPressed(Keyboard::Key_F12))
 	{
 		EERIE_PORTAL_ReleaseOnlyVertexBuffer();
 		ComputePortalVertexBuffer();
@@ -762,8 +762,8 @@ static float _AvgFrameDiff = 150.f;
 
 	ACTIVECAM = &subj;
 
-	if(wasResized) {
-		
+	if (wasResized) 
+	{
 		LogDebug("was resized");
 		
 		DanaeRestoreFullScreen();
