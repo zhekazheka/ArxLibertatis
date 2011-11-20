@@ -5486,7 +5486,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 		ITC.Level = getLocalised("system_charsheet_player_lvl");
 		ITC.Xp = getLocalised("system_charsheet_player_xp");
 		
-		ANIM_Set(&player.useanim,herowaitbook);
+		ANIM_Set(&player.useanim, player.herowaitbook);
 
 		player.useanim.flags |= EA_LOOP;
 
@@ -6667,14 +6667,14 @@ void ARX_INTERFACE_ManageOpenedBook()
 
 		if (io)
 		{
-			player.useanim.cur_anim = herowaitbook;
+			player.useanim.cur_anim = player.herowaitbook;
 
 			if (	(player.equiped[EQUIP_SLOT_WEAPON]!=0)
 				&&	ValidIONum(player.equiped[EQUIP_SLOT_WEAPON]	))
 			{
 				if (inter.iobj[player.equiped[EQUIP_SLOT_WEAPON]]->type_flags & OBJECT_TYPE_2H)
 				{
-					player.useanim.cur_anim = herowait_2h;
+					player.useanim.cur_anim = player.herowait_2h;
 				}
 			}
 

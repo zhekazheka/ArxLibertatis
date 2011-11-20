@@ -80,6 +80,11 @@ arx::character::character()
 	FistParticles = 0;
 	sp_max = 0;
 	CURRENT_TORCH = NULL;
+	hero = NULL;
+	herowaitbook = NULL;
+	herowait2 = NULL;
+	herowait_2h = NULL;
+	PLAYER_SKIN_TC = NULL;
 }
 
 // Specific for color checks
@@ -627,7 +632,7 @@ void arx::character::add_rune(RuneFlag _ulRune)
 
 	for (size_t i = 0; i < SPELL_COUNT; i++)
 	{
-		//if (spellicons[i].bSecret == false)
+		if (spellicons[i].bSecret == false)
 		{
 			long j = 0;
 			bool bOk = true;
@@ -653,7 +658,7 @@ void arx::character::add_rune(RuneFlag _ulRune)
 
 	for (size_t i = 0; i < SPELL_COUNT; i++)
 	{
-		//if (spellicons[i].bSecret == false)
+		if (spellicons[i].bSecret == false)
 		{
 			long j = 0;
 			bool bOk = true;

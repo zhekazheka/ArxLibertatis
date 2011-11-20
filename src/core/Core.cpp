@@ -3899,19 +3899,24 @@ void ShowFPS() {
 		LASTfps2=fpss2;
 	}
 
-	sprintf(tex,"%ld Prims %4.02f fps ( %3.02f - %3.02f ) [%3.0fms] INTER:%ld/%ld INTREAT:%ld"
-	        , EERIEDrawnPolys, FPS, fps2min, fps2, _framedelay, INTER_DRAW, INTER_COMPUTE, INTREATZONECOUNT);
+	sprintf(tex, "%.02f fps", FPS);
+	mainApp->OutputText((DANAESIZX >= 80 ? DANAESIZX - 80 : 0), 8, tex);
+
+	sprintf(tex, "%i, [%i/%i]{%i}", EERIEDrawnPolys, INTER_DRAW, INTER_COMPUTE, INTREATZONECOUNT);
+	mainApp->OutputText(20, 40, tex);
+
+	//sprintf(tex,"%ld Prims %4.02f fps ( %3.02f - %3.02f ) [%3.0fms] INTER:%ld/%ld INTREAT:%ld", EERIEDrawnPolys, FPS, fps2min, fps2, _framedelay, INTER_DRAW, INTER_COMPUTE, INTREATZONECOUNT);
 	//mainApp->OutputText( 70, DANAESIZY-100+32, tex );
-
 	TOTAL_CHRONO=0;
-//	TODO(lubosz): Don't get this by extern global
-//	sprintf(tex,"%4.0f MCache %ld[%ld] FP %3.0f %3.0f Llights %ld/%ld TOTIOPDL %ld TOTPDL %ld"
-//		,inter.iobj[0]->pos.y, meshCache.size(),MCache_GetSize(),Original_framedelay,_framedelay,LAST_LLIGHT_COUNT,MAX_LLIGHTS,TOTIOPDL,TOTPDL);
+	//	TODO(lubosz): Don't get this by extern global
+	//	sprintf(tex,"%4.0f MCache %ld[%ld] FP %3.0f %3.0f Llights %ld/%ld TOTIOPDL %ld TOTPDL %ld",inter.iobj[0]->pos.y, meshCache.size(),MCache_GetSize(),Original_framedelay,_framedelay,LAST_LLIGHT_COUNT,MAX_LLIGHTS,TOTIOPDL,TOTPDL);
 
-	if (LAST_LLIGHT_COUNT>MAX_LLIGHTS)
-		strcat(tex," EXCEEDING LIMIT !!!");
+	if (LAST_LLIGHT_COUNT > MAX_LLIGHTS)
+	{
+		sprintf(tex, "lights %i > %i", LAST_LLIGHT_COUNT, MAX_LLIGHTS);
+		mainApp->OutputText(20, 60, tex);
+	}
 
-	mainApp->OutputText(70,20,tex);
 }
 
 void ARX_SetAntiAliasing() {
@@ -3920,9 +3925,9 @@ void ARX_SetAntiAliasing() {
 
 void ReleaseSystemObjects() {
 	
-	if(hero) {
-		delete hero;
-		hero=NULL;
+	if (player.hero) {
+		delete player.hero;
+		player.hero = NULL;
 	}
 
 	if (inter.iobj[0]) {

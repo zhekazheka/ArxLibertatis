@@ -274,6 +274,11 @@ namespace arx
 		void *inzone;
 
 		TextureContainer *heads[5];
+		EERIE_3DOBJ *hero;
+		ANIM_HANDLE *herowaitbook;
+		ANIM_HANDLE *herowait2;
+		ANIM_HANDLE *herowait_2h;
+		TextureContainer *PLAYER_SKIN_TC;
 		ARX_INTERFACE_MEMORIZE_SPELL SpellToMemorize;
 		PlayerFlags playerflags;
 

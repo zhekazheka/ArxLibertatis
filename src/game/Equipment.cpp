@@ -274,7 +274,7 @@ void ARX_EQUIPMENT_RecreatePlayerMesh() {
 		return;
 	}
 	
-	if(io->obj != hero) {
+	if(io->obj != player.hero) {
 		delete io->obj;
 	}
 	io->obj = loadObject("graph/obj3d/interactive/npc/human_base/human_base.teo", false);
@@ -336,7 +336,7 @@ void ARX_EQUIPMENT_RecreatePlayerMesh() {
 	}
 
 	ARX_INTERACTIVE_HideGore(inter.iobj[0], 1);
-	EERIE_Object_Precompute_Fast_Access(hero);
+	EERIE_Object_Precompute_Fast_Access(player.hero);
 	EERIE_Object_Precompute_Fast_Access(inter.iobj[0]->obj);
 
 	ARX_INTERACTIVE_RemoveGoreOnIO(inter.iobj[0]); 

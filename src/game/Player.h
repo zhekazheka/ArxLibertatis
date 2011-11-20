@@ -69,11 +69,6 @@ namespace arx
 	};
 };
 
-extern EERIE_3DOBJ *hero;
-extern ANIM_HANDLE *herowaitbook;
-extern ANIM_HANDLE *herowait2;
-extern ANIM_HANDLE *herowait_2h;
-
 void ARX_PLAYER_LoadHeroAnimsAndMesh();
 void ARX_PLAYER_BecomesDead();
 void ARX_PLAYER_RectifyPosition();

@@ -722,7 +722,7 @@ bool ARX_Menu_Render() {
 			ITC.Level = getLocalised("system_charsheet_player_lvl");
 			ITC.Xp = getLocalised("system_charsheet_player_xp");
 
-			ANIM_Set(&player.useanim, herowaitbook);
+			ANIM_Set(&player.useanim, player.herowaitbook);
 
 			player.useanim.flags |= EA_LOOP;
 

@@ -79,15 +79,7 @@
 #include "scene/Light.h"
 #include "scene/Object.h"
 
-void Manage_sp_max();
-
 // globals
-EERIE_3DOBJ *hero = NULL;
-ANIM_HANDLE *herowaitbook = NULL;
-ANIM_HANDLE *herowait2 = NULL;
-ANIM_HANDLE *herowait_2h = NULL;
-TextureContainer *PLAYER_SKIN_TC = NULL;
-
 float sp_max_y[64];
 Color sp_max_col[64];
 char  sp_max_ch[64];
@@ -358,9 +350,9 @@ void ARX_PLAYER_Restore_Skin()
 	// TODO maybe it would be better to replace the textures in the player object
 	// instead of replacing the texture data for all objects that use these textures
 
-	if (PLAYER_SKIN_TC && !tx[0].empty())
+	if (player.PLAYER_SKIN_TC && !tx[0].empty())
 	{
-		PLAYER_SKIN_TC->LoadFile(tx[0]);
+		player.PLAYER_SKIN_TC->LoadFile(tx[0]);
 	}
 
 	tmpTC = TextureContainer::Find("graph/obj3d/textures/npc_human_chainmail_hero_head");
@@ -388,22 +380,14 @@ void ARX_PLAYER_Restore_Skin()
 // Load Mesh & anims for hero
 void ARX_PLAYER_LoadHeroAnimsAndMesh()
 {
-	const char *OBJECT_HUMAN_BASE   = "graph/obj3d/interactive/npc/human_base/human_base.teo";
-	const char *ANIM_WAIT_BOOK      = "graph/obj3d/anims/npc/human_wait_book.tea";
-	const char *ANIM_WAIT_NORMAL    = "graph/obj3d/anims/npc/human_normal_wait.tea";
-	const char *ANIM_WAIT_TWOHANDED = "graph/obj3d/anims/npc/human_wait_book_2handed.tea";
-
-	const char *HUMAN_BASE_HEAD     = "graph/obj3d/textures/npc_human_base_hero_head";
-
-	hero = loadObject(OBJECT_HUMAN_BASE, false);
-	PLAYER_SKIN_TC = TextureContainer::Load(HUMAN_BASE_HEAD);
-
-	herowaitbook = EERIE_ANIMMANAGER_Load(ANIM_WAIT_BOOK);
-	herowait2 = EERIE_ANIMMANAGER_Load(ANIM_WAIT_NORMAL);
-	herowait_2h = EERIE_ANIMMANAGER_Load(ANIM_WAIT_TWOHANDED);
+	player.hero = loadObject("graph/obj3d/interactive/npc/human_base/human_base.teo", false);
+	player.PLAYER_SKIN_TC = TextureContainer::Load("graph/obj3d/textures/npc_human_base_hero_head");
+	player.herowaitbook = EERIE_ANIMMANAGER_Load("graph/obj3d/anims/npc/human_wait_book.tea");
+	player.herowait2    = EERIE_ANIMMANAGER_Load("graph/obj3d/anims/npc/human_normal_wait.tea");
+	player.herowait_2h  = EERIE_ANIMMANAGER_Load("graph/obj3d/anims/npc/human_wait_book_2handed.tea");
 
 	INTERACTIVE_OBJ *io = CreateFreeInter(0);
-	io->obj = hero;
+	io->obj = player.hero;
 
 	player.skin = 0;
 	ARX_PLAYER_Restore_Skin();
@@ -414,14 +398,13 @@ void ARX_PLAYER_LoadHeroAnimsAndMesh()
 
 	// todo free
 	io->_npcdata = new IO_NPCDATA;
-
 	io->ioflags = IO_NPC;
-	io->_npcdata->maxlife = io->_npcdata->life = 10.f;
+	io->_npcdata->life    = 10.0f;
+	io->_npcdata->maxlife = 10.0f;
 	io->_npcdata->vvpos = -99999.f;
-
-	// todo free
 	io->armormaterial = "leather";
 	io->filename = "graph/obj3d/interactive/player/player.teo";
+
 	loadScript(io->script, resources->getFile("graph/obj3d/interactive/player/player.asl"));
 
 	const long eogg[4] =
@@ -459,21 +442,19 @@ void ARX_PLAYER_LoadHeroAnimsAndMesh()
 // Called When player has just died
 void ARX_PLAYER_BecomesDead()
 {
-	player.STARTED_A_GAME = 0;
-	// a mettre au final
+	player.STARTED_A_GAME = false;
 	player.BLOCK_PLAYER_CONTROLS = true;
 
 	if (inter.iobj[0])
 	{
-		player.Interface &= ~INTER_COMBATMODE;
 		player.Interface = 0;
-		player.DeadCameraDistance = 40.f;
 		player.DeadTime = 0;
+		player.DeadCameraDistance = 40.0f;
 	}
 
-	for(size_t i = 0; i < MAX_SPELLS; i++)
+	for (int i = 0; i < MAX_SPELLS; i++)
 	{
-		if(spells[i].exist && (spells[i].caster == 0))
+		if (spells[i].exist && !spells[i].caster)
 		{
 			spells[i].tolive = 0;
 		}
@@ -483,8 +464,9 @@ void ARX_PLAYER_BecomesDead()
 // Manage Player Death Visual
 void ARX_PLAYER_Manage_Death()
 {
+	float ratio = ((float)player.DeadTime - 2000.0f) * (1.0f / 5000.0f);
+
 	player.PLAYER_PARALYSED = false;
-	float ratio = (float)(player.DeadTime - 2000) * (1.0f / 5000);
 
 	if (ratio >= 1.f)
 	{
@@ -513,9 +495,8 @@ void ARX_PLAYER_GotoAnyPoly()
 
 			if (eg->nbpoly)
 			{
-				player.pos.x = moveto.x = eg->polydata[0].center.x;
-				player.pos.y = moveto.y = eg->polydata[0].center.y + PLAYER_BASE_HEIGHT;
-				player.pos.z = moveto.z = eg->polydata[0].center.z;
+				moveto = eg->polydata[0].center + Vec3f(0, PLAYER_BASE_HEIGHT, 0);
+				player.pos = moveto;
 			}
 		}
 	}
@@ -576,18 +557,25 @@ void ARX_PLAYER_PutPlayerInNormalStance(long val)
 
 void ARX_PLAYER_Start_New_Quest()
 {
-	player.SKIN_MOD = 0;
-	player.QUICK_MOD = 0;
+	// clear paths
 	EERIE_PATHFINDER_Clear();
 	EERIE_PATHFINDER_Release();
-	player.hero_generate_fresh();
+
+	//
+	player.SKIN_MOD = 0;
+	player.QUICK_MOD = 0;
 	player.CURRENT_TORCH = NULL;
+	inter.iobj[0]->halo.flags = 0;
+	player.hero_generate_fresh();
+
+	// clear all objects and inventory
 	FreeAllInter();
 	SecondaryInventory = NULL;
 	TSecondaryInventory = NULL;
 	ARX_EQUIPMENT_UnEquipAllPlayer();
+
+	//
 	ARX_Changelevel_CurGame_Clear();
-	inter.iobj[0]->halo.flags = 0;
 }
 
 void Manage_sp_max()
