@@ -24,14 +24,14 @@
 
 namespace arx
 {	
-	template <class T>
-	T limit(const T &v, const T &l, const T &h)
-	{
-		return (v < l ? l : v > h ? h : v);
-	}
-
 	struct stats
 	{
+		template <class T>
+		T limit(const T &v, const T &l, const T &h)
+		{
+			return (v < l ? l : v > h ? h : v);
+		}
+
 		void operator=(const float &v)
 		{
 			life = v;
@@ -42,12 +42,12 @@ namespace arx
 
 		void limit_life()
 		{
-			life = arx::limit(life, 0.0f, maxlife);
+			life = limit(life, 0.0f, maxlife);
 		}
 
 		void limit_mana()
 		{
-			mana = arx::limit(mana, 0.0f, maxmana);
+			mana = limit(mana, 0.0f, maxmana);
 		}
 
 		void limit()
