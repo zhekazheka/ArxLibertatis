@@ -48,7 +48,7 @@
 #define ARX_GAME_PLAYER_H
 
 #include <string>
-#include "character.h"
+#include "Character.h"
 
 enum player_base_constants
 {
