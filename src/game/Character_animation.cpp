@@ -646,6 +646,7 @@ retry:;
 			FistParticles &= ~1;
 		}
 
+		// TODO rename this - adejr: spell casting fx?
 		if (FistParticles)
 		{
 			light = 1;
@@ -773,13 +774,11 @@ retry:;
 			ChangeMoveAnim = alist[ANIM_LEVITATE];
 			ChangeMA_Loop = 1;
 			goto makechanges;
-		}
-		else if (jump.phase)
+		} // not levitating
+		else if (jump.phase != jump_data::not_jumping)
 		{
 			switch (jump.phase)
 			{
-			case jump_data::not_jumping: ARX_DEAD_CODE();
-			
 			case jump_data::anticipation:
 				FALLING_TIME = 0;
 				Full_Jump_Height = 0;
@@ -799,6 +798,10 @@ retry:;
 					start_fall();
 				}
 
+				break;
+
+			case jump_data::moving_down: 
+				// adejr: the animation for moving_down 'appears' (?) to be equal to moving_up
 				break;
 
 			case jump_data::finished:
@@ -842,6 +845,10 @@ retry:;
 				}
 
 				break;
+
+			default:
+				ARX_DEAD_CODE();
+				break;
 			}
 
 			if (ChangeMoveAnim && (ChangeMoveAnim != ause0->cur_anim))
@@ -868,7 +875,7 @@ retry:;
 				ause3->flags = EA_STATICANIM;
 			}
 		}
-		else
+		else // jump.phase == not_jumping
 		{
 makechanges:;
 
