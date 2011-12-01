@@ -819,7 +819,8 @@ bool ARX_Menu_Render() {
 					{
 						player.hero_generate_average();
 						bQuickGenFirstClick = false;
-					}	else
+					}	
+					else
 					{
 						player.hero_generate_random();
 					}

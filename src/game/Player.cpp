@@ -57,7 +57,6 @@
 
 #include "game/Equipment.h"
 #include "game/Inventory.h"
-#include "game/NPC.h"
 
 #include "gui/Interface.h"
 #include "gui/Menu.h"
@@ -67,7 +66,6 @@
 #include "graphics/Draw.h"
 #include "graphics/Renderer.h"
 #include "graphics/data/TextureContainer.h"
-#include "graphics/particle/ParticleManager.h"
 
 #include "io/PakReader.h"
 
@@ -78,6 +76,25 @@
 #include "scene/Interactive.h"
 #include "scene/Light.h"
 #include "scene/Object.h"
+
+#include <stddef.h>                     // for NULL, size_t
+#include <stdlib.h>                     // for malloc
+#include <string.h>                     // for memcpy
+#include "audio/AudioTypes.h"           // for INVALID_ID
+#include "game/Playerflags.h"
+#include "game/Quest.h"                 // for STRUCT_QUEST
+#include "game/Spells.h"                // for SPELL, spells, MAX_SPELLS, etc
+#include "graphics/BaseGraphicsTypes.h"  // for EERIE_CYLINDER
+#include "graphics/Color.h"             // for Color
+#include "graphics/GraphicsTypes.h"     // for EERIE_LIGHT, EERIEPOLY
+#include "graphics/Math.h"              // for EEsin
+#include "graphics/data/Mesh.h"         // for INTERACTIVE_OBJ, etc
+#include "io/FilePath.h"                // for path
+#include "math/Angle.h"                 // for Angle<>::<anonymous>, Angle
+#include "math/MathFwd.h"               // for Anglef, Vec3f
+#include "math/Vector3.h"               // for Vector3, etc
+#include "platform/Flags.h"             // for Flags, operator~
+#include "script/Script.h"
 
 // globals
 float sp_max_y[64];

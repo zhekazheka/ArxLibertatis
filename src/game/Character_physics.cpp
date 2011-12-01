@@ -31,6 +31,23 @@
 #include "physics/Collisions.h"
 #include "scene/Interactive.h"
 
+#include <math.h>                       // for floorf
+#include <string.h>                     // for NULL, memcpy
+#include <algorithm>                    // for max, min
+#include "game/Damage.h"                // for ARX_DAMAGES_DamagePlayer, etc
+#include "game/Playerflags.h"
+#include "game/Skills.h"                // for skills, etc
+#include "game/Spells.h"                // for ARX_SPELLS_GetSpellOn, etc
+#include "graphics/BaseGraphicsTypes.h"  // for EERIE_CYLINDER
+#include "graphics/GraphicsTypes.h"     // for EERIEPOLY, EERIE_ANIM, etc
+#include "graphics/Math.h"              // for EEfabs, EEcos, EEsin
+#include "graphics/data/Mesh.h"         // for IO_PHYSICS, INTERACTIVE_OBJ, etc
+#include "math/Angle.h"                 // for radians
+#include "math/MathFwd.h"               // for Vec3f
+#include "math/Vector3.h"
+#include "platform/Flags.h"             // for Flags, operator|, operator~
+#include "script/Script.h"              // for SendIOScriptEvent, etc
+
 // externs
 extern float InventoryX;
 extern float InventoryDir;

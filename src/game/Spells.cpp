@@ -8748,7 +8748,8 @@ static void ApplyPasswall() {
 	if (player.USE_PLAYERCOLLISIONS)
 	{
 		player.USE_PLAYERCOLLISIONS = false;
-	} else
+	} 
+	else
 	{
 		player.USE_PLAYERCOLLISIONS = true;
 	}

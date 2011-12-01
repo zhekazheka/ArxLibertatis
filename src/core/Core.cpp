@@ -3899,10 +3899,10 @@ void ShowFPS() {
 		LASTfps2=fpss2;
 	}
 
-	sprintf(tex, "%.02f fps", FPS);
+	sprintf(tex, "%.02f fps", (float)FPS);
 	mainApp->OutputText((DANAESIZX >= 80 ? DANAESIZX - 80 : 0), 8, tex);
 
-	sprintf(tex, "%i, [%i/%i]{%i}", EERIEDrawnPolys, INTER_DRAW, INTER_COMPUTE, INTREATZONECOUNT);
+	sprintf(tex, "%i, [%i/%i]{%i}", (int)EERIEDrawnPolys, (int)INTER_DRAW, (int)INTER_COMPUTE, (int)INTREATZONECOUNT);
 	mainApp->OutputText(20, 40, tex);
 
 	//sprintf(tex,"%ld Prims %4.02f fps ( %3.02f - %3.02f ) [%3.0fms] INTER:%ld/%ld INTREAT:%ld", EERIEDrawnPolys, FPS, fps2min, fps2, _framedelay, INTER_DRAW, INTER_COMPUTE, INTREATZONECOUNT);
@@ -3913,7 +3913,7 @@ void ShowFPS() {
 
 	if (LAST_LLIGHT_COUNT > MAX_LLIGHTS)
 	{
-		sprintf(tex, "lights %i > %i", LAST_LLIGHT_COUNT, MAX_LLIGHTS);
+		sprintf(tex, "lights %i > max (%i)", (int)LAST_LLIGHT_COUNT, (int)MAX_LLIGHTS);
 		mainApp->OutputText(20, 60, tex);
 	}
 

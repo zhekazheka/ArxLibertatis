@@ -23,6 +23,9 @@
 #include "graphics/data/TextureContainer.h"
 #include "scene/Object.h"
 
+#include <stddef.h>                     // for NULL, size_t
+#include "graphics/GraphicsTypes.h"     // for EERIE_3DOBJ
+
 void arx::necklace::clear()
 {
 	if (lacet)

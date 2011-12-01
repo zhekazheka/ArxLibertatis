@@ -22,19 +22,33 @@
 #include "core/Application.h"
 #include "core/Core.h"
 #include "core/GameTime.h"
-#include "game/Inventory.h"
-#include "game/NPC.h"
 #include "game/Player.h"
 #include "graphics/Math.h"
 #include "graphics/particle/ParticleEffects.h"
 #include "gui/Interface.h"
-#include "gui/Speech.h"
 #include "io/log/Logger.h"
-#include "physics/Attractors.h"
 #include "physics/Collisions.h"
 #include "scene/Interactive.h"
 #include "scene/Light.h"
 #include "scene/Object.h"
+
+#include <string.h>                     // for NULL, memcpy
+#include <algorithm>                    // for min
+#include "game/Equipment.h"
+#include "game/Playerflags.h"           // for PlayerMovement, etc
+#include "game/Skills.h"                // for skills, etc
+#include "game/Spells.h"                // for ARX_SPELLS_GetSpellOn, etc
+#include "game/Status.h"                // for stats
+#include "graphics/BaseGraphicsTypes.h"  // for EERIE_CYLINDER
+#include "graphics/Color.h"             // for Color3f, Color3
+#include "graphics/GraphicsTypes.h"     // for EERIE_LIGHT, EERIE_3DOBJ, etc
+#include "graphics/Vertex.h"            // for EERIE_VERTEX
+#include "graphics/data/Mesh.h"         // for INTERACTIVE_OBJ, ANIM_USE, etc
+#include "math/Angle.h"                 // for Angle<>::<anonymous>
+#include "math/MathFwd.h"               // for Vec3f, Anglef
+#include "math/Vector3.h"
+#include "platform/Flags.h"             // for Flags, operator~
+#include "script/Script.h"
 
 // externs
 extern float InventoryX;

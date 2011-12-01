@@ -29,6 +29,20 @@
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
 
+#include <stddef.h>                     // for NULL, size_t
+#include <stdlib.h>                     // for rand
+#include <algorithm>                    // for max
+#include "game/Damage.h"                // for ARX_DAMAGES_DamagePlayer, etc
+#include "game/Equipment.h"             // for ARX_EQUIPMENT_Apply, etc
+#include "graphics/BaseGraphicsTypes.h"  // for EERIE_CYLINDER
+#include "graphics/GraphicsTypes.h"     // for EERIE_3DOBJ, etc
+#include "graphics/Vertex.h"            // for EERIE_VERTEX
+#include "math/Angle.h"                 // for Angle<>::<anonymous>, etc
+#include "math/Vector3.h"               // for Vector3, etc
+#include "platform/Flags.h"             // for Flags, operator~
+#include "platform/Platform.h"          // for arx_assert
+#include "script/Script.h"              // for SendIOScriptEvent, etc
+
 // constants
 const float arx::character::STEP_DISTANCE = 120.0f;
 const float arx::character::SKILL_STEALTH_MAX = 100.0f;
