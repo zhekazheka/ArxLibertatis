@@ -469,7 +469,7 @@ void ARX_PLAYER_BecomesDead()
 		player.DeadCameraDistance = 40.0f;
 	}
 
-	for (int i = 0; i < MAX_SPELLS; i++)
+	for (size_t i = 0; i < MAX_SPELLS; i++)
 	{
 		if (spells[i].exist && !spells[i].caster)
 		{
