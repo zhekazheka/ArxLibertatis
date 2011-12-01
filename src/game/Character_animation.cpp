@@ -778,6 +778,8 @@ retry:;
 		{
 			switch (jump.phase)
 			{
+			case jump_data::not_jumping: ARX_DEAD_CODE();
+			
 			case jump_data::anticipation:
 				FALLING_TIME = 0;
 				Full_Jump_Height = 0;
