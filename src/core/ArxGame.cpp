@@ -332,35 +332,44 @@ bool ArxGame::InitWindow() {
 	
 	arx_assert(m_MainWindow == NULL);
 	
-	bool matched = false;
-	
 	bool autoFramework = (config.window.framework == "auto");
 	
-#ifdef HAVE_SDL
-	if(autoFramework || config.window.framework == "SDL") {
-		matched = true;
-		RenderWindow * window = new SDLWindow;
-		if(!initWindow(window)) {
-			delete window;
+	for(int i = 0; i < 2 && !m_MainWindow; i++) {
+		bool first = (i == 0);
+		
+		bool matched = false;
+		
+		#ifdef HAVE_SDL
+		if(!m_MainWindow && first == (autoFramework || config.window.framework == "SDL")) {
+			matched = true;
+			RenderWindow * window = new SDLWindow;
+			if(!initWindow(window)) {
+				delete window;
+			}
+		}
+		#endif
+		
+		#ifdef HAVE_D3D9
+		if(!m_MainWindow && first == (autoFramework || config.window.framework == "D3D9")) {
+			matched = true;
+			RenderWindow * window = new D3D9Window;
+			if(!initWindow(window)) {
+				delete window;
+			}
+		}
+		#endif
+		
+		if(first && !matched) {
+			LogError << "unknown windowing framework: " << config.window.framework;
 		}
 	}
-#endif
 	
-#ifdef HAVE_D3D9
-	if(!m_MainWindow && (autoFramework || config.window.framework == "D3D9")) {
-		matched = true;
-		RenderWindow * window = new D3D9Window;
-		if(!initWindow(window)) {
-			delete window;
-		}
-	}
-#endif
-	
-	if(!matched) {
-		LogError << "unknown windowing framework: " << config.window.framework;
+	if(!m_MainWindow) {
+		LogError << "no working windowing framework available";
+		return false;
 	}
 	
-	return (m_MainWindow != NULL);
+	return true;
 }
 
 bool ArxGame::InitInput() {
@@ -703,24 +712,22 @@ bool ArxGame::BeforeRun() {
 
 bool ArxGame::Render() {
 	
-	FrameTime = ARX_TIME_Get();
+	arxtime.update_frame_time();
 
 	// before modulation by "GLOBAL_SLOWDOWN"
-	Original_framedelay = FrameTime - LastFrameTime;
+	Original_framedelay = arxtime.get_frame_delay();
 	arx_assert(Original_framedelay >= 0.0f);
 
 	// TODO this code shouldn't exist. ARXStartTime should be constant.
 	if (GLOBAL_SLOWDOWN != 1.0f)
 	{
-		ARXStartTime += (u64)(Original_framedelay * (1.0f - GLOBAL_SLOWDOWN) * 1000.0f);
-
-		arx_assert(ARXStartTime < Time::getUs());
+		arxtime.increment_start_time((u64)(Original_framedelay * (1.0f - GLOBAL_SLOWDOWN) * 1000.0f));
 
 		// recalculate frame delta
-		FrameTime = ARX_TIME_Get();
+		arxtime.update_frame_time();
 	}
 
-	_framedelay = FrameTime - LastFrameTime;
+	_framedelay = arxtime.get_frame_delay();
 	arx_assert(_framedelay >= 0.0f);
 
 	// limit fps above 10fps
@@ -801,7 +808,7 @@ bool ArxGame::Render() {
 
 	// SPECIFIC code for Snapshot MODE... to insure constant capture framerate
 
-	PULSATE=EEsin(FrameTime / 800);
+	PULSATE=EEsin(arxtime.get_frame_time() / 800);
 	EERIEDrawnPolys=0;
 
 	// EditMode Specific code
@@ -872,7 +879,7 @@ bool ArxGame::Render() {
 	else // Manages our first frameS
 	{
 		LogDebug("first frame");
-		ARX_TIME_Get();
+		arxtime.update();
 
 		FirstFrameHandling();
 		goto norenderend;
@@ -1331,7 +1338,7 @@ bool ArxGame::Render() {
 		{
 			CinematicSpeech * acs=&aspeech[valid].cine;
 			INTERACTIVE_OBJ * io=aspeech[valid].io;
-			float rtime=(float)(ARX_TIME_Get()-aspeech[valid].time_creation)/(float)aspeech[valid].duration;
+			float rtime=(float)(arxtime.get_updated()-aspeech[valid].time_creation)/(float)aspeech[valid].duration;
 
 			if (rtime<0) rtime=0;
 
@@ -1590,7 +1597,7 @@ bool ArxGame::Render() {
 	if ((USE_CINEMATICS_CAMERA) && (USE_CINEMATICS_PATH.path!=NULL))
 	{
 		Vec3f pos,pos2;
-			USE_CINEMATICS_PATH._curtime = ARX_TIME_Get();
+			USE_CINEMATICS_PATH._curtime = arxtime.get_updated();
 
 		USE_CINEMATICS_PATH._curtime+=50;
 		long pouet2=ARX_PATHS_Interpolate(&USE_CINEMATICS_PATH,&pos);
@@ -1799,7 +1806,7 @@ bool ArxGame::Render() {
 			)
 		{
 			ARX_MAGICAL_FLARES_Draw(FRAMETICKS);
-				FRAMETICKS = ARXTimeUL();
+				FRAMETICKS = (unsigned long)(arxtime);
 		}
 	}
 #ifdef BUILD_EDITOR
@@ -1900,7 +1907,7 @@ bool ArxGame::Render() {
 			)
 		{
 			ARX_MAGICAL_FLARES_Draw(FRAMETICKS);
-			FRAMETICKS = ARXTimeUL();
+			FRAMETICKS = (unsigned long)(arxtime);
 		}
 		GRenderer->SetRenderState(Renderer::DepthTest, true);
 	}
@@ -2068,7 +2075,7 @@ bool ArxGame::Render() {
 			ARX_PATH_UpdateAllZoneInOutInside();
 	}
 
-	LastFrameTime=FrameTime;
+	arxtime.update_last_frame_time();
 	LastMouseClick=EERIEMouseButton;
 
 	return true;
@@ -2581,7 +2588,7 @@ void arx::game::reset(const int &type)
 	TOTAL_BODY_CHUNKS_COUNT = 0;
 
 	// ARX Timer
-	ARX_TIME_Init();
+	arxtime.init();
 
 	ClearTileLights();
 }

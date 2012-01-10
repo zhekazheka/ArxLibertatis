@@ -387,8 +387,6 @@ long LaunchDemo=0;
 long FirstFrame=1;
 unsigned long WILLADDSPEECHTIME=0;
 unsigned long AimTime;
-float LastFrameTime=0;
-float FrameTime=0;
 unsigned long PlayerWeaponBlockTime=0;
 unsigned long SPLASH_START=0;
 //-----------------------------------------------------------------------------
@@ -649,6 +647,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 	}
 #endif
 	
+	arxtime.init();
 	
 	FOR_EXTERNAL_PEOPLE = 1; // TODO remove this
 	
@@ -667,7 +666,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 	NOCHECKSUM=1;
 	
 	// TODO Time will be re-initialized later, but if we don't initialize it now casts to int might overflow.
-	ARX_TIME_Init();
+	arxtime.init();
 	
 	mainApp = new ArxGame();
 	if(!mainApp->Initialize()) {
@@ -1765,7 +1764,7 @@ void SetEditMode(long ed, const bool stop_sound) {
 	{
 		ARX_PATH_ComputeAllBoundingBoxes();
 
-		ARX_TIME_Pause();
+		arxtime.pause();
 	}
 	else
 	{
@@ -1918,8 +1917,7 @@ void FirstTimeThings() {
 		DynLight[i].exist = 0;
 	}
 
-	LastFrameTime=FrameTime;
-	return;
+	arxtime.update_last_frame_time();
 }
 
 //*************************************************************************************
@@ -1945,7 +1943,7 @@ void FirstFrameProc() {
 	bookclick.x=-1;
 	bookclick.y=-1;
 
-	if (!LOAD_N_DONT_ERASE) ARX_TIME_Init();
+	if (!LOAD_N_DONT_ERASE) arxtime.init();
 
 	ARX_BOOMS_ClearAllPolyBooms();
 	ARX_DAMAGES_Reset();
@@ -1980,7 +1978,7 @@ void FirstFrameProc() {
 
 	if (!LOAD_N_DONT_ERASE)
 	{
-		ARX_TIME_Init();
+		arxtime.init();
 
 		if (!DONT_ERASE_PLAYER) player.init();
 
@@ -2150,9 +2148,9 @@ void FirstFrameHandling()
 #endif
 
 	if (!NO_TIME_INIT)
-		ARX_TIME_Init();
+		arxtime.init();
 
-	LastFrameTime=FrameTime;
+	arxtime.update_last_frame_time();
 
  PROGRESS_BAR_COUNT+=1.f;
  LoadLevelScreen();
@@ -2184,12 +2182,12 @@ void FirstFrameHandling()
 
 	if (NO_TIME_INIT)
 	{
-		ARX_TIME_Force_Time_Restore(FORCE_TIME_RESTORE);
-		LastFrameTime=FrameTime=FORCE_TIME_RESTORE;
+		arxtime.force_time_restore(FORCE_TIME_RESTORE);
+		arxtime.force_frame_time_restore(FORCE_TIME_RESTORE);
 	}
 	else
 	{
-		ARX_TIME_UnPause();
+		arxtime.resume();
 	}
 
 	long t = inter.getById("seat_stool1_0012");
@@ -2358,7 +2356,7 @@ float GLOBAL_SLOWDOWN=1.f;
 bool StrikeAimtime()
 {
 	player.remove_invisibility();
-	STRIKE_AIMTIME=(float)ARXTime-(float)AimTime;
+	STRIKE_AIMTIME=float(arxtime)-(float)AimTime;
 	STRIKE_AIMTIME=STRIKE_AIMTIME*(1.f+(1.f-GLOBAL_SLOWDOWN));
 
 	if (STRIKE_AIMTIME>player.full.aimtime)
@@ -2440,7 +2438,7 @@ void ManageCombatModeAnimations()
 				{
 					AcquireLastAnim(io);
 					ANIM_Set(useanim,alist[ANIM_BARE_STRIKE_LEFT_CYCLE+j*3]);
-					AimTime = ARXTimeUL();
+					AimTime = (unsigned long)(arxtime);
 					useanim->flags|=EA_LOOP;
 				}
 				else if (	(useanim->cur_anim==alist[ANIM_BARE_STRIKE_LEFT_CYCLE+j*3])
@@ -2464,7 +2462,7 @@ void ManageCombatModeAnimations()
 						ANIM_Set(useanim,alist[ANIM_BARE_WAIT]);
 						useanim->flags|=EA_LOOP;
 						CurrFightPos=0;
-						AimTime = ARXTimeUL();
+						AimTime = (unsigned long)(arxtime);
 						PlayerWeaponBlocked=-1;
 					}
 					else if ((useanim->ctime > useanim->cur_anim->anims[useanim->altidx_cur]->anim_time * 0.2f)
@@ -2500,7 +2498,7 @@ void ManageCombatModeAnimations()
 												ARX_SOUND_PlaySFX(SND_SPELL_LIGHTNING_START, &io->obj->vertexlist3[id].v);
 
 											PlayerWeaponBlocked=useanim->ctime;
-										PlayerWeaponBlockTime = ARXTimeUL();
+										PlayerWeaponBlockTime = (unsigned long)(arxtime);
 										}
 
 										{
@@ -2544,7 +2542,7 @@ void ManageCombatModeAnimations()
 												ARX_SOUND_PlaySFX(SND_SPELL_LIGHTNING_START, &io->obj->vertexlist3[id].v);
 
 											PlayerWeaponBlocked=useanim->ctime;
-										PlayerWeaponBlockTime = ARXTimeUL();
+										PlayerWeaponBlockTime = (unsigned long)(arxtime);
 										}
 
 										ARX_PARTICLES_Spawn_Spark(&sphere.origin, dmgs, 2);
@@ -2582,7 +2580,7 @@ void ManageCombatModeAnimations()
 				{
 					AcquireLastAnim(io);
 					ANIM_Set(useanim,alist[ANIM_DAGGER_STRIKE_LEFT_CYCLE+j*3]);
-					AimTime = ARXTimeUL();
+					AimTime = (unsigned long)(arxtime);
 					useanim->flags|=EA_LOOP;
 				}
 				else if ((useanim->cur_anim==alist[ANIM_DAGGER_STRIKE_LEFT_CYCLE+j*3])
@@ -2608,7 +2606,7 @@ void ManageCombatModeAnimations()
 						&& (ARX_EQUIPMENT_Strike_Check(io,inter.iobj[player.equiped[EQUIP_SLOT_WEAPON]],STRIKE_AIMTIME,0)))
 						{
 							PlayerWeaponBlocked=useanim->ctime;
-							PlayerWeaponBlockTime = ARXTimeUL();
+							PlayerWeaponBlockTime = (unsigned long)(arxtime);
 						}
 					}
 
@@ -2619,7 +2617,7 @@ void ManageCombatModeAnimations()
 						useanim->flags&=~(EA_PAUSED | EA_REVERSE);
 						useanim->flags|=EA_LOOP;
 						CurrFightPos=0;
-						AimTime = ARXTimeUL();
+						AimTime = (unsigned long)(arxtime);
 						PlayerWeaponBlocked=-1;
 					}
 
@@ -2652,7 +2650,7 @@ void ManageCombatModeAnimations()
 				{
 					AcquireLastAnim(io);
 					ANIM_Set(useanim,alist[ANIM_1H_STRIKE_LEFT_CYCLE+j*3]);
-					AimTime = ARXTimeUL();
+					AimTime = (unsigned long)(arxtime);
 					useanim->flags|=EA_LOOP;
 				}
 				else if ((useanim->cur_anim==alist[ANIM_1H_STRIKE_LEFT_CYCLE+j*3])
@@ -2678,7 +2676,7 @@ void ManageCombatModeAnimations()
 								&& (ARX_EQUIPMENT_Strike_Check(io,inter.iobj[player.equiped[EQUIP_SLOT_WEAPON]],STRIKE_AIMTIME,0)) )
 							{
 								PlayerWeaponBlocked=useanim->ctime;
-							PlayerWeaponBlockTime = ARXTimeUL();
+							PlayerWeaponBlockTime = (unsigned long)(arxtime);
 							}
 						}
 
@@ -2724,7 +2722,7 @@ void ManageCombatModeAnimations()
 				{
 					AcquireLastAnim(io);
 					ANIM_Set(useanim,alist[ANIM_2H_STRIKE_LEFT_CYCLE+j*3]);
-					AimTime = ARXTimeUL();
+					AimTime = (unsigned long)(arxtime);
 					useanim->flags|=EA_LOOP;
 				}
 				else if (	(useanim->cur_anim==alist[ANIM_2H_STRIKE_LEFT_CYCLE+j*3])
@@ -2751,7 +2749,7 @@ void ManageCombatModeAnimations()
 								&& (ARX_EQUIPMENT_Strike_Check(io,inter.iobj[player.equiped[EQUIP_SLOT_WEAPON]],STRIKE_AIMTIME,0)) )
 							{
 								PlayerWeaponBlocked=useanim->ctime;
-							PlayerWeaponBlockTime = ARXTimeUL();
+							PlayerWeaponBlockTime = (unsigned long)(arxtime);
 							}
 						}
 
@@ -2789,7 +2787,7 @@ void ManageCombatModeAnimations()
 			// Waiting and Receiving Strike Impulse
 			if (useanim->cur_anim==alist[ANIM_MISSILE_WAIT])
 			{
-				AimTime = ARXTimeUL();
+				AimTime = (unsigned long)(arxtime);
 
 				if ((EERIEMouseButton & 1) && (Player_Arrow_Count()>0))
 				{
@@ -2814,7 +2812,7 @@ void ManageCombatModeAnimations()
 			{
 				AcquireLastAnim(io);
 				ANIM_Set(useanim,alist[ANIM_MISSILE_STRIKE_CYCLE]);
-				AimTime = ARXTimeUL();
+				AimTime = (unsigned long)(arxtime);
 
 				useanim->flags|=EA_LOOP;
 			}
@@ -2897,7 +2895,7 @@ void ManageCombatModeAnimationsEND()
 			||	(useanim->cur_anim==alist[ANIM_MISSILE_READY_PART_1])
 			||	(useanim->cur_anim==alist[ANIM_MISSILE_READY_PART_2])	)
 			)
-		AimTime = ARXTimeUL();
+		AimTime = (unsigned long)(arxtime);
 
 	if (useanim->flags & EA_ANIMEND)
 	{
@@ -2934,7 +2932,7 @@ void ManageCombatModeAnimationsEND()
 					else
 						ANIM_Set(useanim,alist[ANIM_BARE_STRIKE_LEFT_START+CurrFightPos*3]);
 
-					AimTime = ARXTimeUL();
+					AimTime = (unsigned long)(arxtime);
 					io->aflags&=~IO_NPC_AFLAG_HIT_CLEAR;
 				}
 
@@ -2963,7 +2961,7 @@ void ManageCombatModeAnimationsEND()
 						else
 							ANIM_Set(useanim,alist[ANIM_DAGGER_STRIKE_LEFT_START+CurrFightPos*3]);
 
-						AimTime = ARXTimeUL();
+						AimTime = (unsigned long)(arxtime);
 						io->aflags&=~IO_NPC_AFLAG_HIT_CLEAR;
 					}
 					else if (useanim->cur_anim==alist[ANIM_DAGGER_UNREADY_PART_1])
@@ -2998,7 +2996,7 @@ void ManageCombatModeAnimationsEND()
 						else
 						ANIM_Set(useanim,alist[ANIM_1H_STRIKE_LEFT_START+CurrFightPos*3]);
 
-						AimTime = ARXTimeUL();
+						AimTime = (unsigned long)(arxtime);
 						io->aflags&=~IO_NPC_AFLAG_HIT_CLEAR;
 					}
 					else if (useanim->cur_anim==alist[ANIM_1H_UNREADY_PART_1])
@@ -3033,7 +3031,7 @@ void ManageCombatModeAnimationsEND()
 						else
 							ANIM_Set(useanim,alist[ANIM_2H_STRIKE_LEFT_START+CurrFightPos*3]);
 
-						AimTime = ARXTimeUL();
+						AimTime = (unsigned long)(arxtime);
 						io->aflags&=~IO_NPC_AFLAG_HIT_CLEAR;
 					}
 					else if (useanim->cur_anim==alist[ANIM_2H_UNREADY_PART_1])
@@ -3138,7 +3136,7 @@ void ManageCombatModeAnimationsEND()
 float LAST_FADEVALUE=1.f;
 void ManageFade()
 {
-	float tim=((float)ARX_TIME_Get()-(float)FADESTART);
+	float tim = (arxtime.get_updated() - (float)FADESTART);
 
 	if (tim<=0.f) return;
 
@@ -3294,7 +3292,7 @@ void AddQuakeFX(float intensity,float duration,float period,long flags)
 	{
 		QuakeFx.intensity=intensity;
 
-		QuakeFx.start = checked_range_cast<unsigned long>(FrameTime);
+		QuakeFx.start = checked_range_cast<unsigned long>(arxtime.get_frame_time());
 
 		QuakeFx.duration=(unsigned long)duration;
 		QuakeFx.frequency=period;
@@ -3315,7 +3313,7 @@ void ManageQuakeFX()
 {
 	if (QuakeFx.intensity>0.f)
 	{
-		float tim=(float)FrameTime-(float)QuakeFx.start;
+		float tim=(float)arxtime.get_frame_time()-(float)QuakeFx.start;
 
 		if (tim >= QuakeFx.duration)
 		{
@@ -3324,7 +3322,7 @@ void ManageQuakeFX()
 		}
 
 		float itmod=1.f-(tim/QuakeFx.duration);
-		float periodicity=EEsin((float)FrameTime*QuakeFx.frequency*( 1.0f / 100 ));
+		float periodicity=EEsin((float)arxtime.get_frame_time()*QuakeFx.frequency*( 1.0f / 100 ));
 
 		if ((periodicity>0.5f) && (QuakeFx.flags & 1))
 			ARX_SOUND_PlaySFX(SND_QUAKE, NULL, 1.0F - 0.5F * QuakeFx.intensity);
@@ -3392,11 +3390,11 @@ bool DANAE_ManageSplashThings() {
 		{
 			
 			if (SPLASH_START==0) //firsttime
-				SPLASH_START = ARX_TIME_GetUL();
+				SPLASH_START = arxtime.get_updated_ul();
 
 			ARX_INTERFACE_ShowFISHTANK();
 
-			unsigned long tim = ARX_TIME_GetUL();
+			unsigned long tim = arxtime.get_updated_ul();
 			float pos=(float)tim-(float)SPLASH_START;
 
 			if (pos>3600)
@@ -3414,12 +3412,12 @@ bool DANAE_ManageSplashThings() {
 		{
 			if (SPLASH_START==0) //firsttime
 			{
-				SPLASH_START = ARX_TIME_GetUL();
+				SPLASH_START = arxtime.get_updated_ul();
 				ARX_SOUND_PlayInterface(SND_PLAYER_HEART_BEAT);
 			}
 
 			ARX_INTERFACE_ShowARKANE();
-			unsigned long tim = ARX_TIME_GetUL();
+			unsigned long tim = arxtime.get_updated_ul();
 			float pos=(float)tim-(float)SPLASH_START;
 
 			if (pos>3600)
@@ -3493,7 +3491,7 @@ void LaunchWaitingCine() {
 			} else {
 				LogDebug("starting cinematic");
 				PLAY_LOADED_CINEMATIC = 1;
-				ARX_TIME_Pause();
+				arxtime.pause();
 			}
 			
 			LAST_LAUNCHED_CINE = WILL_LAUNCH_CINE;
@@ -3514,7 +3512,7 @@ void LaunchWaitingCine() {
 long DANAE_Manage_Cinematic()
 {
 	
-	float FrameTicks=ARX_TIME_Get( false );
+	float FrameTicks=arxtime.get_updated( false );
 
 	if (PLAY_LOADED_CINEMATIC==1)
 	{
@@ -3538,7 +3536,7 @@ long DANAE_Manage_Cinematic()
 		StopSoundKeyFramer();
 		ControlCinematique->OneTimeSceneReInit();
 		ControlCinematique->DeleteDeviceObjects();
-		ARX_TIME_UnPause();
+		arxtime.resume();
 		PLAY_LOADED_CINEMATIC=0;
 		bool bWasBlocked = false;
 
@@ -3726,7 +3724,7 @@ long TSU_TEST_NB_LIGHT = 0;
 
 void ShowInfoText() {
 	
-	unsigned long uGAT = ARXTimeUL() / 1000;
+	unsigned long uGAT = (unsigned long)(arxtime) / 1000;
 	long GAT=(long)uGAT;
 	char tex[256];
 	float fpss2=1000.f/_framedelay;
@@ -3987,7 +3985,7 @@ void ReleaseSystemObjects() {
 void ClearGame() {
 	
 	ARX_Menu_Resources_Release();
-	ARX_TIME_UnPause();
+	arxtime.resume();
 	
 	mainApp->GetWindow()->hide();
 	

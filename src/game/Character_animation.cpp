@@ -172,7 +172,7 @@ void arx::character::frame_update()
 //   Choose the set of animations to use to represent current player situation.
 void arx::character::manage_visual()
 {
-	unsigned long tim = ARXTimeUL();
+	unsigned long tim = (unsigned long)(arxtime);
 
 	if (Current_Movement & PLAYER_ROTATE)
 	{
@@ -730,7 +730,7 @@ retry:;
 						target.z = eobj->vertexlist3[id].v.z;
 						long j = ARX_PARTICLES_GetFree();
 
-						if ((j != -1) && (!ARXPausedTimer))
+						if (j != -1 && !arxtime.is_paused())
 						{
 							ParticleCount++;
 							particle[j].exist       = true;
@@ -746,7 +746,7 @@ retry:;
 							particle[j].scale.x     = 0.2f;
 							particle[j].scale.y     = 0.2f;
 							particle[j].scale.z     = 0.2f;
-							particle[j].timcreation = lARXTime;
+							particle[j].timcreation = (long)(arxtime);
 							particle[j].tc          = TC_smoke;
 							particle[j].special     = FADE_IN_AND_OUT | ROTATING | MODULATE_ROTATION | DISSIPATING; // | SUBSTRACT;
 							particle[j].sourceionum = 0;
@@ -784,7 +784,7 @@ retry:;
 				Full_Jump_Height = 0;
 				jump.phase = jump_data::moving_up;
 				ChangeMoveAnim = alist[ANIM_JUMP_UP];
-				jump.start_time = ARXTimeUL();
+				jump.start_time = (unsigned long)(arxtime);
 				jump.last_position = -1.f;
 				break;
 
@@ -805,7 +805,7 @@ retry:;
 				break;
 
 			case jump_data::finished:
-				LAST_JUMP_ENDTIME = ARXTimeUL();
+				LAST_JUMP_ENDTIME = (unsigned long)(arxtime);
 
 				if (((ause0->cur_anim == alist[ANIM_JUMP_END])
 				     && (ause0->flags & EA_ANIMEND))
@@ -822,7 +822,7 @@ retry:;
 				break;
 
 			case jump_data::post_sync:
-				LAST_JUMP_ENDTIME = ARXTimeUL();
+				LAST_JUMP_ENDTIME = (unsigned long)(arxtime);
 
 				if ((ause0->cur_anim == alist[ANIM_JUMP_END_PART2])
 				    && (ause0->flags & EA_ANIMEND))

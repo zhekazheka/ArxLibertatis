@@ -615,7 +615,7 @@ void InventoryOpenClose(unsigned long t) // 0 switch 1 forceopen 2 forceclose
 		if (WILLRETURNTOFREELOOK)
 		{
 			TRUE_PLAYER_MOUSELOOK_ON |= 1;
-			SLID_START=(float)ARXTime;
+			SLID_START=float(arxtime);
 			WILLRETURNTOFREELOOK = 0;
 		}
 	}
@@ -1076,7 +1076,7 @@ void ResetPlayerInterface()
 	player.Interface |= INTER_LIFE_MANA;
 	SLID_VALUE = 0;
 	lSLID_VALUE = 0;
-	SLID_START=(float)ARXTime;
+	SLID_START=float(arxtime);
 }
 
 extern long MouseDragX, MouseDragY;
@@ -1474,7 +1474,7 @@ bool ArxGame::ManageEditorControls()
 			{
 				bOk = false;
 
-				float t=(float)ARXTime;
+				float t=float(arxtime);
 
 				if (t-SLID_START>10000.f)
 				{
@@ -1677,7 +1677,7 @@ bool ArxGame::ManageEditorControls()
 								}
 
 
-								WILLADDSPEECHTIME = ARXTimeUL();
+								WILLADDSPEECHTIME = (unsigned long)(arxtime);
 							}
 						}
 
@@ -1812,12 +1812,12 @@ bool ArxGame::ManageEditorControls()
 					{
 						if (!flDelay)
 						{
-							flDelay=ARX_TIME_Get();
+							flDelay=arxtime.get_updated();
 							return false;
 						}
 						else
 						{
-							if ((ARX_TIME_Get() - flDelay) < 300)
+							if ((arxtime.get_updated() - flDelay) < 300)
 							{
 								return false;
 							}
@@ -2571,7 +2571,7 @@ void ARX_INTERFACE_Combat_Mode(long i)
 			if (config.input.mouseLookToggle)
 			{
 				TRUE_PLAYER_MOUSELOOK_ON |= 1;
-				SLID_START=(float)ARXTime;
+				SLID_START=float(arxtime);
 			}
 		}
 
@@ -2775,7 +2775,7 @@ void ArxGame::ManagePlayerControls()
 		float t;
 		float multi;
 
-		if (EDITMODE || ARXPausedTimer) FD=40.f;
+		if (EDITMODE || arxtime.is_paused()) FD=40.f;
 		
 		bool left=GInput->actionPressed(CONTROLS_CUST_STRAFELEFT);
 
@@ -2967,7 +2967,7 @@ void ArxGame::ManagePlayerControls()
 	// Checks JUMP Key Status.
 	if (player.jump.phase == arx::character::jump_data::not_jumping && GInput->actionNowPressed(CONTROLS_CUST_JUMP))
 	{
-		player.REQUEST_JUMP = ARXTimeUL();
+		player.REQUEST_JUMP = (unsigned long)(arxtime);
 	}
 
 
@@ -3315,8 +3315,8 @@ void ArxGame::ManagePlayerControls()
 				  MEMO_PLAYER_MOUSELOOK_ON=TRUE_PLAYER_MOUSELOOK_ON;
 				  SPECIAL_DRAW_WEAPON=1;
 				  TRUE_PLAYER_MOUSELOOK_ON|=1;
-				  SLID_START=(float)ARXTime;
-					lFadeMapTime = lARXTime;
+				  SLID_START=float(arxtime);
+					lFadeMapTime = (long)arxtime;
 				  ARX_INTERFACE_Combat_Mode(2);
 				  bGToggleCombatModeWithKey=true;
 				  
@@ -3347,7 +3347,7 @@ void ArxGame::ManagePlayerControls()
 				if (!(TRUE_PLAYER_MOUSELOOK_ON & 1))
 				{
 					TRUE_PLAYER_MOUSELOOK_ON |= 1;
-					SLID_START=(float)ARXTime;
+					SLID_START=float(arxtime);
 				}
 			}
 			else
@@ -3365,7 +3365,7 @@ void ArxGame::ManagePlayerControls()
 				if (!(TRUE_PLAYER_MOUSELOOK_ON & 1))
 				{
 					TRUE_PLAYER_MOUSELOOK_ON |= 1;
-					SLID_START=(float)ARXTime;
+					SLID_START=float(arxtime);
 				}
 				else
 				{
@@ -3441,11 +3441,11 @@ void ArxGame::ManagePlayerControls()
 	  {
 		  if (!(LastMouseClick & 1))
 		  {
-			COMBAT_MODE_ON_START_TIME = ARXTimeUL();
+			COMBAT_MODE_ON_START_TIME = (unsigned long)(arxtime);
 		  }
 		else 
 		  {
-			  if (ARXTime-COMBAT_MODE_ON_START_TIME>10)
+			  if (float(arxtime) - COMBAT_MODE_ON_START_TIME>10)
 			  {
 				  ARX_INTERFACE_Combat_Mode(1);
 
@@ -3537,7 +3537,7 @@ void ArxGame::ManagePlayerControls()
 					if(config.input.mouseLookToggle)
 					{
 						TRUE_PLAYER_MOUSELOOK_ON |= 1;
-						SLID_START=(float)ARXTime;
+						SLID_START=float(arxtime);
 					}
 				}
 			}
@@ -3578,7 +3578,7 @@ void ArxGame::ManagePlayerControls()
 					if(config.input.mouseLookToggle)
 					{
 						TRUE_PLAYER_MOUSELOOK_ON |= 1;
-						SLID_START=(float)ARXTime;
+						SLID_START=float(arxtime);
 					}
 				}
 			}
@@ -3641,7 +3641,7 @@ void ARX_INTERFACE_SetCinemascope(long status,long smooth)
 	if (status)
 	{
 		CINEMASCOPE=1;//++;
-		g_TimeStartCinemascope = ARX_TIME_Get();
+		g_TimeStartCinemascope = arxtime.get_updated();
 	}
 	else
 	{
@@ -3868,8 +3868,8 @@ void ArxGame::ManageKeyMouse() {
 									{
 										TRUE_PLAYER_MOUSELOOK_ON|=1;
 										EERIEMouseButton &= ~2;
-										SLID_START=(float)ARXTime;
-										lFadeMapTime = lARXTime;
+										SLID_START=float(arxtime);
+										lFadeMapTime = (long)arxtime;
 									}
 								}
 							}
@@ -3907,8 +3907,8 @@ void ArxGame::ManageKeyMouse() {
 							else
 							{
 								TRUE_PLAYER_MOUSELOOK_ON|=1;
-								SLID_START=(float)ARXTime;
-								lFadeMapTime = lARXTime;
+								SLID_START=float(arxtime);
+								lFadeMapTime = (long)arxtime;
 							}
 						}
 					}
@@ -4002,7 +4002,7 @@ void ArxGame::ManageKeyMouse() {
 			if(!GInput->actionPressed(CONTROLS_CUST_STRAFE))
 			{
 
-				float fTime = ARX_TIME_Get();
+				float fTime = arxtime.get_updated();
 
 				int	iTime = checked_range_cast<int>(fTime);
 
@@ -4032,7 +4032,7 @@ void ArxGame::ManageKeyMouse() {
 			if (player.USE_PLAYERCOLLISIONS)
 			{
 
-				float fTime = ARX_TIME_Get();
+				float fTime = arxtime.get_updated();
 				int iTime = checked_range_cast<int>(fTime);
 
 				if(GInput->actionPressed(CONTROLS_CUST_LOOKUP))
@@ -4253,7 +4253,7 @@ void ArxGame::ManageKeyMouse() {
 								WILLADDSPEECH += ss.str();
 							}
 
-						WILLADDSPEECHTIME = ARXTimeUL();
+						WILLADDSPEECHTIME = (unsigned long)(arxtime);
 
 						if (config.misc.newControl)
 						{
@@ -4323,7 +4323,7 @@ void ArxGame::ManageKeyMouse() {
 										WILLADDSPEECH = ss.str();
 									}
 
-									WILLADDSPEECHTIME = ARXTimeUL();//treat warning C4244 conversion from 'float' to 'unsigned long'
+									WILLADDSPEECHTIME = (unsigned long)(arxtime);//treat warning C4244 conversion from 'float' to 'unsigned long'
 									bool bAddText=true;
 
 									if( (temp->obj)&&
@@ -4354,7 +4354,7 @@ void ArxGame::ManageKeyMouse() {
                 WILLADDSPEECH.clear();
 
 			if (!WILLADDSPEECH.empty())
-				if (WILLADDSPEECHTIME+300<FrameTime)
+				if (WILLADDSPEECHTIME+300<arxtime.get_frame_time())
 				{
 					ARX_SPEECH_Add(WILLADDSPEECH);
 					WILLADDSPEECH.clear();
@@ -4825,14 +4825,14 @@ static void StdDraw(float posx, float posy, Color color, TextureContainer * tcc,
 							if (Precast[PRECAST_NUM].typ >= 0)
 								WILLADDSPEECH = spellicons[Precast[PRECAST_NUM].typ].name;
 
-							WILLADDSPEECHTIME = ARXTimeUL();
+							WILLADDSPEECHTIME = (unsigned long)(arxtime);
 						}
 						else
 						{
 							if (spells[i].type >= 0)
 								WILLADDSPEECH = spellicons[spells[i].type].name;
 
-							WILLADDSPEECHTIME = ARXTimeUL();
+							WILLADDSPEECHTIME = (unsigned long)(arxtime);
 						}
 					}
 
@@ -4882,17 +4882,22 @@ void ManageSpellIcon(long i,float rrr,long flag)
 
 	if (spells[i].bDuration)
 	{
-		if(	(player.stat.mana<20)||
-			((spells[i].timcreation+spells[i].tolive-ARXTime)<2000) )
+		if (player.stat.mana < 20 || spells[i].timcreation + spells[i].tolive - float(arxtime) < 2000)
 		{
-			if(ucFlick&1) bOk=false;
+			if (ucFlick & 1) 
+			{
+				bOk = false;
+			}
 		}
 	}
 	else
 	{
-		if(player.stat.mana<20)
+		if (player.stat.mana<20)
 		{
-			if(ucFlick&1) bOk=false;
+			if (ucFlick & 1) 
+			{
+				bOk = false;
+			}
 		}
 	}
 
@@ -4979,7 +4984,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 							if (player.necklace.runes[i]->angle.b>300.f)
 								player.necklace.runes[i]->angle.b=300.f;
 
-							angle.b=EEsin((float)ARX_TIME_Get()*( 1.0f / 200 ))*player.necklace.runes[i]->angle.b*( 1.0f / 40 );
+							angle.b=EEsin(arxtime.get_updated() * ( 1.0f / 200 ))*player.necklace.runes[i]->angle.b*( 1.0f / 40 );
 						}
 
 						player.necklace.runes[i]->angle.b-=_framedelay*0.2f;
@@ -5247,7 +5252,7 @@ void ARX_INTERFACE_ManageOpenedBook_Finish()
 										player.SpellToMemorize.iSpellSymbols[j] = spellicons[i].symbols[j];
 									}
 
-									player.SpellToMemorize.lTimeCreation = ARXTimeUL();
+									player.SpellToMemorize.lTimeCreation = (unsigned long)(arxtime);
 								}
 							} else {
 								color = Color::fromBGRA(0xFFa8d0df);
@@ -5490,7 +5495,7 @@ void ARX_INTERFACE_ManageOpenedBook()
 
 		player.useanim.flags |= EA_LOOP;
 
-		ARXOldTimeMenu=ARXTimeMenu=ARX_TIME_Get();
+		ARXOldTimeMenu=ARXTimeMenu=arxtime.get_updated();
 		ARXDiffTimeMenu=0;
 	}
 
@@ -6923,9 +6928,9 @@ void ArxGame::DrawAllInterfaceFinish()
 			{
 				float val=rrr;
 
-				if ((Precast[i].launch_time>0) &&(ARXTime>=Precast[i].launch_time))
+				if ((Precast[i].launch_time>0) &&(float(arxtime) >= Precast[i].launch_time))
 				{
-					float tt=(ARXTime-Precast[i].launch_time)*( 1.0f / 1000 );
+					float tt=(float(arxtime) - Precast[i].launch_time)*( 1.0f / 1000 );
 
 					if (tt>1.f) tt=1.f;
 
@@ -6961,7 +6966,7 @@ void ARX_INTERFACE_DrawCurrentTorch()
 	{
 		long j=ARX_PARTICLES_GetFree();
 
-		if ( ( j != -1 ) && ( !ARXPausedTimer ) )
+		if ( ( j != -1 ) && ( !arxtime.is_paused() ) )
 		{
 			ParticleCount++;
 			PARTICLE_DEF * pd	=	&particle[j];
@@ -6977,7 +6982,7 @@ void ARX_INTERFACE_DrawCurrentTorch()
 			pd->scale.x 		=	1.8f;
 			pd->scale.y 		=	1.8f;
 			pd->scale.z 		=	1.f;
-			pd->timcreation		=	lARXTime;
+			pd->timcreation		=	(long)arxtime;
 			pd->tolive			=	500+(unsigned long)(rnd()*400.f);
 			pd->tc				=	fire2;
 			pd->rgb = Color3f(1.f, .6f, .5f);
@@ -7012,7 +7017,7 @@ void ArxGame::DrawAllInterface()
 				}
 				else
 				{
-					float at=(float)ARXTime-(float)AimTime;
+					float at=float(arxtime)-(float)AimTime;
 
 					if (at>0.f)
 						bIsAiming = true;
@@ -7549,7 +7554,7 @@ void ArxGame::DrawAllInterface()
 			float px = DANAESIZX - INTERFACE_RATIO_DWORD(ChangeLevel->m_dwWidth);
 		float py = 0;
 
-		float vv = 0.9f - EEsin(FrameTime*( 1.0f / 50 ))*( 1.0f / 2 )+rnd()*( 1.0f / 10 );
+		float vv = 0.9f - EEsin(arxtime.get_frame_time()*( 1.0f / 50 ))*( 1.0f / 2 )+rnd()*( 1.0f / 10 );
 
 		if ( vv < 0.f ) vv = 0;
 		else if ( vv > 1.f ) vv = 1.f;
@@ -7654,7 +7659,7 @@ void ArxGame::DrawAllInterface()
 			}
 		}
 
-		if (ARXTime - player.SpellToMemorize.lTimeCreation > 30000)
+		if (float(arxtime) - player.SpellToMemorize.lTimeCreation > 30000)
 		{
 			player.SpellToMemorize.bSpell = false;
 		}
@@ -8166,7 +8171,7 @@ void ARX_INTERFACE_RenderCursorInternal(long flag)
 	{
 		if (LOOKING_FOR_SPELL_TARGET)
 		{
-			if (ARXTime>LOOKING_FOR_SPELL_TARGET_TIME+7000)
+			if (float(arxtime) > LOOKING_FOR_SPELL_TARGET_TIME+7000)
 			{
 				ARX_SOUND_PlaySFX(SND_MAGIC_FIZZLE, &player.pos);
 				ARX_SPELLS_CancelSpellTarget();

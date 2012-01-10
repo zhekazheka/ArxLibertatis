@@ -138,7 +138,7 @@ long ARX_SPEECH_Add(const string & text, long duration) {
 	
 	if(text.empty()) return -1;
 	
-	unsigned long tim = ARXTimeUL();
+	unsigned long tim = (unsigned long)(arxtime);
 	if(tim == 0) {
 		tim = 1;
 	}
@@ -227,7 +227,7 @@ void ARX_SPEECH_Check()
 	{
 		if (speech[i].timecreation != 0)
 		{
-			if (ARXTime > speech[i].timecreation + speech[i].duration)
+			if (float(arxtime) > speech[i].timecreation + speech[i].duration)
 			{
 				ARX_SPEECH_MoveUp();
 				i--;
@@ -390,7 +390,7 @@ long ARX_SPEECH_AddSpeech(INTERACTIVE_OBJ * io, const std::string& data, long mo
 	}
 	
 	aspeech[num].exist = 1;
-	aspeech[num].time_creation = ARX_TIME_GetUL();
+	aspeech[num].time_creation = arxtime.get_updated_ul();
 	aspeech[num].io = io; // can be NULL
 	aspeech[num].duration = 2000; // Minimum value
 	aspeech[num].flags = flags;
@@ -467,7 +467,7 @@ long ARX_SPEECH_AddSpeech(INTERACTIVE_OBJ * io, const std::string& data, long mo
 
 void ARX_SPEECH_Update() {
 	
-	unsigned long tim = ARXTimeUL();
+	unsigned long tim = (unsigned long)(arxtime);
 
 	if (CINEMASCOPE || player.BLOCK_PLAYER_CONTROLS) ARX_CONVERSATION_CheckAcceleratedSpeech();
 

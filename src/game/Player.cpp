@@ -597,7 +597,7 @@ void ARX_PLAYER_Start_New_Quest()
 
 void Manage_sp_max()
 {
-	float v = ARXTime - sp_max_start;
+	float v = float(arxtime) - sp_max_start;
 
 	if ((sp_max_start != 0) && (v < 20000))
 	{
@@ -610,7 +610,7 @@ void Manage_sp_max()
 		{
 			float dx = px + sizX * (float)i;
 			float dy = py + sp_max_y[i];
-			sp_max_y[i] = EEsin(dx + (float)ARXTime * (1.0f / 100)) * 30.f * modi;
+			sp_max_y[i] = EEsin(dx + (float)arxtime * (1.0f / 100)) * 30.f * modi;
 			std::string tex(1, sp_max_ch[i]);
 
 			UNICODE_ARXDrawTextCenter(hFontInBook, dx - 1, dy - 1, tex, Color::none);

@@ -222,7 +222,7 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		if (REQUEST_JUMP)
 		{
-			float t = (float)ARXTime - (float)REQUEST_JUMP;
+			float t = (float)arxtime - (float)REQUEST_JUMP;
 
 			if ((t >= 0.f) && (t <= 350.f))
 			{
@@ -416,18 +416,18 @@ void arx::character::do_physics(const float &DeltaTime)
 
 		float jump_mul = 1.f;
 
-		if (LAST_JUMP_ENDTIME + 600 > ARXTime)
+		if (LAST_JUMP_ENDTIME + 600 > (unsigned long)arxtime)
 		{
 			JUMP_DIVIDE = 1;
 
-			if (LAST_JUMP_ENDTIME + 300 > ARXTime)
+			if (LAST_JUMP_ENDTIME + 300 > (unsigned long)arxtime)
 			{
 				jump_mul = 0.5f;
 			}
 			else
 			{
 				jump_mul = 0.5f;
-				jump_mul += (float)(LAST_JUMP_ENDTIME + 300 - ARXTime) * (1.0f / 300);
+				jump_mul += (float)(LAST_JUMP_ENDTIME + 300 - (unsigned long)arxtime) * (1.0f / 300);
 
 				if (jump_mul > 1.f)
 				{
@@ -665,12 +665,12 @@ void arx::character::do_physics(const float &DeltaTime)
 				if (jump.last_position == -1.f)
 				{
 					jump.last_position = 0;
-					jump.start_time = ARXTimeUL();
+					jump.start_time = (unsigned long)(arxtime);
 				}
 
 				float jump_up_time  = 200.f;
 				float jump_up_height =  130.f;
-				long timee      = lARXTime;
+				long timee      = long(arxtime);
 				float offset_time = (float)timee - (float)jump.start_time;
 				float divider   = 1.f / jump_up_time;
 				float position    = (float)offset_time * divider;

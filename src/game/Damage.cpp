@@ -121,7 +121,7 @@ void ARX_DAMAGES_SCREEN_SPLATS_Add(Vec3f * pos, float dmgs)
 	return;
 	long j = ARX_PARTICLES_GetFree();
 
-	if ((j != -1) && (!ARXPausedTimer))
+	if ((j != -1) && (!arxtime.is_paused()))
 	{
 		TexturedVertex in, out;
 		in.p.x = pos->x;
@@ -161,7 +161,7 @@ void ARX_DAMAGES_SCREEN_SPLATS_Add(Vec3f * pos, float dmgs)
 		pd->scale.x			=	1.8f;
 		pd->scale.y			=	1.8f;
 		pd->scale.z			=	1.f;
-		pd->timcreation		=	lARXTime;
+		pd->timcreation		=	(long)arxtime;
 		pd->tolive			=	1800 + (unsigned long)(rnd() * 400.f);
 		long num = rnd() * 6.f;
 
@@ -259,7 +259,7 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 
 	inter.iobj[0]->dmg_sum += dmg;
 
-	if (ARXTime > inter.iobj[0]->ouch_time + 500)
+	if (float(arxtime) > inter.iobj[0]->ouch_time + 500)
 	{
 		INTERACTIVE_OBJ * oes = EVENT_SENDER;
 
@@ -268,7 +268,7 @@ float ARX_DAMAGES_DamagePlayer(float dmg, DamageType type, long source) {
 		else
 			EVENT_SENDER = NULL;
 
-		inter.iobj[0]->ouch_time = ARXTimeUL();
+		inter.iobj[0]->ouch_time = (unsigned long)(arxtime);
 		char tex[32];
 		sprintf(tex, "%5.2f", inter.iobj[0]->dmg_sum);
 		SendIOScriptEvent( inter.iobj[0], SM_OUCH, tex );
@@ -480,9 +480,9 @@ void ARX_DAMAGES_DamageFIX(INTERACTIVE_OBJ * io, float dmg, long source, long fl
 	else
 		EVENT_SENDER = NULL;
 
-	if (ARXTime > io->ouch_time + 500)
+	if (float(arxtime) > io->ouch_time + 500)
 	{
-		io->ouch_time = ARXTimeUL();
+		io->ouch_time = (unsigned long)(arxtime);
 		char tex[32];
 		sprintf(tex, "%5.2f", io->dmg_sum);
 		SendIOScriptEvent(io, SM_OUCH, tex);
@@ -844,7 +844,7 @@ float ARX_DAMAGES_DamageNPC(INTERACTIVE_OBJ * io, float dmg, long source, long f
 
 	io->dmg_sum += dmg;
 
-	if (ARXTime > io->ouch_time + 500)
+	if (float(arxtime) > io->ouch_time + 500)
 	{
 		if (ValidIONum(source))
 		{
@@ -854,7 +854,7 @@ float ARX_DAMAGES_DamageNPC(INTERACTIVE_OBJ * io, float dmg, long source, long f
 		else
 			EVENT_SENDER = NULL;
 
-		io->ouch_time = ARXTimeUL();
+		io->ouch_time = (unsigned long)(arxtime);
 		char tex[32];
 
 		if (EVENT_SENDER && (EVENT_SENDER->summoner == 0))
@@ -1026,7 +1026,7 @@ long ARX_DAMAGES_GetFree()
 		if (!damages[i].exist)
 		{
 			damages[i].radius = 100.f;
-			damages[i].start_time = ARXTimeUL(); 
+			damages[i].start_time = (unsigned long)(arxtime); 
 			damages[i].duration = 1000;
 			damages[i].area = DAMAGE_AREA;
 			damages[i].flags = 0;
@@ -1064,7 +1064,7 @@ void ARX_DAMAGES_AddVisual(DAMAGE_INFO * di, Vec3f * pos, float dmg, INTERACTIVE
 
 		if (io != NULL) num = ((long)(float)(rnd() * (io->obj->vertexlist.size() / 4 - 1))) * 4 + 1;
 
-		unsigned long tim = ARXTimeUL();
+		unsigned long tim = (unsigned long)(arxtime);
 
 		if (di->lastupd + 200 < tim)
 		{
@@ -1080,7 +1080,7 @@ void ARX_DAMAGES_AddVisual(DAMAGE_INFO * di, Vec3f * pos, float dmg, INTERACTIVE
 		{
 			long j = ARX_PARTICLES_GetFree();
 
-			if ((j != -1) && (!ARXPausedTimer))
+			if ((j != -1) && (!arxtime.is_paused()))
 			{
 				ParticleCount++;
 				particle[j].exist	= true;
@@ -1110,7 +1110,7 @@ void ARX_DAMAGES_AddVisual(DAMAGE_INFO * di, Vec3f * pos, float dmg, INTERACTIVE
 				particle[j].scale.x			= -10.f;
 				particle[j].scale.y			= -10.f;
 				particle[j].scale.z			= -10.f;
-				particle[j].timcreation		= lARXTime;
+				particle[j].timcreation		= (long)arxtime;
 				particle[j].special		   |= ROTATING | MODULATE_ROTATION;
 				particle[j].special		   |= FIRE_TO_SMOKE;
 				particle[j].tolive			= 500 + (unsigned long)(rnd() * 400.f);
@@ -1217,10 +1217,10 @@ void ARX_DAMAGES_UpdateDamage(long j, float tim)
 
 						if (damages[j].type & DAMAGE_TYPE_FIELD)
 						{
-							if (ARXTime > io->collide_door_time + 500) 
+							if (float(arxtime) > io->collide_door_time + 500) 
 							{
 								EVENT_SENDER = NULL;
-								io->collide_door_time = ARXTimeUL(); 
+								io->collide_door_time = (unsigned long)(arxtime); 
 								char param[64];
 								param[0] = 0;
 
@@ -1422,7 +1422,7 @@ void ARX_DAMAGES_UpdateDamage(long j, float tim)
 void ARX_DAMAGES_UpdateAll()
 {
 	for (size_t j = 0; j < MAX_DAMAGES; j++)
-		ARX_DAMAGES_UpdateDamage(j, ARXTime);
+		ARX_DAMAGES_UpdateDamage(j, arxtime);
 }
 bool SphereInIO(INTERACTIVE_OBJ * io, Vec3f * pos, float radius)
 {

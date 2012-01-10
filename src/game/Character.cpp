@@ -779,9 +779,9 @@ void arx::character::frame_check(const float &frame_delta)
 			hunger -= hunger_delta;
 
 			// Check for player hungry sample playing
-			if ((hunger < 10.0f) && ((ARXTime > LastHungerSample + 180000) || (hunger + hunger_delta >= 10.0f)))
+			if ((hunger < 10.0f) && (((unsigned long)(arxtime) > LastHungerSample + 180000) || (hunger + hunger_delta >= 10.0f)))
 			{
-				LastHungerSample = ARXTimeUL();
+				LastHungerSample = (unsigned long)(arxtime);
 
 				// TODO assumption is if BLOCK_PLAYER_CONTROLS is true, time does not pass
 				if (!BLOCK_PLAYER_CONTROLS)
@@ -864,7 +864,7 @@ void arx::character::frame_check(const float &frame_delta)
 
 void arx::character::start_fall()
 {
-	FALLING_TIME = ARXTimeUL();
+	FALLING_TIME = (unsigned long)(arxtime);
 	Falling_Height = 50.f;
 
 	float yy;
