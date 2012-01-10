@@ -92,7 +92,7 @@
 #include "graphics/GraphicsTypes.h"     // for EERIE_LIGHT, EERIEPOLY
 #include "graphics/Math.h"              // for EEsin
 #include "graphics/data/Mesh.h"         // for INTERACTIVE_OBJ, etc
-#include "io/FilePath.h"                // for path
+#include "io/fs/FilePath.h"                // for path
 #include "math/Angle.h"                 // for Angle<>::<anonymous>, Angle
 #include "math/MathFwd.h"               // for Anglef, Vec3f
 #include "math/Vector3.h"               // for Vector3, etc
@@ -320,7 +320,7 @@ void ARX_PLAYER_Quest_Add(const std::string &quest, bool _bLoad)
 
 void ARX_PLAYER_Restore_Skin()
 {
-	fs::path tx[4] =
+	res::path tx[4] =
 	{
 		"graph/obj3d/textures/npc_human_base_hero_head",
 		"graph/obj3d/textures/npc_human_chainmail_hero_head",
@@ -397,88 +397,8 @@ void ARX_PLAYER_Restore_Skin()
 	}
 }
 
-<<<<<<< .mine=======		if (player.poison < 0.1f) player.poison = 0.f;
-	}
-}
 TextureContainer * PLAYER_SKIN_TC = NULL;
 
-void ARX_PLAYER_Restore_Skin() {
-	
-	res::path tx;
-	res::path tx2;
-	res::path tx3;
-	res::path tx4;
-	
-	switch(player.skin) {
-		case 0:
-			tx  = "graph/obj3d/textures/npc_human_base_hero_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero_head";
-			break;
-		case 1:
-			tx  = "graph/obj3d/textures/npc_human_base_hero2_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero2_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero2_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero2_head";
-			break;
-		case 2:
-			tx  = "graph/obj3d/textures/npc_human_base_hero3_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero3_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero3_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero3_head";
-			break;
-		case 3:
-			tx  = "graph/obj3d/textures/npc_human_base_hero4_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero4_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero4_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero4_head";
-			break;
-		case 4:
-			tx  = "graph/obj3d/textures/npc_human_cm_hero_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero_head";
-			break;
-		case 5:
-			tx  = "graph/obj3d/textures/npc_human__base_hero_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero_head";
-			break;
-		case 6: //just in case
-			tx  = "graph/obj3d/textures/npc_human__base_hero_head";
-			tx2 = "graph/obj3d/textures/npc_human_chainmail_hero_head";
-			tx3 = "graph/obj3d/textures/npc_human_chainmail_mithril_hero_head";
-			tx4 = "graph/obj3d/textures/npc_human_leather_hero_head";
-			break;
-	}
-
-	TextureContainer * tmpTC;
-	
-	// TODO maybe it would be better to replace the textures in the player object instead of replacing the texture data for all objects that use these textures
-
-	if (PLAYER_SKIN_TC && !tx.empty())
-		PLAYER_SKIN_TC->LoadFile(tx);
-
-	tmpTC = TextureContainer::Find("graph/obj3d/textures/npc_human_chainmail_hero_head");
-	if (tmpTC && !tx2.empty())
-		tmpTC->LoadFile(tx2);
-
-	tmpTC = TextureContainer::Find("graph/obj3d/textures/npc_human_chainmail_mithril_hero_head");
-	if (tmpTC && !tx3.empty())
-		tmpTC->LoadFile(tx3);
-
-	tmpTC = TextureContainer::Find("graph/obj3d/textures/npc_human_leather_hero_head");
-	if (tmpTC && !tx4.empty())
-		tmpTC->LoadFile(tx4);
-}
-
-//*************************************************************************************
-// void ARX_PLAYER_LoadHeroAnimsAndMesh()
-//-------------------------------------------------------------------------------------
-// FUNCTION/RESULT:
->>>>>>> .theirs// Load Mesh & anims for hero
 void ARX_PLAYER_LoadHeroAnimsAndMesh()
 {
 	player.hero = loadObject("graph/obj3d/interactive/npc/human_base/human_base.teo", false);
