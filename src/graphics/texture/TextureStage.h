@@ -20,6 +20,8 @@
 #ifndef ARX_GRAPHICS_TEXTURE_TEXTURESTAGE_H
 #define ARX_GRAPHICS_TEXTURE_TEXTURESTAGE_H
 
+#include <deque>
+
 class Texture;
 
 class TextureStage {
@@ -60,6 +62,75 @@ public:
 		FilterLinear   //!< Bilinear interpolation filtering. A weighted average of a 2×2 area of texels surrounding the desired pixel is used.
 	};
 	
+	struct configuration
+	{
+		configuration();
+		configuration(const configuration &old);
+
+		struct dirty_flags
+		{
+			void  clear()
+			{
+				color = false;
+				alpha = false;
+				wrap = false;
+				min = false;
+				mag = false;
+				mip = false;
+				lod = false;
+			}
+			bool color;
+			bool alpha;
+			bool wrap;
+			bool min;
+			bool mag;
+			bool mip;
+			bool lod;
+		};
+
+		struct state_struct
+		{
+			void clear()
+			{
+				colorop = OpDisable;
+				colorarg1 = ArgDiffuse;
+				colorarg2 = ArgDiffuse;
+
+				alphaop = OpDisable;
+				alphaarg1 = ArgDiffuse;
+				alphaarg2 = ArgDiffuse;
+
+				wrapmode = WrapRepeat;
+
+				min = FilterNone;
+				mag = FilterNone;
+				mip = FilterNone;
+				lod = 0.0f;
+			}
+			// color op
+			TextureOp colorop;
+			TextureArg colorarg1;
+			TextureArg colorarg2;
+
+			// alpha op
+			TextureOp alphaop;
+			TextureArg alphaarg1;
+			TextureArg alphaarg2;
+
+			// wrap mode
+			WrapMode wrapmode;
+
+			// filters
+			FilterMode min;
+			FilterMode mag;
+			FilterMode mip;
+			float lod;
+		};
+
+		dirty_flags dirty;
+		state_struct state;
+	};
+
 	explicit TextureStage(unsigned int stage);
 	virtual ~TextureStage() { }
 	
@@ -90,10 +161,16 @@ public:
 	 */
 	virtual void SetMipMapLODBias(float bias) = 0;
 	
+	void push();
+	void pop();
+
 protected:
 	
 	unsigned int mStage;
 	
+private:
+
+	std::deque<configuration> stack;
 };
 
 

@@ -299,7 +299,7 @@ Texture2D* D3D9Renderer::CreateTexture2D() {
 	return new DX9Texture2D();
 }
 
-void D3D9Renderer::SetRenderState(RenderState renderState, bool enable) {
+void D3D9Renderer::ApplyRenderState(const RenderState &renderState, const bool &enable) {
 	if(renderState == ColorKey)
 	{
 		SetRenderState(AlphaTest, enable);
@@ -312,12 +312,12 @@ void D3D9Renderer::SetRenderState(RenderState renderState, bool enable) {
 	}
 }
 
-void D3D9Renderer::SetAlphaFunc(PixelCompareFunc func, float fef) {
+void D3D9Renderer::ApplyAlphaFunc(const PixelCompareFunc &func, const float &fef) {
 	GD3D9Device->SetRenderState(D3DRS_ALPHAREF, (DWORD)fef*255);
 	GD3D9Device->SetRenderState(D3DRS_ALPHAFUNC, ARXToDXPixelCompareFunc[func]);
 }
 
-void D3D9Renderer::SetBlendFunc(PixelBlendingFactor srcFactor, PixelBlendingFactor dstFactor) {
+void D3D9Renderer::ApplyBlendFunc(const PixelBlendingFactor &srcFactor, const PixelBlendingFactor &dstFactor) {
 	GD3D9Device->SetRenderState(D3DRS_SRCBLEND,  ARXToDXPixelBlendingFactor[srcFactor]);
 	GD3D9Device->SetRenderState(D3DRS_DESTBLEND, ARXToDXPixelBlendingFactor[dstFactor]);
 }
@@ -335,18 +335,18 @@ Rect D3D9Renderer::GetViewport() {
 	return Rect(Vec2i(tmpViewport.X, tmpViewport.Y), tmpViewport.Width, tmpViewport.Height);
 }
 
-void D3D9Renderer::SetCulling(CullingMode mode) {
+void D3D9Renderer::ApplyCulling(CullingMode mode) {
 	GD3D9Device->SetRenderState(D3DRS_CULLMODE, ARXToDXCullMode[mode]);
 }
 
-void D3D9Renderer::SetDepthBias(int depthBias) {
+void D3D9Renderer::ApplyDepthBias(int depthBias) {
 	float bias = -(float)depthBias;
 	bias /= 65536.0f;
 	u32 val = reinterpret<u32, f32>(bias);
 	GD3D9Device->SetRenderState(D3DRS_DEPTHBIAS, val);
 }
 
-void D3D9Renderer::SetFillMode(FillMode mode) {
+void D3D9Renderer::ApplyFillMode(FillMode mode) {
 	GD3D9Device->SetRenderState(D3DRS_FILLMODE, ARXToDXFillMode[mode]);
 }
 
@@ -427,18 +427,18 @@ void D3D9Renderer::Clear(BufferFlags bufferFlags, Color clearColor, float clearD
 	GD3D9Device->Clear(DWORD(nrects), nrects != 0 ? d3drects : 0, clearTargets, clearColor.toBGRA(), clearDepth, 0);
 }
 
-void D3D9Renderer::SetFogColor(Color color) {
+void D3D9Renderer::ApplyFogColor(Color color) {
 	GD3D9Device->SetRenderState(D3DRS_FOGCOLOR, color.toBGRA());
 }
 
-void D3D9Renderer::SetFogParams(FogMode fogMode, float fogStart, float fogEnd, float fogDensity) {
+void D3D9Renderer::ApplyFogParams(FogMode fogMode, float fogStart, float fogEnd, float fogDensity) {
 	GD3D9Device->SetRenderState(D3DRS_FOGTABLEMODE, ARXToDXFogMode[fogMode]);
 	GD3D9Device->SetRenderState(D3DRS_FOGSTART, reinterpret<DWORD, f32>(fogStart));
 	GD3D9Device->SetRenderState(D3DRS_FOGEND, reinterpret<DWORD, f32>(fogEnd));
 	GD3D9Device->SetRenderState(D3DRS_FOGDENSITY, reinterpret<DWORD, f32>(fogDensity));
 }
 
-void D3D9Renderer::SetAntialiasing(bool enable) {
+void D3D9Renderer::ApplyAntialiasing(bool enable) {
 	// This won't have much effect if the device was initially created 
 	// with present parameter MultiSampleType == D3DMULTISAMPLE_NONE
 	GD3D9Device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, enable);
