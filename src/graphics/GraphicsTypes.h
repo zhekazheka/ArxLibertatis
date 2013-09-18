@@ -234,6 +234,9 @@ struct PHYSVERT
 	{}
 };
 
+class btConvexHullShape;
+class btRigidBody;
+
 struct PHYSICS_BOX_DATA
 {
 	PHYSVERT * vert;
@@ -243,6 +246,9 @@ struct PHYSICS_BOX_DATA
 	float	radius; //radius around vert[0].pos for spherical collision
 	float	storedtiming;
 	
+	btConvexHullShape * shape;
+	btRigidBody * body;
+	
 	PHYSICS_BOX_DATA()
 		: vert(NULL)
 		, nb_physvert(0)
@@ -250,6 +256,8 @@ struct PHYSICS_BOX_DATA
 		, stopcount(0)
 		, radius(0.f)
 		, storedtiming(0.f)
+		, shape(NULL)
+		, body(NULL)
 	{}
 };
 

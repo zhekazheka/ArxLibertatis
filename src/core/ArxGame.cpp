@@ -129,6 +129,8 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "math/Vector.h"
 
 #include "physics/Attractors.h"
+#include "physics/Physics.h"
+#include "physics/bullet/BulletPhysicsBackend.h"
 
 #include "io/fs/FilePath.h"
 #include "io/fs/Filesystem.h"
@@ -248,6 +250,8 @@ bool ArxGame::initialize()
 		LogCritical << "Failed to initialize game";
 		return false;
 	}
+	
+	initPhysics();
 	
 	return true;
 }
@@ -968,6 +972,11 @@ bool ArxGame::initGame()
 	m_gameInitialized = true;
 	
 	return true;
+}
+
+void ArxGame::initPhysics()
+{
+	g_bulletPhysics = new BulletPhysicsBackend;
 }
 
 static const char * default_paks[][2] = {
