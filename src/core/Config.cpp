@@ -67,6 +67,7 @@ const int
 	maxAnisotropicFiltering = 9001,
 	cinematicWidescreenMode = CinematicFadeEdges,
 	hudScaleFilter = UIFilterBilinear,
+	gamma = 5,
 	volume = 10,
 	sfxVolume = 10,
 	speechVolume = 10,
@@ -179,6 +180,7 @@ const std::string
 	fullscreen = "full_screen",
 	levelOfDetail = "others_details",
 	fogDistance = "fog",
+	gamma = "gamma",
 	antialiasing = "antialiasing",
 	vsync = "vsync",
 	maxAnisotropicFiltering = "max_anisotropic_filtering",
@@ -401,6 +403,7 @@ bool Config::save() {
 	writer.writeKey(Key::fullscreen, video.fullscreen);
 	writer.writeKey(Key::levelOfDetail, video.levelOfDetail);
 	writer.writeKey(Key::fogDistance, video.fogDistance);
+	writer.writeKey(Key::gamma, video.gamma);
 	writer.writeKey(Key::antialiasing, video.antialiasing);
 	writer.writeKey(Key::vsync, video.vsync);
 	writer.writeKey(Key::maxAnisotropicFiltering, video.maxAnisotropicFiltering);
@@ -530,7 +533,8 @@ bool Config::init(const fs::path & file) {
 	}
 	video.fullscreen = reader.getKey(Section::Video, Key::fullscreen, Default::fullscreen);
 	video.levelOfDetail = reader.getKey(Section::Video, Key::levelOfDetail, Default::levelOfDetail);
-	video.fogDistance = reader.getKey(Section::Video, Key::fogDistance, Default::fogDistance);;
+	video.fogDistance = reader.getKey(Section::Video, Key::fogDistance, Default::fogDistance);
+	video.gamma = reader.getKey(Section::Video, Key::gamma, Default::gamma);
 	video.antialiasing = reader.getKey(Section::Video, Key::antialiasing, Default::antialiasing);
 	video.vsync = reader.getKey(Section::Video, Key::vsync, Default::vsync);
 	int anisoFiltering = reader.getKey(Section::Video, Key::maxAnisotropicFiltering, Default::maxAnisotropicFiltering);

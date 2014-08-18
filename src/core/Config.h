@@ -118,6 +118,7 @@ public:
 		bool fullscreen;
 		int levelOfDetail;
 		float fogDistance;
+		float gamma;
 		bool antialiasing;
 		bool vsync;
 		int maxAnisotropicFiltering;

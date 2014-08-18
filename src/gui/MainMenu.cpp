@@ -676,6 +676,21 @@ public:
 		}
 		
 		{
+			PanelWidget * panel = new PanelWidget;
+			std::string szMenuText = getLocalised("system_menus_options_video_gamma");
+			TextWidget * txt = new TextWidget(BUTTON_INVALID, hFontMenu, szMenuText, Vec2f(20, 0));
+			txt->SetCheckOff();
+			panel->AddElement(txt);
+			SliderWidget * sld = new SliderWidget(Vec2f(200, 0));
+			sld->valueChanged = boost::bind(&VideoOptionsMenuPage::onChangedGamma, this, _1);
+			sld->setValue(config.video.gamma);
+			panel->AddElement(sld);
+			addCenter(panel);
+		}
+		
+		
+		
+		{
 			std::string szMenuText = getLocalised("system_menus_options_video_antialiasing", "antialiasing");
 			TextWidget * txt = new TextWidget(BUTTON_INVALID, hFontMenu, szMenuText, Vec2f(20, 0));
 			txt->SetCheckOff();
@@ -842,6 +857,10 @@ private:
 	
 	void onChangedFogDistance(int value) {
 		ARXMenu_Options_Video_SetFogDistance(value);
+	}
+	
+	void onChangedGamma(int value) {
+		ARXMenu_Options_Video_SetGamma(value);
 	}
 	
 	void onChangedAntialiasing(int state) {
