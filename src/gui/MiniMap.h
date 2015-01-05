@@ -196,7 +196,7 @@ private:
 	void drawPlayer(float playerSize, float playerX, float playerY, bool alphaBlending = false);
 	void drawDetectedEntities(int showLevel, float startX, float startY, float zoom);
 	
-    std::vector<ProjectedVertex> m_mapVertices;
+    std::vector<TexturedVertex> m_mapVertices;
 };
 
 extern MiniMap g_miniMap;

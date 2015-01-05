@@ -588,7 +588,7 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 				continue; // out of bounds
 			}
 
-			ProjectedVertex verts[4];
+			TexturedVertex verts[4];
 			
 			verts[3].p.x = verts[0].p.x = (posx);
 			verts[1].p.y = verts[0].p.y = (posy);
@@ -605,7 +605,7 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 			
 			for(int vert = 0; vert < 4; vert++) {
 				verts[vert].color = Color(255, 255, 255, 255).toRGBA();
-				verts[vert].rhw = 1;
+				verts[vert].w = 1.f;
 				verts[vert].p.z = 0.00001f;
 
 				// Array offset according to "vert"
@@ -686,7 +686,7 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 	}
 
 	if(!m_mapVertices.empty()) {
-		EERIEDRAWPRIM(Renderer::TriangleList, unproject(&m_mapVertices[0], m_mapVertices.size()), m_mapVertices.size());
+		EERIEDRAWPRIM(Renderer::TriangleList, &m_mapVertices[0], m_mapVertices.size());
 	}
 	
 	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
