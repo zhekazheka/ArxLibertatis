@@ -124,13 +124,6 @@ struct ProjectedVertex {
 	
 };
 
-inline TexturedVertex * unproject(const ProjectedVertex * vertices, size_t count) {
-	static std::vector<TexturedVertex> buffer;
-	buffer.resize(count);
-	std::copy_n(vertices, count, buffer.begin());
-	return &buffer.front();
-}
-
 template <class Vertex>
 class VertexBuffer;
 
