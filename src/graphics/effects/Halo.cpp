@@ -26,21 +26,21 @@
 
 const size_t HALOMAX = 2000;
 
-long HALOCUR[2] = {};
-ProjectedVertex LATERDRAWHALO[2][HALOMAX * 6];
+static long HALOCUR[2] = {};
+static TexturedVertex LATERDRAWHALO[2][HALOMAX * 6];
 
 void Halo_AddVertices(ProjectedVertex (&inVerts)[4]) {
 	int blendType = inVerts[2].color == 0 ? 0 : 1;
 
-	ProjectedVertex *vert = &LATERDRAWHALO[blendType][(HALOCUR[blendType] * 6)];
+	TexturedVertex * vert = &LATERDRAWHALO[blendType][(HALOCUR[blendType] * 6)];
 	if(HALOCUR[blendType] < ((long)HALOMAX) - 1) {
 		HALOCUR[blendType]++;
 	}
-
+	
+	// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
 	vert[0] = inVerts[0];
 	vert[1] = inVerts[1];
 	vert[2] = inVerts[2];
-	
 	vert[3] = inVerts[0];
 	vert[4] = inVerts[2];
 	vert[5] = inVerts[3];
@@ -59,13 +59,13 @@ void Halo_Render() {
 
 	if(HALOCUR[0] > 0) {
 		GRenderer->SetBlendFunc(Renderer::BlendZero, Renderer::BlendInvSrcColor);
-		EERIEDRAWPRIM(Renderer::TriangleList, unproject(LATERDRAWHALO[0], HALOCUR[0] * 6), HALOCUR[0] * 6);
+		EERIEDRAWPRIM(Renderer::TriangleList, LATERDRAWHALO[0], HALOCUR[0] * 6);
 		HALOCUR[0] = 0;
 	}
 
 	if(HALOCUR[1] > 0) {
 		GRenderer->SetBlendFunc(Renderer::BlendSrcColor, Renderer::BlendOne);
-		EERIEDRAWPRIM(Renderer::TriangleList, unproject(LATERDRAWHALO[1], HALOCUR[1] * 6), HALOCUR[1] * 6);
+		EERIEDRAWPRIM(Renderer::TriangleList, LATERDRAWHALO[1], HALOCUR[1] * 6);
 		HALOCUR[1] = 0;
 	}
 
