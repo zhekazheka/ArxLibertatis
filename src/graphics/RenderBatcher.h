@@ -125,7 +125,7 @@ private:
 	
 private:
 	Batches m_BatchedSprites;
-	CircularVertexBuffer<ProjectedVertex> * m_VertexBuffer;
+	CircularVertexBuffer<TexturedVertex> * m_VertexBuffer;
 };
 
 #endif // ARX_GRAPHICS_RENDERBATCHER_H

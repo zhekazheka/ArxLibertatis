@@ -86,7 +86,7 @@ public:
 	
 	inline float GetMaxAnisotropy() const { return maximumAnisotropy; }
 	
-	VertexBuffer<ProjectedVertex> * createVertexBufferTL(size_t capacity, BufferUsage usage);
+	VertexBuffer<TexturedVertex> * createVertexBufferTL(size_t capacity, BufferUsage usage);
 	VertexBuffer<SMY_VERTEX> * createVertexBuffer(size_t capacity, BufferUsage usage);
 	VertexBuffer<SMY_VERTEX3> * createVertexBuffer3(size_t capacity, BufferUsage usage);
 	

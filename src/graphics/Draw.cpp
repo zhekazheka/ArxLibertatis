@@ -52,7 +52,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "graphics/data/TextureContainer.h"
 #include "graphics/data/Mesh.h"
 
-CircularVertexBuffer<ProjectedVertex> * pDynamicVertexBuffer_TLVERTEX;
+CircularVertexBuffer<TexturedVertex> * pDynamicVertexBuffer_TLVERTEX;
 
 void EERIEDRAWPRIM(Renderer::Primitive primitive, const ProjectedVertex * vertices, size_t count, bool nocount) {
 	
@@ -60,7 +60,7 @@ void EERIEDRAWPRIM(Renderer::Primitive primitive, const ProjectedVertex * vertic
 		EERIEDrawnPolys++;
 	}
 	
-	pDynamicVertexBuffer_TLVERTEX->draw(primitive, vertices, count);
+	pDynamicVertexBuffer_TLVERTEX->draw(primitive, unproject(vertices, count), count);
 }
 
 static const float BASICFOCAL = 350.f;

@@ -58,7 +58,8 @@ void RenderBatcher::render() {
 	for(Batches::const_iterator it = m_BatchedSprites.begin(); it != m_BatchedSprites.end(); ++it) {
 		if(!it->second.empty()) {
 			it->first.apply();
-			m_VertexBuffer->draw(Renderer::TriangleList, &it->second.front(), it->second.size());
+			TexturedVertex * vertices = unproject(&it->second.front(), it->second.size());
+			m_VertexBuffer->draw(Renderer::TriangleList, vertices, it->second.size());
 			GRenderer->GetTextureStage(0)->setAlphaOp(TextureStage::OpSelectArg1);
 		}
 	}
@@ -96,7 +97,7 @@ u32 RenderBatcher::getMemoryUsed() const {
 
 void RenderBatcher::initialize() {
 	arx_assert(m_VertexBuffer == NULL);
-	m_VertexBuffer = new CircularVertexBuffer<ProjectedVertex>(GRenderer->createVertexBufferTL(32 * 1024, Renderer::Stream));
+	m_VertexBuffer = new CircularVertexBuffer<TexturedVertex>(GRenderer->createVertexBufferTL(32 * 1024, Renderer::Stream));
 }
 
 void RenderBatcher::shutdown() {

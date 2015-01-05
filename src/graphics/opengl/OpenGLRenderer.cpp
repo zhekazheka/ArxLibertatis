@@ -724,54 +724,11 @@ void OpenGLRenderer::SetFillMode(FillMode mode) {
 	glPolygonMode(GL_FRONT_AND_BACK, arxToGlFillMode[mode]);
 }
 
-class UnprojectVertexBuffer : public VertexBuffer<ProjectedVertex> {
-	
-public:
-	
-	using VertexBuffer<ProjectedVertex>::capacity;
-	
-	UnprojectVertexBuffer(VertexBuffer<TexturedVertex> * base)
-		: VertexBuffer<ProjectedVertex>(base->capacity())
-		, m_base(base)
-	{ }
-	
-	void setData(const ProjectedVertex * vertices, size_t count, size_t offset, BufferFlags flags) {
-		m_base->setData(unproject(vertices, count), count, offset, flags);
-	}
-	
-	ProjectedVertex * lock(BufferFlags flags, size_t offset, size_t count) {
-		ARX_UNUSED(flags), ARX_UNUSED(offset), ARX_UNUSED(count);
-		ARX_DEAD_CODE();
-	}
-	
-	void unlock() {
-		ARX_DEAD_CODE();
-	}
-	
-	void draw(Renderer::Primitive primitive, size_t count, size_t offset) const {
-		m_base->draw(primitive, count, offset);
-	}
-	
-	void drawIndexed(Renderer::Primitive primitive, size_t count, size_t offset,
-	                 unsigned short * indices, size_t nbindices) const {
-		m_base->drawIndexed(primitive, count, offset, indices, nbindices);
-	}
-	
-	~UnprojectVertexBuffer() {
-		delete m_base;
-	}
-	
-private:
-	
-	VertexBuffer<TexturedVertex> * m_base;
-	
-};
-
-VertexBuffer<ProjectedVertex> * OpenGLRenderer::createVertexBufferTL(size_t capacity, BufferUsage usage) {
+VertexBuffer<TexturedVertex> * OpenGLRenderer::createVertexBufferTL(size_t capacity, BufferUsage usage) {
 	if(useVBOs && shader) {
-		return new UnprojectVertexBuffer(new GLVertexBuffer<TexturedVertex>(this, capacity, usage));
+		return new GLVertexBuffer<TexturedVertex>(this, capacity, usage);
 	} else {
-		return new UnprojectVertexBuffer(new GLNoVertexBuffer<TexturedVertex>(this, capacity));
+		return new GLNoVertexBuffer<TexturedVertex>(this, capacity);
 	}
 }
 
