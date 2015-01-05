@@ -1326,7 +1326,7 @@ void Draw3DObject(EERIE_3DOBJ *eobj, const Anglef & angle, const Vec3f & pos, co
 	
 	ProjectedVertex v;
 	ProjectedVertex rv;
-	ProjectedVertex vert_list[3];
+	TexturedVertex vert_list[3];
 	
 	glm::mat4 rotation = toRotationMatrix(angle);
 	
@@ -1344,6 +1344,7 @@ void Draw3DObject(EERIE_3DOBJ *eobj, const Anglef & angle, const Vec3f & pos, co
 	for(size_t i = 0; i < eobj->facelist.size(); i++) {
 		EERIE_FACE & face = eobj->facelist[i];
 
+		// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
 		vert_list[0] = eobj->vertexlist[face.vid[0]].vert;
 		vert_list[1] = eobj->vertexlist[face.vid[1]].vert;
 		vert_list[2] = eobj->vertexlist[face.vid[2]].vert;
@@ -1366,9 +1367,7 @@ void Draw3DObject(EERIE_3DOBJ *eobj, const Anglef & angle, const Vec3f & pos, co
 		else
 			mat.setCulling(Renderer::CullCW);
 
-		TexturedVertex unprojected[3];
-		std::copy_n(vert_list, 3, unprojected);
-		RenderBatcher::getInstance().add(mat, unprojected);
+		RenderBatcher::getInstance().add(mat, vert_list);
 	}
 }
 
