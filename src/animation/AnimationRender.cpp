@@ -477,7 +477,7 @@ void drawQuadRTP(const RenderMaterial & mat, TexturedQuad quat) {
 
 void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices) {
 	
-	ProjectedVertex projected[3];
+	TexturedVertex projected[3];
 	EE_P(&vertices[0].p, &projected[0]);
 	EE_P(&vertices[1].p, &projected[1]);
 	EE_P(&vertices[2].p, &projected[2]);
@@ -488,9 +488,7 @@ void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices) 
 	projected[2].color = vertices[2].color;
 	projected[2].uv = vertices[2].uv;
 	
-	TexturedVertex unprojected[3];
-	std::copy_n(projected, 3, unprojected);
-	RenderBatcher::getInstance().add(mat, unprojected);
+	RenderBatcher::getInstance().add(mat, projected);
 }
 
 static bool Cedric_IO_Visible(const Vec3f & pos) {
