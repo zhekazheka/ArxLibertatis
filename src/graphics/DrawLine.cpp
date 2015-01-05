@@ -31,17 +31,17 @@
 
 void drawLine2D(float x0, float y0, float x1, float y1, float z, Color col) {
 
-	ProjectedVertex v[2];
+	TexturedVertex v[2];
 	v[0].p.x = x0;
 	v[0].p.y = y0;
 	v[0].p.z = v[1].p.z = z;
 	v[1].p.x = x1;
 	v[1].p.y = y1;
 	v[1].color = v[0].color = col.toRGBA();
-	v[1].rhw = v[0].rhw = 1.f;
+	v[1].w = v[0].w = 1.f;
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::LineList, unproject(v, 2), 2);
+	EERIEDRAWPRIM(Renderer::LineList, v, 2);
 }
 
 void drawLineRectangle(const Rectf & rect, float z, Color col) {
