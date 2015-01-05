@@ -223,31 +223,31 @@ static void Check_Apply() {
 
 static void FadeInOut(float _fVal) {
 
-	ProjectedVertex d3dvertex[4];
+	TexturedVertex d3dvertex[4];
 
 	ColorRGBA iColor = Color::gray(_fVal).toRGB();
 	d3dvertex[0].p.x=0;
 	d3dvertex[0].p.y=0;
 	d3dvertex[0].p.z=0.f;
-	d3dvertex[0].rhw=1.f;
+	d3dvertex[0].w = 1.f;
 	d3dvertex[0].color=iColor;
 
 	d3dvertex[1].p.x=static_cast<float>(g_size.width());
 	d3dvertex[1].p.y=0;
 	d3dvertex[1].p.z=0.f;
-	d3dvertex[1].rhw=1.f;
+	d3dvertex[1].w = 1.f;
 	d3dvertex[1].color=iColor;
 
 	d3dvertex[2].p.x=0;
 	d3dvertex[2].p.y=static_cast<float>(g_size.height());
 	d3dvertex[2].p.z=0.f;
-	d3dvertex[2].rhw=1.f;
+	d3dvertex[2].w = 1.f;
 	d3dvertex[2].color=iColor;
 
 	d3dvertex[3].p.x=static_cast<float>(g_size.width());
 	d3dvertex[3].p.y=static_cast<float>(g_size.height());
 	d3dvertex[3].p.z=0.f;
-	d3dvertex[3].rhw=1.f;
+	d3dvertex[3].w = 1.f;
 	d3dvertex[3].color=iColor;
 
 	GRenderer->ResetTexture(0);
@@ -258,7 +258,7 @@ static void FadeInOut(float _fVal) {
 	GRenderer->SetRenderState(Renderer::DepthTest, false);
 	GRenderer->SetCulling(Renderer::CullNone);
 
-	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(d3dvertex, 4), 4, true);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, d3dvertex, 4, true);
 
 	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
 	GRenderer->SetRenderState(Renderer::DepthWrite, true);
