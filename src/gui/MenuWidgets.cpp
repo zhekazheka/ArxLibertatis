@@ -2894,7 +2894,7 @@ void MenuCursor::update(float time) {
 	
 }
 
-bool MenuCursor::ComputePer(const Vec2s & _psPoint1, const Vec2s & _psPoint2, ProjectedVertex * _psd3dv1, ProjectedVertex * _psd3dv2, float _fSize) {
+bool MenuCursor::ComputePer(const Vec2s & _psPoint1, const Vec2s & _psPoint2, TexturedVertex * _psd3dv1, TexturedVertex * _psd3dv2, float _fSize) {
 	
 	Vec2f sTemp((float)(_psPoint2.x - _psPoint1.x), (float)(_psPoint2.y - _psPoint1.y));
 	float fTemp = sTemp.x;
@@ -2937,9 +2937,9 @@ void MenuCursor::DrawLine2D(float _fSize, Color3f color) {
 	GRenderer->ResetTexture(0);
 	GRenderer->SetRenderState(Renderer::AlphaBlending, true);
 	
-	ProjectedVertex v[4];
+	TexturedVertex v[4];
 	v[0].p.z = v[1].p.z = v[2].p.z = v[3].p.z = 0.f;
-	v[0].rhw = v[1].rhw = v[2].rhw = v[3].rhw = 1.f;
+	v[0].w = v[1].w = v[2].w = v[3].w = 1.f;
 	
 	v[0].color = v[2].color = Color3f(fColorRed, fColorGreen, fColorBlue).toRGB();
 	
@@ -2958,7 +2958,7 @@ void MenuCursor::DrawLine2D(float _fSize, Color3f color) {
 		if(ComputePer(iOldCoord[i], iOldCoord[i + 1], &v[1], &v[3], fTaille)) {
 			
 			v[1].color = v[3].color = Color3f(fColorRed, fColorGreen, fColorBlue).toRGB();
-			EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
+			EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
 			
 			v[0].p.x = v[1].p.x;
 			v[0].p.y = v[1].p.y;
