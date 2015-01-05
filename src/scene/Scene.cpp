@@ -198,11 +198,11 @@ Vec2f getWaterFxUvOffset(const Vec3f & odtv, float power)
 				 std::cos(WATEREFFECT + odtv.z) * power);
 }
 
-static void ApplyLavaGlowToVertex(Vec3f * odtv,ProjectedVertex * dtv, float power) {
+static ColorRGBA ApplyLavaGlowToVertex(Vec3f * odtv, ColorRGBA color, float power) {
 	float f;
 	long lr, lg, lb;
 	power = 1.f - std::sin(WATEREFFECT + odtv->x + odtv->z) * 0.05f * power;
-	Color inColor = Color::fromRGBA(dtv->color);
+	Color inColor = Color::fromRGBA(color);
 	f = inColor.r * power;
 	lr = clipByte(f);
 
@@ -212,7 +212,7 @@ static void ApplyLavaGlowToVertex(Vec3f * odtv,ProjectedVertex * dtv, float powe
 	f = inColor.b * power;
 	lb = clipByte(f);
 
-	dtv->color = Color(lr, lg, lb, 255).toRGBA();
+	return Color(lr, lg, lb, 255).toRGBA();
 }
 
 static void ManageWater_VertexBuffer(EERIEPOLY * ep, const long to,
@@ -238,7 +238,7 @@ static void ManageLava_VertexBuffer(EERIEPOLY * ep, const long to,
 		ep->tv[k].uv = ep->v[k].uv;
 		
 		ep->tv[k].uv += getWaterFxUvOffset(ep->v[k].p, 0.35f); //0.25f
-		ApplyLavaGlowToVertex(&ep->v[k].p, &ep->tv[k], 0.6f);
+		ep->tv[k].color = ApplyLavaGlowToVertex(&ep->v[k].p, ep->tv[k].color, 0.6f);
 			
 		if(ep->type & POLY_FALL) {
 			ep->tv[k].uv.y -= (float)(tim) * (1.f/12000);
