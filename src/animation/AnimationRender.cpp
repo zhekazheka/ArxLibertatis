@@ -94,12 +94,12 @@ extern Color ulBKGColor;
 // TODO: Convert to a RenderBatch & make TextureContainer constructor private
 static TextureContainer TexSpecialColor("specialcolor_list", TextureContainer::NoInsert);
 
-static ProjectedVertex * PushVertexInTable(TextureContainer * pTex,
+static TexturedVertex * PushVertexInTable(TextureContainer * pTex,
                                           TextureContainer::TransparencyType type) {
 	
 	if(pTex->count[type] + 3 > pTex->max[type]) {
 		pTex->max[type] += 20 * 3;
-		pTex->list[type] = (ProjectedVertex *)realloc(pTex->list[type], pTex->max[type] * sizeof(ProjectedVertex));
+		pTex->list[type] = (TexturedVertex *)realloc(pTex->list[type], pTex->max[type] * sizeof(TexturedVertex));
 
 		if(!pTex->list[type]) {
 			pTex->max[type] = 0;
@@ -126,7 +126,7 @@ static void PopOneTriangleList(TextureContainer * _pTex, bool clear) {
 	}
 
 
-	EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Opaque], _pTex->count[TextureContainer::Opaque]), _pTex->count[TextureContainer::Opaque]);
+	EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Opaque], _pTex->count[TextureContainer::Opaque]);
 	
 	if(clear) {
 		_pTex->count[TextureContainer::Opaque] = 0;
@@ -153,8 +153,7 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Blended]) {
 		GRenderer->SetBlendFunc(Renderer::BlendDstColor, Renderer::BlendSrcColor);
 		if(_pTex->count[TextureContainer::Blended]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Blended],
-						  _pTex->count[TextureContainer::Blended]),
+			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Blended],
 						  _pTex->count[TextureContainer::Blended]);
 			_pTex->count[TextureContainer::Blended]=0;
 		}
@@ -163,8 +162,7 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Additive]) {
 		GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendOne);
 		if(_pTex->count[TextureContainer::Additive]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Additive],
-						  _pTex->count[TextureContainer::Additive]),
+			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Additive],
 						  _pTex->count[TextureContainer::Additive]);
 			_pTex->count[TextureContainer::Additive]=0;
 		}
@@ -173,8 +171,7 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Subtractive]) {
 		GRenderer->SetBlendFunc(Renderer::BlendZero, Renderer::BlendInvSrcColor);
 		if(_pTex->count[TextureContainer::Subtractive]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Subtractive],
-						  _pTex->count[TextureContainer::Subtractive]),
+			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Subtractive],
 						  _pTex->count[TextureContainer::Subtractive]);
 			_pTex->count[TextureContainer::Subtractive]=0;
 		}
@@ -183,8 +180,7 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Multiplicative]) {
 		GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendOne);
 		if(_pTex->count[TextureContainer::Multiplicative]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Multiplicative],
-						  _pTex->count[TextureContainer::Multiplicative]),
+			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Multiplicative],
 						  _pTex->count[TextureContainer::Multiplicative]);
 			_pTex->count[TextureContainer::Multiplicative] = 0;
 		}
@@ -439,7 +435,7 @@ static void Cedric_PrepareHalo(EERIE_3DOBJ * eobj, Skeleton * obj) {
 	}
 }
 
-static ProjectedVertex * GetNewVertexList(TextureContainer * container,
+static TexturedVertex * GetNewVertexList(TextureContainer * container,
                                          const EERIE_FACE & face, float invisibility,
                                          float & fTransp) {
 	
@@ -755,8 +751,9 @@ void DrawEERIEInter_Render(EERIE_3DOBJ *eobj, const TransformInfo &t, Entity *io
 			continue;
 
 		float fTransp = 0.f;
-		ProjectedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
+		TexturedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
 
+		ProjectedVertex vertices[3];
 		for(size_t n = 0; n < 3; n++) {
 
 			if(io && (io->ioflags & IO_ANGULAR)) {
@@ -771,29 +768,29 @@ void DrawEERIEInter_Render(EERIE_3DOBJ *eobj, const TransformInfo &t, Entity *io
 				eobj->vertexlist3[face.vid[n]].vert.color = ApplyLight(&t.rotation, position, normal, colorMod);
 			}
 
-			tvList[n] = eobj->vertexlist[face.vid[n]].vert;
-			tvList[n].uv.x = face.u[n];
-			tvList[n].uv.y = face.v[n];
+			vertices[n] = eobj->vertexlist[face.vid[n]].vert;
+			vertices[n].uv.x = face.u[n];
+			vertices[n].uv.y = face.v[n];
 
 			// Treat WATER Polys (modify UVs)
 			if(face.facetype & POLY_WATER) {
-				tvList[n].uv += getWaterFxUvOffset(eobj->vertexlist[face.vid[n]].v, 0.3f);
+				vertices[n].uv += getWaterFxUvOffset(eobj->vertexlist[face.vid[n]].v, 0.3f);
 			}
 
 			if(face.facetype & POLY_GLOW) {
 				// unaffected by light
-				tvList[n].color = Color(255, 255, 255, 255).toRGBA();
+				vertices[n].color = Color(255, 255, 255, 255).toRGBA();
 			} else {
 				// Normal Illuminations
-				tvList[n].color = eobj->vertexlist3[face.vid[n]].vert.color;
+				vertices[n].color = eobj->vertexlist3[face.vid[n]].vert.color;
 			}
 
 			// TODO copy-paste
 			if(io && player.m_improve) {
-				long lr = Color::fromRGBA(tvList[n].color).r;
+				long lr = Color::fromRGBA(vertices[n].color).r;
 				float ffr=(float)(lr);
 
-				float dd = tvList[n].rhw;
+				float dd = vertices[n].rhw;
 
 				dd = glm::clamp(dd, 0.f, 1.f);
 
@@ -813,19 +810,22 @@ void DrawEERIEInter_Render(EERIE_3DOBJ *eobj, const TransformInfo &t, Entity *io
 				u8 lfr = fr;
 				u8 lfb = fb;
 				u8 lfg = 0x1E;
-				tvList[n].color = Color(lfr, lfg, lfb, 255).toRGBA();
+				vertices[n].color = Color(lfr, lfg, lfb, 255).toRGBA();
 			}
 
 			// Transparent poly: storing info to draw later
 			if((face.facetype & POLY_TRANS) || invisibility > 0.f) {
-				tvList[n].color = Color::gray(fTransp).toRGB();
+				vertices[n].color = Color::gray(fTransp).toRGB();
 			}
 		}
 
 		// HALO HANDLING START
 		if(io && (io->halo.flags & HALO_ACTIVE)) {
-			AddFixedObjectHalo(face, t, io, tvList, eobj);
+			AddFixedObjectHalo(face, t, io, vertices, eobj);
 		}
+		
+		// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
+		std::copy_n(vertices, 3, tvList);
 	}
 }
 
@@ -1137,23 +1137,27 @@ static void Cedric_RenderObject(EERIE_3DOBJ * eobj, Skeleton * obj, Entity * io,
 			continue;
 
 		float fTransp = 0.f;
-		ProjectedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
+		TexturedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
 
+		ProjectedVertex vertices[3];
 		for(size_t n = 0; n < 3; n++) {
-			tvList[n].p     = eobj->vertexlist3[face.vid[n]].vert.p;
-			tvList[n].rhw   = eobj->vertexlist3[face.vid[n]].vert.rhw;
-			tvList[n].color = eobj->vertexlist3[face.vid[n]].vert.color;
-			tvList[n].uv.x  = face.u[n];
-			tvList[n].uv.y  = face.v[n];
+			vertices[n].p     = eobj->vertexlist3[face.vid[n]].vert.p;
+			vertices[n].rhw   = eobj->vertexlist3[face.vid[n]].vert.rhw;
+			vertices[n].color = eobj->vertexlist3[face.vid[n]].vert.color;
+			vertices[n].uv.x  = face.u[n];
+			vertices[n].uv.y  = face.v[n];
 		}
 
 		if((face.facetype & POLY_TRANS) || invisibility > 0.f) {
-			tvList[0].color = tvList[1].color = tvList[2].color = Color::gray(fTransp).toRGB();
+			vertices[0].color = vertices[1].color = vertices[2].color = Color::gray(fTransp).toRGB();
 		}
 
 		if(haloInfo.need_halo) {
-			AddAnimatedObjectHalo(haloInfo, face.vid, invisibility, eobj, io, tvList);
+			AddAnimatedObjectHalo(haloInfo, face.vid, invisibility, eobj, io, vertices);
 		}
+
+		// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
+		std::copy_n(vertices, 3, tvList);
 		
 		if(glow) {
 			TexturedVertex * tv2 = PushVertexInTable(&TexSpecialColor, TextureContainer::Opaque);

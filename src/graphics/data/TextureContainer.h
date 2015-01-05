@@ -69,7 +69,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 struct SMY_ARXMAT;
 struct EERIEPOLY;
-struct ProjectedVertex;
+struct TexturedVertex;
 class Texture2D;
 
 extern long GLOBAL_EERIETEXTUREFLAG_LOADSCENE_RELEASE;
@@ -177,7 +177,7 @@ public:
 
 	unsigned long max[5];
 	unsigned long count[5];
-	ProjectedVertex * list[5];
+	TexturedVertex * list[5];
 
 	// END TODO
 	
