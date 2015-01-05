@@ -2349,8 +2349,6 @@ void ArxGame::render() {
 
 void ArxGame::update2DFX()
 {
-	ProjectedVertex ltvv;
-
 	Entity* pTableIO[256];
 	int nNbInTableIO = 0;
 
@@ -2370,17 +2368,22 @@ void ArxGame::update2DFX()
 
 		if(el->extras & EXTRAS_FLARE) {
 			Vec3f lv = el->pos;
+			TexturedVertex ltvv;
 			EE_RTP(lv, &ltvv);
 			el->temp -= temp_increase;
 
 			if(!(player.Interface & INTER_COMBATMODE) && (player.Interface & INTER_MAP))
 				continue;
-
-			if(ltvv.rhw > 0.f &&
-				ltvv.p.x > 0.f &&
-				ltvv.p.y > (CINEMA_DECAL*g_sizeRatio.y) &&
-				ltvv.p.x < g_size.width() &&
-				ltvv.p.y < (g_size.height()-(CINEMA_DECAL*g_sizeRatio.y))
+			
+			if(ltvv.w < 0.000001f) {
+				continue;
+			}
+			
+			Vec3f p = ltvv.p / ltvv.w;
+			if(p.x > 0.f &&
+				p.y > (CINEMA_DECAL*g_sizeRatio.y) &&
+				p.x < g_size.width() &&
+				p.y < (g_size.height()-(CINEMA_DECAL*g_sizeRatio.y))
 				)
 			{
 				Vec3f vector = lv - ACTIVECAM->orgTrans.pos;
@@ -2393,15 +2396,15 @@ void ArxGame::update2DFX()
 				Vec2s ees2dlv;
 				Vec3f ee3dlv = lv;
 
-				ees2dlv.x = checked_range_cast<short>(ltvv.p.x);
-				ees2dlv.y = checked_range_cast<short>(ltvv.p.y);
+				ees2dlv.x = checked_range_cast<short>(p.x);
+				ees2dlv.y = checked_range_cast<short>(p.y);
 
 				if(!bComputeIO) {
 					GetFirstInterAtPos(ees2dlv, 2, &ee3dlv, pTableIO, &nNbInTableIO);
 					bComputeIO = true;
 				}
 
-				if(ltvv.p.z > fZFar ||
+				if(p.z > fZFar ||
 					EERIELaunchRay3(ACTIVECAM->orgTrans.pos, ee3dlv, &hit, tp, 1) ||
 					GetFirstInterAtPos(ees2dlv, 3, &ee3dlv, pTableIO, &nNbInTableIO )
 					)
