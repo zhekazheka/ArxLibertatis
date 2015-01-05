@@ -371,7 +371,9 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 			uvs++;
 		}
 		
-		GRenderer->drawIndexed(Renderer::TriangleList, AllTLVertex, grille->m_nbvertexs,
+		TexturedVertex * vert = unproject(AllTLVertex, grille->m_nbvertexs);
+		
+		GRenderer->drawIndexed(Renderer::TriangleList, vert, grille->m_nbvertexs,
 		                       &grille->m_inds->i1 + mat->startind, mat->nbind);
 	}
 }

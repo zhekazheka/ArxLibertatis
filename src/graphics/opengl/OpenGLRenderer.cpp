@@ -799,17 +799,15 @@ const GLenum arxToGlPrimitiveType[] = {
 	GL_LINE_STRIP // LineStrip
 };
 
-void OpenGLRenderer::drawIndexed(Primitive primitive, const ProjectedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) {
+void OpenGLRenderer::drawIndexed(Primitive primitive, const TexturedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) {
 	
 	beforeDraw<TexturedVertex>();
-	
-	TexturedVertex * vert = unproject(vertices, nvertices);
 	
 	if(useVertexArrays && shader) {
 		
 		bindBuffer(GL_NONE);
 		
-		setVertexArray(vert, vert);
+		setVertexArray(vertices, vertices);
 		
 		glDrawRangeElements(arxToGlPrimitiveType[primitive], 0, nvertices - 1, nindices, GL_UNSIGNED_SHORT, indices);
 		
@@ -818,7 +816,7 @@ void OpenGLRenderer::drawIndexed(Primitive primitive, const ProjectedVertex * ve
 		glBegin(arxToGlPrimitiveType[primitive]);
 		
 		for(size_t i = 0; i < nindices; i++) {
-			renderVertex(vert[indices[i]]);
+			renderVertex(vertices[indices[i]]);
 		}
 		
 		glEnd();
