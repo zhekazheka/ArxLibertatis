@@ -472,7 +472,9 @@ void drawQuadRTP(const RenderMaterial & mat, ProjectedQuad quat) {
 	EE_RTP(quat.v[2].p, &quat.v[2]);
 	EE_RTP(quat.v[3].p, &quat.v[3]);
 	
-	RenderBatcher::getInstance().add(mat, quat);
+	TexturedQuad unprojected;
+	std::copy_n(quat.v, 4, unprojected.v);
+	RenderBatcher::getInstance().add(mat, unprojected);
 }
 
 void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices) {
