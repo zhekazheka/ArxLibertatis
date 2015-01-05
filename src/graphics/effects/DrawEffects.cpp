@@ -228,7 +228,7 @@ extern Entity * CAMERACONTROLLER;
 
 // This used to add a bias when the "forceZbias" config option was activated, but it
 // was off by default and we removed it.
-static void IncrementPolyWithNormalOutput(EERIEPOLY * _pPoly, ProjectedVertex * _pOut) {
+static void IncrementPolyWithNormalOutput(EERIEPOLY * _pPoly, TexturedVertex * _pOut) {
 	
 	_pOut[0].p = _pPoly->v[0].p;
 	_pOut[1].p = _pPoly->v[1].p;
@@ -242,7 +242,7 @@ static void IncrementPolyWithNormalOutput(EERIEPOLY * _pPoly, ProjectedVertex * 
 extern float framedelay;
 void ARXDRAW_DrawPolyBoom()
 {
-	ProjectedVertex ltv[4];
+	TexturedVertex ltv[4];
 
 	GRenderer->SetFogColor(Color::none); // TODO: not handled by RenderMaterial
 	unsigned long tim = (unsigned long)(arxtime);

@@ -52,7 +52,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 struct EERIE_3DOBJ;
 struct ANIM_USE;
 class Entity;
-struct ProjectedVertex;
+struct TexturedVertex;
 struct RenderMaterial;
 struct TexturedQuad;
 
@@ -64,7 +64,7 @@ void PopAllTriangleList(bool clear = true);
 void PopAllTriangleListTransparency();
 
 void drawQuadRTP(const RenderMaterial & mat, const TexturedQuad & quat);
-void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices);
+void drawTriangle(const RenderMaterial & mat, const TexturedVertex * vertices);
 
 struct TransformInfo {
 

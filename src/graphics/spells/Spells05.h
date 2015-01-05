@@ -101,7 +101,7 @@ private:
 		int conenbvertex;
 		int conenbfaces;
 		Vec3f * conevertex;
-		ProjectedVertex * coned3d;
+		TexturedVertex * coned3d;
 		unsigned short * coneind;
 	};
 	

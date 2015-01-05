@@ -948,7 +948,7 @@ void CLevitate::CreateConeStrip(float rbase, float rhaut, float hauteur, int def
 	
 	c.conenbvertex = def * 2 + 2;
 	c.conenbfaces = def * 2 + 2;
-	c.coned3d = (ProjectedVertex *)malloc(c.conenbvertex * sizeof(ProjectedVertex));
+	c.coned3d = (TexturedVertex *)malloc(c.conenbvertex * sizeof(TexturedVertex));
 	c.conevertex = (Vec3f *)malloc(c.conenbvertex * sizeof(Vec3f));
 	c.coneind = (unsigned short *)malloc(c.conenbvertex * sizeof(unsigned short));
 	
@@ -1158,7 +1158,7 @@ void CLevitate::Render()
 		return;
 	
 	//calcul du cone
-	ProjectedVertex *d3dv;
+	TexturedVertex *d3dv;
 	Vec3f	* vertex;
 	int			nb, nbc, col;
 	float		ddu = this->ang;

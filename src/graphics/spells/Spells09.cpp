@@ -242,7 +242,7 @@ void CSummonCreature::RenderFissure()
 	int i;
 	float ff;
 	Vec3f vt[4];
-	ProjectedVertex vr[4];
+	TexturedVertex vr[4];
 	Vec3f target;
 
 	Vec3f etarget;
