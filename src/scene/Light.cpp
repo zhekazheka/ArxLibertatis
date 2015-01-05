@@ -195,22 +195,27 @@ void EERIE_LIGHT_MoveAll(const Vec3f * trans) {
 
 static void ComputeLight2DPos(EERIE_LIGHT * _pL) {
 	
-	ProjectedVertex out;
+	TexturedVertex out;
 	EE_RTP(_pL->pos, &out);
 	
-	if(out.p.z > 0.f && out.p.z < 1000.f && out.rhw > 0) {
+	if(out.w < 0.000001f) {
+		return;
+	}
+	
+	Vec3f p = out.p / out.w;
+	if(p.z > 0.f && p.z < 1000.f) {
 		float siz = 50;
 		float fMaxdist = 300;
 
 		if(player.m_telekinesis)
 			fMaxdist = 850;
 
-		float t = siz * (1.0f - 1.0f / (out.rhw * fMaxdist)) + 10;
+		float t = siz * (1.0f - 1.0f * out.w / fMaxdist) + 10;
 
-		_pL->m_screenRect.max.x = out.p.x + t;
-		_pL->m_screenRect.min.x = out.p.x - t;
-		_pL->m_screenRect.max.y = out.p.y + t;
-		_pL->m_screenRect.min.y = out.p.y - t;
+		_pL->m_screenRect.max.x = p.x + t;
+		_pL->m_screenRect.min.x = p.x - t;
+		_pL->m_screenRect.max.y = p.y + t;
+		_pL->m_screenRect.min.y = p.y - t;
 	}
 }
 
