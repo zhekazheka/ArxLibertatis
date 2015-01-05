@@ -74,7 +74,7 @@ private:
 	float fTrail;
 	float fOneOnBezierPrecision;
 	TextureContainer * tex_mm;
-	ProjectedVertex pathways[6];
+	Vec3f pathways[6];
 	audio::SourceId snd_loop;
 	bool m_mrCheat;
 };

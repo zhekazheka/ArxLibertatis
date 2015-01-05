@@ -225,13 +225,13 @@ void CMagicMissile::Create(const Vec3f & aeSrc, const Anglef & angles)
 	e.y += std::sin(glm::radians(MAKEANGLE(angles.getYaw()))) * 50 * i;
 	e.z += std::cos(glm::radians(angles.getPitch())) * 50 * i;
 
-	pathways[0].p = eSrc;
-	pathways[5].p = e;
-	Split(pathways, 0, 5, 50, 0.5f);
+	pathways[0] = eSrc;
+	pathways[5] = e;
+	Split2(pathways, 0, 5, 50, 0.5f);
 
 	for(i = 0; i < 6; i++) {
-		if(pathways[i].p.y >= eSrc.y + 150) {
-			pathways[i].p.y = eSrc.y + 150;
+		if(pathways[i].y >= eSrc.y + 150) {
+			pathways[i].y = eSrc.y + 150;
 		}
 	}
 
@@ -295,7 +295,7 @@ void CMagicMissile::Render()
 		fTrail = (ulCurrentTime * fOneOnDuration) * (iBezierPrecision + 2) * 5;
 	}
 	
-	newpos = lastpos = pathways[0].p;
+	newpos = lastpos = pathways[0];
 	
 	for(int i = 0; i < 5; i++) {
 		int kp = i;
@@ -317,20 +317,20 @@ void CMagicMissile::Render()
 			float f2 = t3 - 2.f * t2 + t1 ;
 			float f3 = t3 - t2 ;
 
-			float val = pathways[kpsuiv].p.x;
-			float p0 = 0.5f * (val - pathways[kpprec].p.x) ;
-			float p1 = 0.5f * (pathways[kpsuivsuiv].p.x - pathways[kp].p.x) ;
-			v.x = f0 * pathways[kp].p.x + f1 * val + f2 * p0 + f3 * p1 ;
+			float val = pathways[kpsuiv].x;
+			float p0 = 0.5f * (val - pathways[kpprec].x) ;
+			float p1 = 0.5f * (pathways[kpsuivsuiv].x - pathways[kp].x) ;
+			v.x = f0 * pathways[kp].x + f1 * val + f2 * p0 + f3 * p1 ;
 
-			val = pathways[kpsuiv].p.y ;
-			p0 = 0.5f * (val - pathways[kpprec].p.y) ;
-			p1 = 0.5f * (pathways[kpsuivsuiv].p.y - pathways[kp].p.y) ;
-			v.y = f0 * pathways[kp].p.y + f1 * val + f2 * p0 + f3 * p1 ;
+			val = pathways[kpsuiv].y ;
+			p0 = 0.5f * (val - pathways[kpprec].y) ;
+			p1 = 0.5f * (pathways[kpsuivsuiv].y - pathways[kp].y) ;
+			v.y = f0 * pathways[kp].y + f1 * val + f2 * p0 + f3 * p1 ;
 
-			val = pathways[kpsuiv].p.z ;
-			p0 = 0.5f * (val - pathways[kpprec].p.z) ;
-			p1 = 0.5f * (pathways[kpsuivsuiv].p.z - pathways[kp].p.z) ;
-			v.z = f0 * pathways[kp].p.z + f1 * val + f2 * p0 + f3 * p1 ;
+			val = pathways[kpsuiv].z ;
+			p0 = 0.5f * (val - pathways[kpprec].z) ;
+			p1 = 0.5f * (pathways[kpsuivsuiv].z - pathways[kp].z) ;
+			v.z = f0 * pathways[kp].z + f1 * val + f2 * p0 + f3 * p1 ;
 
 			newpos = v;
 

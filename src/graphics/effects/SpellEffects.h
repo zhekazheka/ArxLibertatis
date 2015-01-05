@@ -53,7 +53,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "math/Types.h"
 #include "scene/Light.h"
 
-struct ProjectedVertex;
 struct RenderMaterial;
 
 const int BEZIERPrecision = 32;
@@ -83,7 +82,7 @@ Vec3f randomOffsetXZ(float range);
 void Draw3DLineTexNew(const RenderMaterial & mat, Vec3f startPos, Vec3f endPos, Color startColor, Color endColor, float startSize, float endSize);
 
 void Split(Vec3f * v, int a, int b, float fX, float fMulX, float fY, float fMulY, float fZ, float fMulZ);
-void Split(ProjectedVertex * v, int a, int b, float yo, float fMul = 0.5f);
+void Split2(Vec3f * v, int a, int b, float yo, float fMul = 0.5f);
 
 extern EERIE_3DOBJ * ssol;
 extern long ssol_count;

@@ -152,7 +152,7 @@ void Split(Vec3f * v, int a, int b, float fX, float fMulX, float fY, float fMulY
 	}
 }
 
-void Split(ProjectedVertex * v, int a, int b, float yo, float fMul)
+void Split2(Vec3f * v, int a, int b, float yo, float fMul)
 {
 	if (a != b)
 	{
@@ -160,9 +160,9 @@ void Split(ProjectedVertex * v, int a, int b, float yo, float fMul)
 
 		if ((i != a) && (i != b))
 		{
-			v[i].p = (v[a].p + v[b].p) * 0.5f + randomVec(-yo, yo);
-			Split(v, a, i, yo * fMul);
-			Split(v, i, b, yo * fMul);
+			v[i] = (v[a] + v[b]) * 0.5f + randomVec(-yo, yo);
+			Split2(v, a, i, yo * fMul);
+			Split2(v, i, b, yo * fMul);
 		}
 	}
 }
