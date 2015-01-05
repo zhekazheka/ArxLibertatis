@@ -771,7 +771,7 @@ VertexBuffer<ProjectedVertex> * OpenGLRenderer::createVertexBufferTL(size_t capa
 	if(useVBOs && shader) {
 		return new UnprojectVertexBuffer(new GLVertexBuffer<TexturedVertex>(this, capacity, usage));
 	} else {
-		return new GLNoVertexBuffer<ProjectedVertex>(this, capacity);
+		return new UnprojectVertexBuffer(new GLNoVertexBuffer<TexturedVertex>(this, capacity));
 	}
 }
 
@@ -801,13 +801,13 @@ const GLenum arxToGlPrimitiveType[] = {
 
 void OpenGLRenderer::drawIndexed(Primitive primitive, const ProjectedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) {
 	
-	beforeDraw<ProjectedVertex>();
+	beforeDraw<TexturedVertex>();
+	
+	TexturedVertex * vert = unproject(vertices, nvertices);
 	
 	if(useVertexArrays && shader) {
 		
 		bindBuffer(GL_NONE);
-		
-		TexturedVertex * vert = unproject(vertices, nvertices);
 		
 		setVertexArray(vert, vert);
 		
@@ -818,7 +818,7 @@ void OpenGLRenderer::drawIndexed(Primitive primitive, const ProjectedVertex * ve
 		glBegin(arxToGlPrimitiveType[primitive]);
 		
 		for(size_t i = 0; i < nindices; i++) {
-			renderVertex(vertices[indices[i]]);
+			renderVertex(vert[indices[i]]);
 		}
 		
 		glEnd();

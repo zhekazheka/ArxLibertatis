@@ -28,15 +28,14 @@ template <class Vertex>
 static void renderVertex(const Vertex & vertex);
 
 template <>
-void renderVertex(const ProjectedVertex & vertex) {
+void renderVertex(const TexturedVertex & vertex) {
 	
 	Color c = Color::fromRGBA(vertex.color);
 	glColor4ub(c.r, c.g, c.b, c.a);
 	
 	glMultiTexCoord2f(GL_TEXTURE0, vertex.uv.x, vertex.uv.y);
 	
-	GLfloat w = 1.0f / vertex.rhw; 
-	glVertex4f(vertex.p.x * w, vertex.p.y * w, vertex.p.z * w, w);
+	glVertex4f(vertex.p.x, vertex.p.y, vertex.p.z, vertex.w);
 }
 
 template <>

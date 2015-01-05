@@ -163,9 +163,6 @@ template <class Vertex>
 inline void OpenGLRenderer::selectTrasform() { enableTransform(); }
 
 template <>
-inline void OpenGLRenderer::selectTrasform<ProjectedVertex>() { disableTransform(); }
-
-template <>
 inline void OpenGLRenderer::selectTrasform<TexturedVertex>() { disableTransform(); }
 
 #endif // ARX_GRAPHICS_OPENGL_OPENGLRENDERER_H
