@@ -694,11 +694,11 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 
 void MiniMap::drawPlayer(float playerSize, float playerX, float playerY, bool alphaBlending) {
 	
-	ProjectedVertex verts[4];
+	TexturedVertex verts[4];
 	
 	for(int k = 0; k < 4; k++) {
 		verts[k].color = Color(255, 0, 0, 255).toRGBA();
-		verts[k].rhw = 1;
+		verts[k].w = 1.f;
 		verts[k].p.z = 0.00001f;
 	}
 	
@@ -726,7 +726,7 @@ void MiniMap::drawPlayer(float playerSize, float playerX, float playerY, bool al
 		GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendInvSrcColor);
 	}
 	
-	EERIEDRAWPRIM(Renderer::TriangleFan, unproject(verts, 3));
+	EERIEDRAWPRIM(Renderer::TriangleFan, verts);
 	
 	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
 }
