@@ -427,11 +427,12 @@ float CylinderPlatformCollide(Cylinder * cyl, Entity * io) {
 
 static long NPC_IN_CYLINDER = 0;
 
-inline void EE_RotateY(ProjectedVertex *in,ProjectedVertex *out,float c, float s)
-{
-	out->p.x = (in->p.x*c) + (in->p.z*s);
-	out->p.y = in->p.y;
-	out->p.z = (in->p.z*c) - (in->p.x*s);
+static Vec3f EE_RotateY(const Vec3f & in, float c, float s) {
+	Vec3f out;
+	out.x = (in.x * c) + (in.z * s);
+	out.y = in.y;
+	out.z = (in.z * c) - (in.x * s);
+	return out;
 }
 
 static bool CollidedFromBack(Entity * io,Entity * ioo) {
@@ -460,8 +461,8 @@ static bool CollidedFromBack(Entity * io,Entity * ioo) {
 	ft = glm::radians(270.f-io->angle.getPitch());
 	float ec=std::cos(ft);
 	float es=std::sin(ft);
-	EE_RotateY(&ep.v[1], &ep.tv[1], ec, es);
-	EE_RotateY(&ep.v[2], &ep.tv[2], ec, es);
+	ep.tv[1].p = EE_RotateY(ep.v[1].p, ec, es);
+	ep.tv[2].p = EE_RotateY(ep.v[2].p, ec, es);
 	ep.v[1].p.x=ep.tv[1].p.x+ep.v[0].p.x;
 	ep.v[1].p.z=ep.tv[1].p.z+ep.v[0].p.z;
 	ep.v[2].p.x=ep.tv[2].p.x+ep.v[0].p.x;
