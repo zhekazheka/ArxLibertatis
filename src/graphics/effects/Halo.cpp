@@ -29,7 +29,7 @@ const size_t HALOMAX = 2000;
 static long HALOCUR[2] = {};
 static TexturedVertex LATERDRAWHALO[2][HALOMAX * 6];
 
-void Halo_AddVertices(ProjectedVertex (&inVerts)[4]) {
+void Halo_AddVertices(TexturedVertex (&inVerts)[4]) {
 	int blendType = inVerts[2].color == 0 ? 0 : 1;
 
 	TexturedVertex * vert = &LATERDRAWHALO[blendType][(HALOCUR[blendType] * 6)];
@@ -37,7 +37,6 @@ void Halo_AddVertices(ProjectedVertex (&inVerts)[4]) {
 		HALOCUR[blendType]++;
 	}
 	
-	// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
 	vert[0] = inVerts[0];
 	vert[1] = inVerts[1];
 	vert[2] = inVerts[2];

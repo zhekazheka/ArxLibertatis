@@ -719,7 +719,10 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 			else
 				vert[2].color = Color(0, 0, 0, 255).toRGBA();
 
-			Halo_AddVertices(vert);
+			TexturedVertex v[4];
+			// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
+			std::copy_n(vert, 4, v);
+			Halo_AddVertices(v);
 		}
 	}
 }
@@ -1083,7 +1086,10 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			else
 				vert[2].color = Color(0, 0, 0, 255).toRGBA();
 
-			Halo_AddVertices(vert);
+			TexturedVertex v[4];
+			// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
+			std::copy_n(vert, 4, v);
+			Halo_AddVertices(v);
 		}
 	}
 }
