@@ -397,10 +397,10 @@ void MiniMap::showBookEntireMap(int showLevel) {
 		drawDetectedEntities(showLevel, start.x, start.y, zoom);
 	}
 	
-	ProjectedVertex verts[4];
+	TexturedVertex verts[4];
 	for(int k = 0; k < 4; k++) {
 		verts[k].color = Color(255, 255, 255, 255).toRGBA();
-		verts[k].rhw = 1;
+		verts[k].w = 1.f;
 		verts[k].p.z = 0.00001f;
 	}
 	
@@ -463,7 +463,7 @@ void MiniMap::showBookEntireMap(int showLevel) {
 		
 		GRenderer->SetTexture(0, m_mapMarkerTexCont);
 		
-		EERIEDRAWPRIM(Renderer::TriangleFan, unproject(verts, 4), 4);
+		EERIEDRAWPRIM(Renderer::TriangleFan, verts, 4);
 	}
 }
 
