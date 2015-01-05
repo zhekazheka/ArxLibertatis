@@ -466,15 +466,16 @@ static ProjectedVertex * GetNewVertexList(TextureContainer * container,
 	}
 }
 
-void drawQuadRTP(const RenderMaterial & mat, ProjectedQuad quat) {
-	EE_RTP(quat.v[0].p, &quat.v[0]);
-	EE_RTP(quat.v[1].p, &quat.v[1]);
-	EE_RTP(quat.v[2].p, &quat.v[2]);
-	EE_RTP(quat.v[3].p, &quat.v[3]);
+void drawQuadRTP(const RenderMaterial & mat, const ProjectedQuad & in) {
 	
-	TexturedQuad unprojected;
-	std::copy_n(quat.v, 4, unprojected.v);
-	RenderBatcher::getInstance().add(mat, unprojected);
+	TexturedQuad quad;
+	for(size_t i = 0; i < 4; i++) {
+		EE_RTP(in.v[i].p, &quad.v[i]);
+		quad.v[i].color = in.v[i].color;
+		quad.v[i].uv = in.v[i].uv;
+	}
+	
+	RenderBatcher::getInstance().add(mat, quad);
 }
 
 void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices) {

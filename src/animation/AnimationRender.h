@@ -63,7 +63,7 @@ void Cedric_ApplyLightingFirstPartRefactor(Entity *io);
 void PopAllTriangleList(bool clear = true);
 void PopAllTriangleListTransparency();
 
-void drawQuadRTP(const RenderMaterial & mat, ProjectedQuad quat);
+void drawQuadRTP(const RenderMaterial & mat, const ProjectedQuad & quat);
 void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices);
 
 struct TransformInfo {
