@@ -451,6 +451,19 @@ static inline float clamp_and_invert(float z) {
 	return 1.f / std::max(z, near_clamp);
 }
 
+void EE_P(const Vec3f * in, TexturedVertex * out) {
+	float z = in->z;
+	out->p.x = in->x * ACTIVECAM->ProjectionMatrix[0][0] + ACTIVECAM->orgTrans.mod.x * z;
+	out->p.y = in->y * ACTIVECAM->ProjectionMatrix[1][1] + ACTIVECAM->orgTrans.mod.y * z;
+	out->p.z = ACTIVECAM->ProjectionMatrix[2][2] + ACTIVECAM->ProjectionMatrix[3][2] * z;
+	out->w = z;
+}
+
+void EE_RTP(const Vec3f & in, TexturedVertex * out) {
+	out->p = EE_RT(in);
+	EE_P(&out->p, out);
+}
+
 void EE_P(const Vec3f * in, ProjectedVertex * out) {
 	
 	float fZTemp = clamp_and_invert(in->z);

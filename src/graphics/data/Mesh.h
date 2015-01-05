@@ -134,6 +134,8 @@ int EERIELaunchRay3(const Vec3f & orgn, const Vec3f & dest,  Vec3f * hit, EERIEP
 void EE_RotateY(ProjectedVertex *in,ProjectedVertex *out,float c, float s);
 
 Vec3f EE_RT(const Vec3f & in);
+void EE_P(const Vec3f * in, TexturedVertex * out);
+void EE_RTP(const Vec3f & in,TexturedVertex *out);
 void EE_P(const Vec3f * in, ProjectedVertex * out);
 void EE_RTP(const Vec3f & in,ProjectedVertex *out);
 

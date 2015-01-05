@@ -203,7 +203,7 @@ bool CinematicGrid::AllocGrille(Vec2i nb, Vec2f t, Vec2f d, int scale) {
 				if (!oldnbxx) nb.x = 1;
 
 				while(nb.x--) {
-					*v = Vec3f(depxx, dep.y, 0.f);
+					*v = Vec3f(depxx, dep.y, 0.000001f);
 					depxx += dxx;
 					v++;
 				}

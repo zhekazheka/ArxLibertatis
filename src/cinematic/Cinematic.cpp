@@ -70,7 +70,7 @@ static const int HEIGHTS = 384;
 
 static Vec2i cinRenderSize;
 
-ProjectedVertex AllTLVertex[40000];
+TexturedVertex AllTLVertex[40000];
 
 extern float DreamTable[];
 
@@ -310,7 +310,7 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 {
 	int nb = grille->m_nbvertexs;
 	Vec3f * v = grille->m_vertexs;
-	ProjectedVertex * d3dv = AllTLVertex;
+	TexturedVertex * d3dv = AllTLVertex;
 
 	LocalPos = *posgrille;
 	LocalSin = glm::sin(glm::radians(angzgrille));
@@ -327,6 +327,8 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 			t.z = v->z;
 			TransformLocalVertex(&t, &vtemp);
 			EE_RTP(vtemp.p, d3dv);
+			d3dv->w = 1.f / d3dv->w;
+			d3dv->p *= d3dv->w;
 			if(light) {
 				d3dv->color = CalculLight(light, Vec2f(d3dv->p.x, d3dv->p.y), col).toRGBA();
 			} else {
@@ -335,6 +337,8 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 			d3dv->p.x = ADJUSTX(d3dv->p.x);
 			d3dv->p.y = ADJUSTY(d3dv->p.y);
 			v++;
+			d3dv->w = 1.f / d3dv->w;
+			d3dv->p *= d3dv->w;
 			d3dv++;
 		}
 	} else {
@@ -342,6 +346,8 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 			ProjectedVertex vtemp;
 			TransformLocalVertex(v, &vtemp);
 			EE_RTP(vtemp.p, d3dv);
+			d3dv->w = 1.f / d3dv->w;
+			d3dv->p *= d3dv->w;
 			if(light) {
 				d3dv->color = CalculLight(light, Vec2f(d3dv->p.x, d3dv->p.y), col).toRGBA();
 			} else {
@@ -349,6 +355,8 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 			}
 			d3dv->p.x = ADJUSTX(d3dv->p.x);
 			d3dv->p.y = ADJUSTY(d3dv->p.y);
+			d3dv->w = 1.f / d3dv->w;
+			d3dv->p *= d3dv->w;
 			v++;
 			d3dv++;
 		}
@@ -371,9 +379,7 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 			uvs++;
 		}
 		
-		TexturedVertex * vert = unproject(AllTLVertex, grille->m_nbvertexs);
-		
-		GRenderer->drawIndexed(Renderer::TriangleList, vert, grille->m_nbvertexs,
+		GRenderer->drawIndexed(Renderer::TriangleList, AllTLVertex, grille->m_nbvertexs,
 		                       &grille->m_inds->i1 + mat->startind, mat->nbind);
 	}
 }
