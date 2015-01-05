@@ -241,10 +241,10 @@ void EERIEDrawBitmap2DecalY(Rectf rect, float z, TextureContainer * tex, Color c
 	Vec2f uv3(uv.x, uv.y);
 	Vec2f uv4(0.f, uv.y);
 	
-	ProjectedVertex v[4];
-	v[0] = ProjectedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv1);
-	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv2);
-	v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
-	v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv4);
-	SetTextureDrawPrim(tex, unproject(v, 4), Renderer::TriangleFan);
+	TexturedVertex v[4];
+	v[0] = TexturedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv1);
+	v[1] = TexturedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv2);
+	v[2] = TexturedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
+	v[3] = TexturedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv4);
+	SetTextureDrawPrim(tex, v, Renderer::TriangleFan);
 }
