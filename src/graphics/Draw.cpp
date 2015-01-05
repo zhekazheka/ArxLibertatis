@@ -149,49 +149,42 @@ void EERIEDrawSprite(const Vec3f & in, float siz, TextureContainer * tex, Color 
 	}
 }
 
-static void CreateBitmap(ProjectedQuad & s, Rectf rect, float z, TextureContainer * tex,
+static void CreateBitmap(TexturedQuad & s, Rectf rect, float z, TextureContainer * tex,
                          Color color, bool isRhw) {
 	
 	rect.move(-.5f, -.5f);
 	
 	Vec2f uv = (tex) ? tex->uv : Vec2f_ZERO;
 	ColorRGBA col = color.toRGBA();
-	float val = 1.f;
-
-	if(isRhw) {
-		val -= z;
-	}
-	
-	s.v[0] = ProjectedVertex(Vec3f(rect.topLeft(), z), val, col, Vec2f(0.f, 0.f));
-	s.v[1] = ProjectedVertex(Vec3f(rect.topRight(), z), val, col, Vec2f(uv.x, 0.f));
-	s.v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), val, col, Vec2f(uv.x, uv.y));
-	s.v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(), z), val, col, Vec2f(0.f, uv.y));
+	float w = isRhw ? 1.f / (1.f - z) : 1.f;
+	s.v[0] = TexturedVertex(Vec3f(rect.topLeft(), z) * w, w, col, Vec2f(0.f, 0.f));
+	s.v[1] = TexturedVertex(Vec3f(rect.topRight(), z) * w, w, col, Vec2f(uv.x, 0.f));
+	s.v[2] = TexturedVertex(Vec3f(rect.bottomRight(), z) * w, w, col, Vec2f(uv.x, uv.y));
+	s.v[3] = TexturedVertex(Vec3f(rect.bottomLeft(), z) * w, w, col, Vec2f(0.f, uv.y));
 }
 
 static void DrawBitmap(const Rectf & rect, float z, TextureContainer * tex,
                        Color color, bool isRhw) {
 	
-	ProjectedQuad s;
+	TexturedQuad s;
 	CreateBitmap(s, rect, z, tex, color, isRhw);
 	
 	GRenderer->SetTexture(0, tex);
 	if(isRhw) {
 		if(tex && tex->hasColorKey()) {
 			GRenderer->SetAlphaFunc(Renderer::CmpGreater, .5f);
-			EERIEDRAWPRIM(Renderer::TriangleFan, unproject(s.v, 4), 4);
+			EERIEDRAWPRIM(Renderer::TriangleFan, s.v, 4);
 			GRenderer->SetAlphaFunc(Renderer::CmpNotEqual, 0.f);
 			return;
 		}
 	}
-	EERIEDRAWPRIM(Renderer::TriangleFan, unproject(s.v, 4), 4);
+	EERIEDRAWPRIM(Renderer::TriangleFan, s.v, 4);
 }
 
 void EERIEAddBitmap(const RenderMaterial & mat, const Vec3f & p, float sx, float sy, TextureContainer * tex, Color color) {
-	ProjectedQuad s;
+	TexturedQuad s;
 	CreateBitmap(s, Rectf(Vec2f(p.x, p.y), sx, sy), p.z, tex, color, false);
-	TexturedQuad unprojected;
-	std::copy_n(s.v, 4, unprojected.v);
-	RenderBatcher::getInstance().add(mat, unprojected);
+	RenderBatcher::getInstance().add(mat, s);
 }
 
 void EERIEDrawBitmap(const Rectf & rect, float z, TextureContainer * tex, Color color) {
