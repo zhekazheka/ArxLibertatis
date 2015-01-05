@@ -1028,7 +1028,7 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 	
 	Vec3f in;
 	Vec3f inn;
-	ProjectedVertex out;
+	TexturedVertex out;
 	
 	unsigned long tim = (unsigned long)arxtime;
 	
@@ -1152,7 +1152,12 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 			Sphere sp;
 			sp.origin = in;
 			EE_RTP(inn, &out);
-			if(out.rhw < 0 || out.p.z > cam->cdepth * fZFogEnd) {
+			if(out.w < 0.000001f) {
+				continue;
+			}
+			
+			out.p /= out.w;
+			if(out.p.z > cam->cdepth * fZFogEnd) {
 				continue;
 			}
 			
