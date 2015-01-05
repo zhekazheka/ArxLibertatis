@@ -65,10 +65,10 @@ void EERIEDRAWPRIM(Renderer::Primitive primitive, const TexturedVertex * vertice
 
 static const float BASICFOCAL = 350.f;
 
-static void SetTextureDrawPrim(TextureContainer * tex, ProjectedVertex * v,
+static void SetTextureDrawPrim(TextureContainer * tex, TexturedVertex * v,
                                Renderer::Primitive prim) {
 	GRenderer->SetTexture(0, tex);
-	EERIEDRAWPRIM(prim, unproject(v, 4), 4);
+	EERIEDRAWPRIM(prim, v, 4);
 }
 
 static bool EERIECreateSprite(ProjectedQuad & sprite, const Vec3f & in, float siz,
@@ -149,7 +149,9 @@ void EERIEDrawSprite(const Vec3f & in, float siz, TextureContainer * tex, Color 
 	ProjectedQuad s;
 
 	if(EERIECreateSprite(s, in, siz, color, Zpos)) {
-		SetTextureDrawPrim(tex, s.v, Renderer::TriangleFan);
+		TexturedQuad unprojected;
+		std::copy_n(s.v, 4, unprojected.v);
+		SetTextureDrawPrim(tex, unprojected.v, Renderer::TriangleFan);
 	}
 }
 
@@ -220,7 +222,7 @@ void EERIEDrawBitmap_uv(Rectf rect, float z, TextureContainer * tex,
 	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, Vec2f(u1, v0));
 	v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, Vec2f(u1, v1));
 	v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, Vec2f(u0, v1));
-	SetTextureDrawPrim(tex, v, Renderer::TriangleFan);
+	SetTextureDrawPrim(tex, unproject(v, 4), Renderer::TriangleFan);
 }
 
 void EERIEDrawBitmapUVs(Rectf rect, float z, TextureContainer * tex,
@@ -234,7 +236,7 @@ void EERIEDrawBitmapUVs(Rectf rect, float z, TextureContainer * tex,
 	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv1);
 	v[2] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv2);
 	v[3] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
-	SetTextureDrawPrim(tex, v, Renderer::TriangleStrip);
+	SetTextureDrawPrim(tex, unproject(v, 4), Renderer::TriangleStrip);
 }
 
 void EERIEDrawBitmap2DecalY(Rectf rect, float z, TextureContainer * tex, Color color, float _fDeltaY) {
@@ -257,5 +259,5 @@ void EERIEDrawBitmap2DecalY(Rectf rect, float z, TextureContainer * tex, Color c
 	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv2);
 	v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
 	v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv4);
-	SetTextureDrawPrim(tex, v, Renderer::TriangleFan);
+	SetTextureDrawPrim(tex, unproject(v, 4), Renderer::TriangleFan);
 }
