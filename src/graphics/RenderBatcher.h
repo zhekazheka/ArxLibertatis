@@ -120,7 +120,7 @@ public:
 	static RenderBatcher& getInstance();
 	
 private:
-	typedef std::vector<ProjectedVertex> VertexBatch;
+	typedef std::vector<TexturedVertex> VertexBatch;
 	typedef std::map<RenderMaterial, VertexBatch> Batches;
 	
 private:

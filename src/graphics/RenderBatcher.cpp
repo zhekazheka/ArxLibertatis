@@ -58,8 +58,7 @@ void RenderBatcher::render() {
 	for(Batches::const_iterator it = m_BatchedSprites.begin(); it != m_BatchedSprites.end(); ++it) {
 		if(!it->second.empty()) {
 			it->first.apply();
-			TexturedVertex * vertices = unproject(&it->second.front(), it->second.size());
-			m_VertexBuffer->draw(Renderer::TriangleList, vertices, it->second.size());
+			m_VertexBuffer->draw(Renderer::TriangleList, &it->second.front(), it->second.size());
 			GRenderer->GetTextureStage(0)->setAlphaOp(TextureStage::OpSelectArg1);
 		}
 	}
