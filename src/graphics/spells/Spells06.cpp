@@ -769,10 +769,6 @@ void CRiseDead::RenderFissure()
 	target.y = eSrc.y + 1.5f * sizeF; 
 	target.z = eSrc.z ;
 
-	EE_RTP(vt[1], &vr[0]);
-	vr[0].color = vr[1].color = Color3f(fColorRays1[0], fColorRays1[1], fColorRays1[2]).toRGB();
-	vr[2].color = vr[3].color = Color3f(fColorRays2[0], fColorRays2[1], fColorRays2[2]).toRGB();
-
 	vr[0].uv.x = fTexWrap;
 	vr[0].uv.y = 1;
 	vr[1].uv.x = 1.0f + fTexWrap;
