@@ -386,7 +386,7 @@ void ShowFpsGraph() {
 	float avg = 0;
 	float worst = lastFPSArray[0];
 
-	std::vector<ProjectedVertex> vertices;
+	std::vector<TexturedVertex> vertices;
 	vertices.resize(lastFPSArray.size());
 
 	const float SCALE_Y = 2.0f;
@@ -401,12 +401,12 @@ void ShowFpsGraph() {
 		vertices[i].color = Color(255, 255, 255, 255).toRGBA();
 		vertices[i].p.x = i;
 		vertices[i].p.y = windowSize.y - (time * SCALE_Y);
-		vertices[i].p.z = 1.0f;
-		vertices[i].rhw = 1.0f;
+		vertices[i].p.z = 1.f;
+		vertices[i].w = 1.f;
 	}
 	avg /= lastFPSArray.size();
 
-	EERIEDRAWPRIM(Renderer::LineStrip, unproject(&vertices[0], vertices.size()), vertices.size());
+	EERIEDRAWPRIM(Renderer::LineStrip, &vertices[0], vertices.size());
 
 	Color avgColor = Color::blue * 0.5f + Color::white * 0.5f;
 	float avgPos = windowSize.y - (avg * SCALE_Y);
