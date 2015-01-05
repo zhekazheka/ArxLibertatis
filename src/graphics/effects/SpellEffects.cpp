@@ -78,7 +78,7 @@ void Draw3DLineTexNew(const RenderMaterial & mat, Vec3f startPos, Vec3f endPos, 
 	float zze = endSize;
 	
 	{
-	ProjectedQuad q1;
+	TexturedQuad q1;
 	q1.v[0].color = q1.v[1].color = startColor.toRGBA();
 	q1.v[2].color = q1.v[3].color = endColor.toRGBA();
 	
@@ -107,7 +107,7 @@ void Draw3DLineTexNew(const RenderMaterial & mat, Vec3f startPos, Vec3f endPos, 
 	zze *= glm::sin(glm::radians(fBeta));
 	
 	{
-	ProjectedQuad q2;
+	TexturedQuad q2;
 	
 	q2.v[0].color = q2.v[1].color = startColor.toRGBA();
 	q2.v[2].color = q2.v[3].color = endColor.toRGBA();

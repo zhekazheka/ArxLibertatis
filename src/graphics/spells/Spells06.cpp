@@ -134,7 +134,7 @@ void CCreateField::RenderQuad(const Vec3f & p1, const Vec3f & p2, const Vec3f & 
 	} else if(rec == 3) {
 		float zab = glm::sin(glm::radians(ft));
 		
-		ProjectedQuad q;
+		TexturedQuad q;
 		
 		q.v[0].uv.x = 0 + zab;
 		q.v[0].uv.y = 0 + zab;

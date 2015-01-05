@@ -466,7 +466,7 @@ static ProjectedVertex * GetNewVertexList(TextureContainer * container,
 	}
 }
 
-void drawQuadRTP(const RenderMaterial & mat, const ProjectedQuad & in) {
+void drawQuadRTP(const RenderMaterial & mat, const TexturedQuad & in) {
 	
 	TexturedQuad quad;
 	for(size_t i = 0; i < 4; i++) {
