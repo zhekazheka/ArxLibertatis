@@ -44,7 +44,7 @@ void setVertexArrayTexCoord(int index, const void * coord, size_t stride);
 bool switchVertexArray(GLArrayClientState type, const void * ref, int texcount);
 
 template <>
-inline void setVertexArray(const ProjectedVertex * vertices, const void * ref) {
+inline void setVertexArray(const TexturedVertex * vertices, const void * ref) {
 	
 	ARX_UNUSED(vertices);
 
@@ -54,12 +54,12 @@ inline void setVertexArray(const ProjectedVertex * vertices, const void * ref) {
 	
 	// rhw -> w conversion is done in a vertex shader
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(4, GL_FLOAT, sizeof(ProjectedVertex), &vertices->p);
+	glVertexPointer(4, GL_FLOAT, sizeof(TexturedVertex), &vertices->p);
 
 	glEnableClientState(GL_COLOR_ARRAY);
-	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ProjectedVertex), &vertices->color);
+	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TexturedVertex), &vertices->color);
 
-	setVertexArrayTexCoord(0, &vertices->uv, sizeof(ProjectedVertex));
+	setVertexArrayTexCoord(0, &vertices->uv, sizeof(TexturedVertex));
 }
 
 template <>
@@ -125,7 +125,6 @@ public:
 	}
 	
 	void setData(const Vertex * vertices, size_t count, size_t offset, BufferFlags flags) {
-		ARX_UNUSED(flags);
 		
 		arx_assert(offset + count <= capacity());
 		

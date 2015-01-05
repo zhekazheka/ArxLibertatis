@@ -32,14 +32,11 @@
 #include "window/RenderWindow.h"
 
 static const char vertexShaderSource[] = "void main() {\n"
-	"	// Convert pre-transformed D3D vertices to OpenGL vertices.\n"
-	"	float w = 1.0 / gl_Vertex.w;\n"
-	"	vec4 vertex = vec4(gl_Vertex.xyz * w, w);\n"
 	"	// We only need the projection matrix as modelview will always be identity.\n"
-	"	gl_Position = gl_ProjectionMatrix * vertex;\n"
+	"	gl_Position = gl_ProjectionMatrix * gl_Vertex;\n"
 	"	gl_FrontColor = gl_BackColor = gl_Color;\n"
 	"	gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-	"	gl_FogFragCoord = vertex.z;\n"
+	"	gl_FogFragCoord = gl_Vertex.z;\n"
 	"}\n";
 
 
@@ -727,9 +724,52 @@ void OpenGLRenderer::SetFillMode(FillMode mode) {
 	glPolygonMode(GL_FRONT_AND_BACK, arxToGlFillMode[mode]);
 }
 
+class UnprojectVertexBuffer : public VertexBuffer<ProjectedVertex> {
+	
+public:
+	
+	using VertexBuffer<ProjectedVertex>::capacity;
+	
+	UnprojectVertexBuffer(VertexBuffer<TexturedVertex> * base)
+		: VertexBuffer<ProjectedVertex>(base->capacity())
+		, m_base(base)
+	{ }
+	
+	void setData(const ProjectedVertex * vertices, size_t count, size_t offset, BufferFlags flags) {
+		m_base->setData(unproject(vertices, count), count, offset, flags);
+	}
+	
+	ProjectedVertex * lock(BufferFlags flags, size_t offset, size_t count) {
+		ARX_UNUSED(flags), ARX_UNUSED(offset), ARX_UNUSED(count);
+		ARX_DEAD_CODE();
+	}
+	
+	void unlock() {
+		ARX_DEAD_CODE();
+	}
+	
+	void draw(Renderer::Primitive primitive, size_t count, size_t offset) const {
+		m_base->draw(primitive, count, offset);
+	}
+	
+	void drawIndexed(Renderer::Primitive primitive, size_t count, size_t offset,
+	                 unsigned short * indices, size_t nbindices) const {
+		m_base->drawIndexed(primitive, count, offset, indices, nbindices);
+	}
+	
+	~UnprojectVertexBuffer() {
+		delete m_base;
+	}
+	
+private:
+	
+	VertexBuffer<TexturedVertex> * m_base;
+	
+};
+
 VertexBuffer<ProjectedVertex> * OpenGLRenderer::createVertexBufferTL(size_t capacity, BufferUsage usage) {
 	if(useVBOs && shader) {
-		return new GLVertexBuffer<ProjectedVertex>(this, capacity, usage);
+		return new UnprojectVertexBuffer(new GLVertexBuffer<TexturedVertex>(this, capacity, usage));
 	} else {
 		return new GLNoVertexBuffer<ProjectedVertex>(this, capacity);
 	}
@@ -767,7 +807,9 @@ void OpenGLRenderer::drawIndexed(Primitive primitive, const ProjectedVertex * ve
 		
 		bindBuffer(GL_NONE);
 		
-		setVertexArray(vertices, vertices);
+		TexturedVertex * vert = unproject(vertices, nvertices);
+		
+		setVertexArray(vert, vert);
 		
 		glDrawRangeElements(arxToGlPrimitiveType[primitive], 0, nvertices - 1, nindices, GL_UNSIGNED_SHORT, indices);
 		

@@ -26,6 +26,7 @@
 #include "math/Types.h"
 #include "graphics/Color.h"
 
+struct TexturedVertex;
 struct ProjectedVertex;
 struct SMY_VERTEX;
 struct SMY_VERTEX3;
