@@ -727,11 +727,11 @@ void OpenGLRenderer::SetFillMode(FillMode mode) {
 	glPolygonMode(GL_FRONT_AND_BACK, arxToGlFillMode[mode]);
 }
 
-VertexBuffer<TexturedVertex> * OpenGLRenderer::createVertexBufferTL(size_t capacity, BufferUsage usage) {
+VertexBuffer<ProjectedVertex> * OpenGLRenderer::createVertexBufferTL(size_t capacity, BufferUsage usage) {
 	if(useVBOs && shader) {
-		return new GLVertexBuffer<TexturedVertex>(this, capacity, usage); 
+		return new GLVertexBuffer<ProjectedVertex>(this, capacity, usage);
 	} else {
-		return new GLNoVertexBuffer<TexturedVertex>(this, capacity); 
+		return new GLNoVertexBuffer<ProjectedVertex>(this, capacity);
 	}
 }
 
@@ -759,9 +759,9 @@ const GLenum arxToGlPrimitiveType[] = {
 	GL_LINE_STRIP // LineStrip
 };
 
-void OpenGLRenderer::drawIndexed(Primitive primitive, const TexturedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) {
+void OpenGLRenderer::drawIndexed(Primitive primitive, const ProjectedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) {
 	
-	beforeDraw<TexturedVertex>();
+	beforeDraw<ProjectedVertex>();
 	
 	if(useVertexArrays && shader) {
 		

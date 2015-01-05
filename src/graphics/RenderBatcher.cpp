@@ -32,7 +32,7 @@ RenderBatcher::~RenderBatcher() {
 	reset();
 }
 
-void RenderBatcher::add(const RenderMaterial& mat, const TexturedVertex (&tri)[3]) {
+void RenderBatcher::add(const RenderMaterial& mat, const ProjectedVertex (&tri)[3]) {
 	
 	VertexBatch & batch = m_BatchedSprites[mat];
 	
@@ -88,7 +88,7 @@ u32 RenderBatcher::getMemoryUsed() const {
 	u32 memoryUsed = 0;
 
 	for(Batches::const_iterator it = m_BatchedSprites.begin(); it != m_BatchedSprites.end(); ++it) {
-		memoryUsed += it->second.capacity() * sizeof(TexturedVertex);
+		memoryUsed += it->second.capacity() * sizeof(ProjectedVertex);
 	}
 
 	return memoryUsed;
@@ -96,7 +96,7 @@ u32 RenderBatcher::getMemoryUsed() const {
 
 void RenderBatcher::initialize() {
 	arx_assert(m_VertexBuffer == NULL);
-	m_VertexBuffer = new CircularVertexBuffer<TexturedVertex>(GRenderer->createVertexBufferTL(32 * 1024, Renderer::Stream));
+	m_VertexBuffer = new CircularVertexBuffer<ProjectedVertex>(GRenderer->createVertexBufferTL(32 * 1024, Renderer::Stream));
 }
 
 void RenderBatcher::shutdown() {

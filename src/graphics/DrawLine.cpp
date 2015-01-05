@@ -31,7 +31,7 @@
 
 void drawLine2D(float x0, float y0, float x1, float y1, float z, Color col) {
 
-	TexturedVertex v[2];
+	ProjectedVertex v[2];
 	v[0].p.x = x0;
 	v[0].p.y = y0;
 	v[0].p.z = v[1].p.z = z;
@@ -46,7 +46,7 @@ void drawLine2D(float x0, float y0, float x1, float y1, float z, Color col) {
 
 void drawLineRectangle(const Rectf & rect, float z, Color col) {
 
-	TexturedVertex v[5];
+	ProjectedVertex v[5];
 	v[0].p = Vec3f(rect.bottomLeft(), z);
 	v[1].p = Vec3f(rect.bottomRight(), z);
 	v[2].p = Vec3f(rect.topRight(), z);
@@ -62,7 +62,7 @@ void drawLineRectangle(const Rectf & rect, float z, Color col) {
 
 void EERIEDrawFill2DRectDegrad(float x0, float y0, float x1, float y1, float z, Color cold, Color cole) {
 
-	TexturedVertex v[4];
+	ProjectedVertex v[4];
 	v[0].p.x = v[2].p.x = x0;
 	v[0].p.y = v[1].p.y = y0;
 	v[1].p.x = v[3].p.x = x1;
@@ -87,7 +87,7 @@ void drawLineSphere(const Sphere & sphere, Color color) {
 	if(rings < 7)
 		rings = 7;
 
-	std::vector<TexturedVertex> vertices;
+	std::vector<ProjectedVertex> vertices;
 
 	bool skip = false;
 
@@ -104,7 +104,7 @@ void drawLineSphere(const Sphere & sphere, Color color) {
 			pos *= sphere.radius;
 			pos += sphere.origin;
 			
-			TexturedVertex out;
+			ProjectedVertex out;
 			Vec3f temp = EE_RT(pos);
 			EE_P(&temp, &out);
 
@@ -154,7 +154,7 @@ void drawLineCylinder(const Cylinder & cyl, Color col) {
 
 void drawLine(const Vec3f & orgn, const Vec3f & dest, Color color1, Color color2, float zbias) {
 	
-	TexturedVertex v[2];
+	ProjectedVertex v[2];
 	
 	EE_RTP(orgn, &v[0]);
 	if(v[0].p.z < 0.f) {

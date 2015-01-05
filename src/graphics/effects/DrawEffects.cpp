@@ -72,14 +72,14 @@ extern Rect g_size;
 extern TextureContainer * Boom;
 
 std::vector<POLYBOOM> polyboom(MAX_POLYBOOM);
-std::vector<TexturedVertex> g_shadowBatch;
+std::vector<ProjectedVertex> g_shadowBatch;
 
 extern Color ulBKGColor;
 
-static void AddToShadowBatch(TexturedVertex * _pVertex1, TexturedVertex * _pVertex2,
-                             TexturedVertex * _pVertex3) {
+static void AddToShadowBatch(ProjectedVertex * _pVertex1, ProjectedVertex * _pVertex2,
+                             ProjectedVertex * _pVertex3) {
 	
-	TexturedVertex pPointAdd[3];
+	ProjectedVertex pPointAdd[3];
 	EE_P(&_pVertex1->p, &pPointAdd[0]);
 	EE_P(&_pVertex2->p, &pPointAdd[1]);
 	EE_P(&_pVertex3->p, &pPointAdd[2]);
@@ -123,11 +123,11 @@ void ARXDRAW_DrawInterShadows()
 			continue;
 		}
 		
-		TexturedVertex ltv[4];
-		ltv[0] = TexturedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.3f, 0.3f));
-		ltv[1] = TexturedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.7f, 0.3f));
-		ltv[2] = TexturedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.7f, 0.7f));
-		ltv[3] = TexturedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.3f, 0.7f));
+		ProjectedVertex ltv[4];
+		ltv[0] = ProjectedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.3f, 0.3f));
+		ltv[1] = ProjectedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.7f, 0.3f));
+		ltv[2] = ProjectedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.7f, 0.7f));
+		ltv[3] = ProjectedVertex(Vec3f(0, 0, 0.001f), 1.f, ColorRGBA(0), Vec2f(0.3f, 0.7f));
 		
 		if(io->obj->grouplist.size() <= 1) {
 			for(size_t k = 0; k < io->obj->vertexlist.size(); k += 9) {
@@ -228,7 +228,7 @@ extern Entity * CAMERACONTROLLER;
 
 // This used to add a bias when the "forceZbias" config option was activated, but it
 // was off by default and we removed it.
-static void IncrementPolyWithNormalOutput(EERIEPOLY * _pPoly, TexturedVertex * _pOut) {
+static void IncrementPolyWithNormalOutput(EERIEPOLY * _pPoly, ProjectedVertex * _pOut) {
 	
 	_pOut[0].p = _pPoly->v[0].p;
 	_pOut[1].p = _pPoly->v[1].p;
@@ -242,7 +242,7 @@ static void IncrementPolyWithNormalOutput(EERIEPOLY * _pPoly, TexturedVertex * _
 extern float framedelay;
 void ARXDRAW_DrawPolyBoom()
 {
-	TexturedVertex ltv[4];
+	ProjectedVertex ltv[4];
 
 	GRenderer->SetFogColor(Color::none); // TODO: not handled by RenderMaterial
 	unsigned long tim = (unsigned long)(arxtime);

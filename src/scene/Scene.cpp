@@ -198,7 +198,7 @@ Vec2f getWaterFxUvOffset(const Vec3f & odtv, float power)
 				 std::cos(WATEREFFECT + odtv.z) * power);
 }
 
-static void ApplyLavaGlowToVertex(Vec3f * odtv,TexturedVertex * dtv, float power) {
+static void ApplyLavaGlowToVertex(Vec3f * odtv,ProjectedVertex * dtv, float power) {
 	float f;
 	long lr, lg, lb;
 	power = 1.f - std::sin(WATEREFFECT + odtv->x + odtv->z) * 0.05f * power;
@@ -823,7 +823,7 @@ static void RenderWaterBatch() {
 	
 }
 
-static float FluidTextureDisplacement(bool calcSin, const TexturedVertex& v, float time,
+static float FluidTextureDisplacement(bool calcSin, const ProjectedVertex& v, float time,
                                       float divVar1, float divVar2, float divVar3,
                                       float divVar4, float addVar1 = 0,
                                       float addVar2 = 0, float sign = 1) {

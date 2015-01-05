@@ -85,8 +85,8 @@ private:
 	Vec3f eSrc;
 	Vec3f eTarget;
 	TextureContainer * tex_mm;
-	TexturedVertex v1a[40];
-	TexturedVertex pathways[40];
+	ProjectedVertex v1a[40];
+	ProjectedVertex pathways[40];
 	float fColor[3];
 	float fColor1[3];
 	float fTrail;

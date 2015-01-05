@@ -26,7 +26,7 @@
 #include "math/Types.h"
 #include "graphics/Color.h"
 
-struct TexturedVertex;
+struct ProjectedVertex;
 struct SMY_VERTEX;
 struct SMY_VERTEX3;
 class TextureContainer;
@@ -218,11 +218,11 @@ public:
 	
 	virtual float GetMaxAnisotropy() const = 0;
 	
-	virtual VertexBuffer<TexturedVertex> * createVertexBufferTL(size_t capacity, BufferUsage usage) = 0;
+	virtual VertexBuffer<ProjectedVertex> * createVertexBufferTL(size_t capacity, BufferUsage usage) = 0;
 	virtual VertexBuffer<SMY_VERTEX> * createVertexBuffer(size_t capacity, BufferUsage usage) = 0;
 	virtual VertexBuffer<SMY_VERTEX3> * createVertexBuffer3(size_t capacity, BufferUsage usage) = 0;
 	
-	virtual void drawIndexed(Primitive primitive, const TexturedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) = 0;
+	virtual void drawIndexed(Primitive primitive, const ProjectedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices) = 0;
 	
 	virtual bool getSnapshot(Image & image) = 0;
 	virtual bool getSnapshot(Image & image, size_t width, size_t height) = 0;

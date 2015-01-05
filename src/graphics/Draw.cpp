@@ -52,9 +52,9 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "graphics/data/TextureContainer.h"
 #include "graphics/data/Mesh.h"
 
-CircularVertexBuffer<TexturedVertex> * pDynamicVertexBuffer_TLVERTEX;
+CircularVertexBuffer<ProjectedVertex> * pDynamicVertexBuffer_TLVERTEX;
 
-void EERIEDRAWPRIM(Renderer::Primitive primitive, const TexturedVertex * vertices, size_t count, bool nocount) {
+void EERIEDRAWPRIM(Renderer::Primitive primitive, const ProjectedVertex * vertices, size_t count, bool nocount) {
 	
 	if(!nocount) {
 		EERIEDrawnPolys++;
@@ -65,7 +65,7 @@ void EERIEDRAWPRIM(Renderer::Primitive primitive, const TexturedVertex * vertice
 
 static const float BASICFOCAL = 350.f;
 
-static void SetTextureDrawPrim(TextureContainer * tex, TexturedVertex * v,
+static void SetTextureDrawPrim(TextureContainer * tex, ProjectedVertex * v,
                                Renderer::Primitive prim) {
 	GRenderer->SetTexture(0, tex);
 	EERIEDRAWPRIM(prim, v, 4);
@@ -74,7 +74,7 @@ static void SetTextureDrawPrim(TextureContainer * tex, TexturedVertex * v,
 static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz,
                               Color color, float Zpos, float rot = 0) {
 	
-	TexturedVertex out;
+	ProjectedVertex out;
 	EE_RTP(in, &out);
 	out.rhw *= 3000.f;
 
@@ -106,10 +106,10 @@ static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz
 		
 		ColorRGBA col = color.toRGBA();
 		
-		sprite.v[0] = TexturedVertex(Vec3f(), out.rhw, col, Vec2f_ZERO);
-		sprite.v[1] = TexturedVertex(Vec3f(), out.rhw, col, Vec2f_X_AXIS);
-		sprite.v[2] = TexturedVertex(Vec3f(), out.rhw, col, Vec2f(1.f, 1.f));
-		sprite.v[3] = TexturedVertex(Vec3f(), out.rhw, col, Vec2f_Y_AXIS);
+		sprite.v[0] = ProjectedVertex(Vec3f(), out.rhw, col, Vec2f_ZERO);
+		sprite.v[1] = ProjectedVertex(Vec3f(), out.rhw, col, Vec2f_X_AXIS);
+		sprite.v[2] = ProjectedVertex(Vec3f(), out.rhw, col, Vec2f(1.f, 1.f));
+		sprite.v[3] = ProjectedVertex(Vec3f(), out.rhw, col, Vec2f_Y_AXIS);
 		
 		if(rot == 0) {
 			Vec3f maxs = out.p + t;
@@ -164,10 +164,10 @@ static void CreateBitmap(TexturedQuad & s, Rectf rect, float z, TextureContainer
 		val -= z;
 	}
 	
-	s.v[0] = TexturedVertex(Vec3f(rect.topLeft(), z), val, col, Vec2f(0.f, 0.f));
-	s.v[1] = TexturedVertex(Vec3f(rect.topRight(), z), val, col, Vec2f(uv.x, 0.f));
-	s.v[2] = TexturedVertex(Vec3f(rect.bottomRight(), z), val, col, Vec2f(uv.x, uv.y));
-	s.v[3] = TexturedVertex(Vec3f(rect.bottomLeft(), z), val, col, Vec2f(0.f, uv.y));
+	s.v[0] = ProjectedVertex(Vec3f(rect.topLeft(), z), val, col, Vec2f(0.f, 0.f));
+	s.v[1] = ProjectedVertex(Vec3f(rect.topRight(), z), val, col, Vec2f(uv.x, 0.f));
+	s.v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), val, col, Vec2f(uv.x, uv.y));
+	s.v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(), z), val, col, Vec2f(0.f, uv.y));
 }
 
 static void DrawBitmap(const Rectf & rect, float z, TextureContainer * tex,
@@ -211,11 +211,11 @@ void EERIEDrawBitmap_uv(Rectf rect, float z, TextureContainer * tex,
 	u0 *= uv.x, u1 *= uv.x, v0 *= uv.y, v1 *= uv.y;
 
 	ColorRGBA col = color.toRGBA();
-	TexturedVertex v[4];
-	v[0] = TexturedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, Vec2f(u0, v0));
-	v[1] = TexturedVertex(Vec3f(rect.topRight(),    z), 1.f, col, Vec2f(u1, v0));
-	v[2] = TexturedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, Vec2f(u1, v1));
-	v[3] = TexturedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, Vec2f(u0, v1));
+	ProjectedVertex v[4];
+	v[0] = ProjectedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, Vec2f(u0, v0));
+	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, Vec2f(u1, v0));
+	v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, Vec2f(u1, v1));
+	v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, Vec2f(u0, v1));
 	SetTextureDrawPrim(tex, v, Renderer::TriangleFan);
 }
 
@@ -225,11 +225,11 @@ void EERIEDrawBitmapUVs(Rectf rect, float z, TextureContainer * tex,
 	rect.move(-.5f, -.5f);
 	
 	ColorRGBA col = color.toRGBA();
-	TexturedVertex v[4];
-	v[0] = TexturedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv0);
-	v[1] = TexturedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv1);
-	v[2] = TexturedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv2);
-	v[3] = TexturedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
+	ProjectedVertex v[4];
+	v[0] = ProjectedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv0);
+	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv1);
+	v[2] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv2);
+	v[3] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
 	SetTextureDrawPrim(tex, v, Renderer::TriangleStrip);
 }
 
@@ -248,10 +248,10 @@ void EERIEDrawBitmap2DecalY(Rectf rect, float z, TextureContainer * tex, Color c
 	Vec2f uv3(uv.x, uv.y);
 	Vec2f uv4(0.f, uv.y);
 	
-	TexturedVertex v[4];
-	v[0] = TexturedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv1);
-	v[1] = TexturedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv2);
-	v[2] = TexturedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
-	v[3] = TexturedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv4);
+	ProjectedVertex v[4];
+	v[0] = ProjectedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv1);
+	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv2);
+	v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
+	v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv4);
 	SetTextureDrawPrim(tex, v, Renderer::TriangleFan);
 }

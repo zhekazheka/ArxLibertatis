@@ -30,7 +30,7 @@
 #include <vector>
 
 struct TexturedQuad {
-	TexturedVertex v[4];
+	ProjectedVertex v[4];
 };
 
 struct RenderMaterial {
@@ -100,7 +100,7 @@ public:
 	RenderBatcher();
 	~RenderBatcher();
 
-	void add(const RenderMaterial& mat, const TexturedVertex(&vertices)[3]);
+	void add(const RenderMaterial& mat, const ProjectedVertex(&vertices)[3]);
 	void add(const RenderMaterial& mat, const TexturedQuad& sprite);
 
 	//! Render all batches
@@ -120,12 +120,12 @@ public:
 	static RenderBatcher& getInstance();
 	
 private:
-	typedef std::vector<TexturedVertex> VertexBatch;
+	typedef std::vector<ProjectedVertex> VertexBatch;
 	typedef std::map<RenderMaterial, VertexBatch> Batches;
 	
 private:
 	Batches m_BatchedSprites;
-	CircularVertexBuffer<TexturedVertex> * m_VertexBuffer;
+	CircularVertexBuffer<ProjectedVertex> * m_VertexBuffer;
 };
 
 #endif // ARX_GRAPHICS_RENDERBATCHER_H

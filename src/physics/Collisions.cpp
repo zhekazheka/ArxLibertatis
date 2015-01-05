@@ -427,7 +427,7 @@ float CylinderPlatformCollide(Cylinder * cyl, Entity * io) {
 
 static long NPC_IN_CYLINDER = 0;
 
-inline void EE_RotateY(TexturedVertex *in,TexturedVertex *out,float c, float s)
+inline void EE_RotateY(ProjectedVertex *in,ProjectedVertex *out,float c, float s)
 {
 	out->p.x = (in->p.x*c) + (in->p.z*s);
 	out->p.y = in->p.y;

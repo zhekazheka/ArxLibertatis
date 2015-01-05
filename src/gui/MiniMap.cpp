@@ -397,7 +397,7 @@ void MiniMap::showBookEntireMap(int showLevel) {
 		drawDetectedEntities(showLevel, start.x, start.y, zoom);
 	}
 	
-	TexturedVertex verts[4];
+	ProjectedVertex verts[4];
 	for(int k = 0; k < 4; k++) {
 		verts[k].color = Color(255, 255, 255, 255).toRGBA();
 		verts[k].rhw = 1;
@@ -588,7 +588,7 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 				continue; // out of bounds
 			}
 
-			TexturedVertex verts[4];
+			ProjectedVertex verts[4];
 			
 			verts[3].p.x = verts[0].p.x = (posx);
 			verts[1].p.y = verts[0].p.y = (posy);
@@ -694,7 +694,7 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 
 void MiniMap::drawPlayer(float playerSize, float playerX, float playerY, bool alphaBlending) {
 	
-	TexturedVertex verts[4];
+	ProjectedVertex verts[4];
 	
 	for(int k = 0; k < 4; k++) {
 		verts[k].color = Color(255, 0, 0, 255).toRGBA();

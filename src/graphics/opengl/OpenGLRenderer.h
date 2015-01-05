@@ -86,11 +86,11 @@ public:
 	
 	inline float GetMaxAnisotropy() const { return maximumAnisotropy; }
 	
-	VertexBuffer<TexturedVertex> * createVertexBufferTL(size_t capacity, BufferUsage usage);
+	VertexBuffer<ProjectedVertex> * createVertexBufferTL(size_t capacity, BufferUsage usage);
 	VertexBuffer<SMY_VERTEX> * createVertexBuffer(size_t capacity, BufferUsage usage);
 	VertexBuffer<SMY_VERTEX3> * createVertexBuffer3(size_t capacity, BufferUsage usage);
 	
-	void drawIndexed(Primitive primitive, const TexturedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices);
+	void drawIndexed(Primitive primitive, const ProjectedVertex * vertices, size_t nvertices, unsigned short * indices, size_t nindices);
 	
 	bool getSnapshot(Image & image);
 	bool getSnapshot(Image & image, size_t width, size_t height);
@@ -163,6 +163,6 @@ template <class Vertex>
 inline void OpenGLRenderer::selectTrasform() { enableTransform(); }
 
 template <>
-inline void OpenGLRenderer::selectTrasform<TexturedVertex>() { disableTransform(); }
+inline void OpenGLRenderer::selectTrasform<ProjectedVertex>() { disableTransform(); }
 
 #endif // ARX_GRAPHICS_OPENGL_OPENGLRENDERER_H

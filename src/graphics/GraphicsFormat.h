@@ -90,8 +90,8 @@ struct SavedTextureVertex {
 	f32 tu;
 	f32 tv;
 	
-	inline operator TexturedVertex() const {
-		TexturedVertex a;
+	inline operator ProjectedVertex() const {
+		ProjectedVertex a;
 		a.p.x = pos.x, a.p.y = pos.y, a.p.z = pos.z;
 		a.rhw = rhw;
 		a.color = Color::fromBGRA(ColorBGRA(color)).toRGBA();
@@ -100,7 +100,7 @@ struct SavedTextureVertex {
 		return a;
 	}
 	
-	inline SavedTextureVertex & operator=(const TexturedVertex & b) {
+	inline SavedTextureVertex & operator=(const ProjectedVertex & b) {
 		pos.x = b.p.x, pos.y = b.p.y, pos.z = b.p.z;
 		rhw = b.rhw;
 		color = Color::fromRGBA(b.color).toBGRA();

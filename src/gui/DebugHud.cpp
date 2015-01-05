@@ -386,7 +386,7 @@ void ShowFpsGraph() {
 	float avg = 0;
 	float worst = lastFPSArray[0];
 
-	std::vector<TexturedVertex> vertices;
+	std::vector<ProjectedVertex> vertices;
 	vertices.resize(lastFPSArray.size());
 
 	const float SCALE_Y = 2.0f;

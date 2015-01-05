@@ -125,7 +125,7 @@ static void drawDebugLights() {
 			continue;
 		}
 		
-		TexturedVertex center;
+		ProjectedVertex center;
 		EE_RTP(light->pos, &center);
 		
 		const Rect mouseTestRect(
@@ -720,7 +720,7 @@ static void drawDebugMaterials() {
 			bool bvalid = false;
 			Vec3f p[4];
 			for(size_t i = 0; i < ((ep->type & POLY_QUAD) ? 4 : 3); i++) {
-				TexturedVertex tv;
+				ProjectedVertex tv;
 				tv.p = EE_RT(ep->v[i].p);
 				valid = valid && (tv.p.z > 0.000001f);
 				EE_P(&tv.p, &tv);

@@ -673,7 +673,7 @@ Vec3f VRotateZ(const Vec3f in, const float angle) {
 }
 
 //A x B = <Ay*Bz - Az*By, Az*Bx - Ax*Bz, Ax*By - Ay*Bx>
-void CalcFaceNormal(EERIEPOLY * ep, const TexturedVertex * v) {
+void CalcFaceNormal(EERIEPOLY * ep, const ProjectedVertex * v) {
 	
 	float Ax, Ay, Az, Bx, By, Bz;
 	Ax = v[1].p.x - v[0].p.x;

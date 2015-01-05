@@ -44,8 +44,8 @@ struct FLARES {
 	unsigned char exist;
 	char type;
 	short flags;
-	TexturedVertex v;
-	TexturedVertex tv;
+	ProjectedVertex v;
+	ProjectedVertex tv;
 	Vec2f pos;
 	float tolive;
 	Color3f rgb;

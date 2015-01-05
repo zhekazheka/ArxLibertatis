@@ -94,12 +94,12 @@ extern Color ulBKGColor;
 // TODO: Convert to a RenderBatch & make TextureContainer constructor private
 static TextureContainer TexSpecialColor("specialcolor_list", TextureContainer::NoInsert);
 
-static TexturedVertex * PushVertexInTable(TextureContainer * pTex,
+static ProjectedVertex * PushVertexInTable(TextureContainer * pTex,
                                           TextureContainer::TransparencyType type) {
 	
 	if(pTex->count[type] + 3 > pTex->max[type]) {
 		pTex->max[type] += 20 * 3;
-		pTex->list[type] = (TexturedVertex *)realloc(pTex->list[type], pTex->max[type] * sizeof(TexturedVertex));
+		pTex->list[type] = (ProjectedVertex *)realloc(pTex->list[type], pTex->max[type] * sizeof(ProjectedVertex));
 
 		if(!pTex->list[type]) {
 			pTex->max[type] = 0;
@@ -435,7 +435,7 @@ static void Cedric_PrepareHalo(EERIE_3DOBJ * eobj, Skeleton * obj) {
 	}
 }
 
-static TexturedVertex * GetNewVertexList(TextureContainer * container,
+static ProjectedVertex * GetNewVertexList(TextureContainer * container,
                                          const EERIE_FACE & face, float invisibility,
                                          float & fTransp) {
 	
@@ -475,9 +475,9 @@ void drawQuadRTP(const RenderMaterial & mat, TexturedQuad quat) {
 	RenderBatcher::getInstance().add(mat, quat);
 }
 
-void drawTriangle(const RenderMaterial & mat, const TexturedVertex * vertices) {
+void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices) {
 	
-	TexturedVertex projected[3];
+	ProjectedVertex projected[3];
 	EE_P(&vertices[0].p, &projected[0]);
 	EE_P(&vertices[1].p, &projected[1]);
 	EE_P(&vertices[2].p, &projected[2]);
@@ -606,7 +606,7 @@ static bool CullFace(const EERIE_3DOBJ * eobj, const EERIE_FACE & face) {
 }
 
 static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
-                               const Entity * io, TexturedVertex * tvList,
+                               const Entity * io, ProjectedVertex * tvList,
                                const EERIE_3DOBJ * eobj) {
 	
 	float mdist=ACTIVECAM->cdepth;
@@ -668,7 +668,7 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 		}
 
 		if(_ffr[first] > 70.f && _ffr[second] > 60.f) {
-			TexturedVertex vert[4];
+			ProjectedVertex vert[4];
 
 			vert[0] = tvList[first];
 			vert[1] = tvList[first];
@@ -749,7 +749,7 @@ void DrawEERIEInter_Render(EERIE_3DOBJ *eobj, const TransformInfo &t, Entity *io
 			continue;
 
 		float fTransp = 0.f;
-		TexturedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
+		ProjectedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
 
 		for(size_t n = 0; n < 3; n++) {
 
@@ -938,7 +938,7 @@ static void PrepareAnimatedObjectHalo(HaloInfo & haloInfo, const Vec3f & pos,
 
 static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * paf,
                                   float invisibility, EERIE_3DOBJ * eobj, Entity * io,
-                                  TexturedVertex * tvList) {
+                                  ProjectedVertex * tvList) {
 	
 	float & ddist = haloInfo.ddist;
 	float & MAX_ZEDE = haloInfo.MAX_ZEDE;
@@ -1008,7 +1008,7 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 		}
 
 		if(_ffr[first] > 150.f && _ffr[second] > 110.f) {
-			TexturedVertex vert[4];
+			ProjectedVertex vert[4];
 
 			vert[0] = tvList[first];
 			vert[1] = tvList[first];
@@ -1128,8 +1128,7 @@ static void Cedric_RenderObject(EERIE_3DOBJ * eobj, Skeleton * obj, Entity * io,
 			continue;
 
 		float fTransp = 0.f;
-
-		TexturedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
+		ProjectedVertex *tvList = GetNewVertexList(pTex, face, invisibility, fTransp);
 
 		for(size_t n = 0; n < 3; n++) {
 			tvList[n].p     = eobj->vertexlist3[face.vid[n]].vert.p;

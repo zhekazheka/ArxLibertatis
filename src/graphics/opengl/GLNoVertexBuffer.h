@@ -28,7 +28,7 @@ template <class Vertex>
 static void renderVertex(const Vertex & vertex);
 
 template <>
-void renderVertex(const TexturedVertex & vertex) {
+void renderVertex(const ProjectedVertex & vertex) {
 	
 	Color c = Color::fromRGBA(vertex.color);
 	glColor4ub(c.r, c.g, c.b, c.a);

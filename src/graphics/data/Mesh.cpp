@@ -451,7 +451,7 @@ static inline float clamp_and_invert(float z) {
 	return 1.f / std::max(z, near_clamp);
 }
 
-void EE_P(const Vec3f * in, TexturedVertex * out) {
+void EE_P(const Vec3f * in, ProjectedVertex * out) {
 	
 	float fZTemp = clamp_and_invert(in->z);
 	
@@ -461,12 +461,12 @@ void EE_P(const Vec3f * in, TexturedVertex * out) {
 	out->rhw = fZTemp;
 }
 
-void EE_RTP(const Vec3f & in, TexturedVertex * out) {
+void EE_RTP(const Vec3f & in, ProjectedVertex * out) {
 	out->p = EE_RT(in);
 	EE_P(&out->p, out);
 }
 
-static void camEE_RTP(const Vec3f & in, TexturedVertex * out, EERIE_CAMERA * cam) {
+static void camEE_RTP(const Vec3f & in, ProjectedVertex * out, EERIE_CAMERA * cam) {
 	
 	const Vec3f rt = Vec3f(cam->orgTrans.worldToView * Vec4f(in, 1.0f));
 	
@@ -1311,9 +1311,9 @@ void Draw3DObject(EERIE_3DOBJ *eobj, const Anglef & angle, const Vec3f & pos, co
 	if(!eobj)
 		return;
 	
-	TexturedVertex v;
-	TexturedVertex rv;
-	TexturedVertex vert_list[3];
+	ProjectedVertex v;
+	ProjectedVertex rv;
+	ProjectedVertex vert_list[3];
 	
 	glm::mat4 rotation = toRotationMatrix(angle);
 	
@@ -1579,7 +1579,7 @@ static bool loadFastScene(const res::path & file, const char * data, const char 
 					ep2->v[kk].uv.y = ep->v[kk].stv;
 				}
 				
-				memcpy(ep2->tv, ep2->v, sizeof(TexturedVertex) * 4);
+				memcpy(ep2->tv, ep2->v, sizeof(ProjectedVertex) * 4);
 				
 				for(size_t kk = 0; kk < 4; kk++) {
 					ep2->tv[kk].color = Color(0, 0, 0, 255).toRGBA();
@@ -2103,16 +2103,16 @@ static int BkgAddPoly(EERIEPOLY * ep, EERIE_3DOBJ * eobj) {
 	return 1;
 }
 
-static void EERIEAddPolyToBackground(TexturedVertex * vert2, TextureContainer * tex, PolyType render, float transval, EERIE_3DOBJ * eobj) {
+static void EERIEAddPolyToBackground(ProjectedVertex * vert2, TextureContainer * tex, PolyType render, float transval, EERIE_3DOBJ * eobj) {
 	
 	EERIEPOLY ep;
 	
-	memset(ep.tv, 0, sizeof(TexturedVertex) * 3);
+	memset(ep.tv, 0, sizeof(ProjectedVertex) * 3);
 	
 	if(vert2) {
-		memcpy(ep.v, vert2, sizeof(TexturedVertex) * 3);
+		memcpy(ep.v, vert2, sizeof(ProjectedVertex) * 3);
 	} else {
-		memset(ep.tv, 0, sizeof(TexturedVertex) * 3);
+		memset(ep.tv, 0, sizeof(ProjectedVertex) * 3);
 	}
 	
 	ep.type = render;
@@ -2123,7 +2123,7 @@ static void EERIEAddPolyToBackground(TexturedVertex * vert2, TextureContainer * 
 
 static void SceneAddObjToBackground(EERIE_3DOBJ * eobj) {
 	
-	TexturedVertex vlist[3];
+	ProjectedVertex vlist[3];
 	
 	glm::mat4 rotation = toRotationMatrix(eobj->angle);
 	
@@ -2145,7 +2145,7 @@ static void SceneAddObjToBackground(EERIE_3DOBJ * eobj) {
 
 			for(size_t i = 0; i < eobj->facelist.size(); i++) {
 				for(long kk = 0; kk < 3; kk++) {
-					memcpy(&ep.v[kk], &eobj->vertexlist[eobj->facelist[i].vid[kk]].vert, sizeof(TexturedVertex));
+					memcpy(&ep.v[kk], &eobj->vertexlist[eobj->facelist[i].vid[kk]].vert, sizeof(ProjectedVertex));
 				}
 
 				if(i == 0) {

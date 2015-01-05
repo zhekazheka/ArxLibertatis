@@ -22,9 +22,9 @@
 
 #include <stddef.h>
 
-struct TexturedVertex;
+struct ProjectedVertex;
 
-void Halo_AddVertices(TexturedVertex (&vert)[4]);
+void Halo_AddVertices(ProjectedVertex (&vert)[4]);
 
 void Halo_Render();
 

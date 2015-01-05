@@ -152,7 +152,7 @@ void Split(Vec3f * v, int a, int b, float fX, float fMulX, float fY, float fMulY
 	}
 }
 
-void Split(TexturedVertex * v, int a, int b, float yo, float fMul)
+void Split(ProjectedVertex * v, int a, int b, float yo, float fMul)
 {
 	if (a != b)
 	{

@@ -169,7 +169,7 @@ bool FX_FlashBlanc(Vec2f size, float speed, Color color, float fps, float currfp
 	color.a = 255.f * FlashAlpha;
 	ColorRGBA col = color.toRGBA();
 	
-	TexturedVertex v[4];
+	ProjectedVertex v[4];
 	v[0].p = Vec3f(0.f, 0.f, 0.01f);
 	v[0].rhw = 1.f;
 	v[0].color = col;

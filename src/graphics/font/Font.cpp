@@ -251,7 +251,7 @@ Font::glyph_iterator Font::getNextGlyph(text_iterator & it, text_iterator end) {
 	return glyphs.find(chr); // the newly inserted glyph
 }
 
-static void addGlyphVertices(std::vector<TexturedVertex> & vertices,
+static void addGlyphVertices(std::vector<ProjectedVertex> & vertices,
                              const Font::Glyph & glyph, const Vec2f & pos, Color color) {
 	
 	float w = glyph.size.x;
@@ -265,7 +265,7 @@ static void addGlyphVertices(std::vector<TexturedVertex> & vertices,
 	p.x = floor(pos.x + glyph.draw_offset.x) - .5f;
 	p.y = floor(pos.y - glyph.draw_offset.y) - .5f;
 
-	TexturedVertex quad[4];
+	ProjectedVertex quad[4];
 	quad[0].p = Vec3f(p.x, p.y, 0);
 	quad[0].uv = Vec2f(uStart, vStart);
 	quad[0].color = color.toRGBA();
@@ -311,7 +311,7 @@ Vec2i Font::process(int x, int y, text_iterator start, text_iterator end, Color 
 	FT_UInt prevGlyphIndex = 0;
 	FT_Pos prevRsbDelta = 0;
 
-	typedef std::map< unsigned int, std::vector<TexturedVertex> > MapTextureVertices;
+	typedef std::map< unsigned int, std::vector<ProjectedVertex> > MapTextureVertices;
 	MapTextureVertices mapTextureVertices;
 	
 	for(text_iterator it = start; it != end; ) {

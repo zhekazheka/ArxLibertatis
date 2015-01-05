@@ -184,7 +184,7 @@ extern Vec3f LastValidPlayerPos;
 extern Color ulBKGColor;
 extern EERIE_CAMERA conversationcamera;
 extern ParticleManager * pParticleManager;
-extern CircularVertexBuffer<TexturedVertex> * pDynamicVertexBuffer_TLVERTEX; // VB using TLVERTEX format.
+extern CircularVertexBuffer<ProjectedVertex> * pDynamicVertexBuffer_TLVERTEX; // VB using TLVERTEX format.
 extern CircularVertexBuffer<SMY_VERTEX3> * pDynamicVertexBuffer;
 
 long STOP_KEYBOARD_INPUT= 0;
@@ -2349,7 +2349,7 @@ void ArxGame::render() {
 
 void ArxGame::update2DFX()
 {
-	TexturedVertex ltvv;
+	ProjectedVertex ltvv;
 
 	Entity* pTableIO[256];
 	int nNbInTableIO = 0;
@@ -2502,8 +2502,8 @@ void ArxGame::onRendererInit(Renderer & renderer) {
 	VertexBuffer<SMY_VERTEX3> * vb3 = renderer.createVertexBuffer3(4000, Renderer::Stream);
 	pDynamicVertexBuffer = new CircularVertexBuffer<SMY_VERTEX3>(vb3);
 	
-	VertexBuffer<TexturedVertex> * vb = renderer.createVertexBufferTL(4000, Renderer::Stream);
-	pDynamicVertexBuffer_TLVERTEX = new CircularVertexBuffer<TexturedVertex>(vb);
+	VertexBuffer<ProjectedVertex> * vb = renderer.createVertexBufferTL(4000, Renderer::Stream);
+	pDynamicVertexBuffer_TLVERTEX = new CircularVertexBuffer<ProjectedVertex>(vb);
 
 	RenderBatcher::getInstance().initialize();
 	

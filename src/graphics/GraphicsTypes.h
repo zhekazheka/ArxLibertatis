@@ -110,8 +110,8 @@ struct EERIEPOLY {
 	Vec3f		max;
 	Vec3f		norm;
 	Vec3f		norm2;
-	TexturedVertex		v[4];
-	TexturedVertex		tv[4];
+	ProjectedVertex		v[4];
+	ProjectedVertex		tv[4];
 	Vec3f		nrml[4];
 	TextureContainer * tex;
 	Vec3f		center;

@@ -48,7 +48,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "platform/Platform.h"
 #include "math/Vector.h"
 
-struct TexturedVertex {
+struct ProjectedVertex {
 	
 	Vec3f p;
 	float rhw;
@@ -57,21 +57,21 @@ struct TexturedVertex {
 	
 	Vec2f uv;
 	
-	TexturedVertex()
+	ProjectedVertex()
 		: p(Vec3f_ZERO)
 		, rhw(1.f)
 		, color(0x00000000)
 		, uv(0.f, 0.f)
 	{}
 
-	TexturedVertex(const TexturedVertex & o)
+	ProjectedVertex(const ProjectedVertex & o)
 		: p(o.p)
 		, rhw(o.rhw)
 		, color(o.color)
 		, uv(o.uv)
 	{}
 
-	TexturedVertex(const Vec3f & _p, float _rhw, ColorRGBA _color, Vec2f _uv)
+	ProjectedVertex(const Vec3f & _p, float _rhw, ColorRGBA _color, Vec2f _uv)
 		: p(_p)
 		, rhw(_rhw)
 		, color(_color)
@@ -95,7 +95,7 @@ struct SMY_VERTEX3 {
 };
 
 struct EERIE_VERTEX {
-	TexturedVertex vert;
+	ProjectedVertex vert;
 	Vec3f v;
 	Vec3f norm;
 };
