@@ -169,23 +169,23 @@ bool FX_FlashBlanc(Vec2f size, float speed, Color color, float fps, float currfp
 	color.a = 255.f * FlashAlpha;
 	ColorRGBA col = color.toRGBA();
 	
-	ProjectedVertex v[4];
+	TexturedVertex v[4];
 	v[0].p = Vec3f(0.f, 0.f, 0.01f);
-	v[0].rhw = 1.f;
+	v[0].w = 1.f;
 	v[0].color = col;
 	v[1].p = Vec3f(size.x - 1.f, 0.f, 0.01f);
-	v[1].rhw = 1.f;
+	v[1].w = 1.f;
 	v[1].color = col;
 	v[2].p = Vec3f(0.f, size.y - 1.f, 0.01f);
-	v[2].rhw = 1.f;
+	v[2].w = 1.f;
 	v[2].color = col;
 	v[3].p = Vec3f(size.x - 1.f, size.y - 1.f, 0.01f);
-	v[3].rhw = 1.f;
+	v[3].w = 1.f;
 	v[3].color = col;
 	
 	FlashAlpha -= speed * fps / currfps;
 	
-	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
 	
 	return true;
 }
