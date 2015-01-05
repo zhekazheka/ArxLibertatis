@@ -1160,12 +1160,11 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 				
 				Vec3f vect = part->oldpos - in;
 				vect = glm::normalize(vect);
-				ProjectedVertex tv[3];
+				TexturedVertex tv[3];
 				tv[0].color = part->rgb.toRGB();
 				tv[1].color = Color(102, 102, 102, 255).toRGBA();
 				tv[2].color = Color(0, 0, 0, 255).toRGBA();
-				tv[0].p = out.p;
-				tv[0].rhw = out.rhw;
+				EE_RTP(inn, &tv[0]);
 				Vec3f temp;
 				temp = in + Vec3f(rnd() * 0.5f, 0.8f, rnd() * 0.5f);
 				EE_RTP(temp, &tv[1]);
@@ -1175,9 +1174,7 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 				
 				RenderMaterial mat;
 				mat.setBlendType(RenderMaterial::Additive);
-				TexturedVertex unprojected[3];
-				std::copy_n(tv, 3, unprojected);
-				RenderBatcher::getInstance().add(mat, unprojected);
+				RenderBatcher::getInstance().add(mat, tv);
 				
 				if(!arxtime.is_paused()) {
 					part->oldpos = in;
