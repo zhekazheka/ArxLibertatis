@@ -46,7 +46,7 @@ void drawLine2D(float x0, float y0, float x1, float y1, float z, Color col) {
 
 void drawLineRectangle(const Rectf & rect, float z, Color col) {
 
-	ProjectedVertex v[5];
+	TexturedVertex v[5];
 	v[0].p = Vec3f(rect.bottomLeft(), z);
 	v[1].p = Vec3f(rect.bottomRight(), z);
 	v[2].p = Vec3f(rect.topRight(), z);
@@ -54,10 +54,10 @@ void drawLineRectangle(const Rectf & rect, float z, Color col) {
 	v[4].p = v[0].p;
 	
 	v[4].color = v[3].color = v[2].color = v[1].color = v[0].color = col.toRGBA();
-	v[4].rhw = v[3].rhw = v[2].rhw = v[1].rhw = v[0].rhw = 1.f;
+	v[4].w = v[3].w = v[2].w = v[1].w = v[0].w = 1.f;
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::LineStrip, unproject(v, 5), 5);
+	EERIEDRAWPRIM(Renderer::LineStrip, v, 5);
 }
 
 void EERIEDrawFill2DRectDegrad(float x0, float y0, float x1, float y1, float z, Color cold, Color cole) {
