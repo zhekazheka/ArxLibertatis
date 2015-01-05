@@ -463,7 +463,7 @@ void MiniMap::showBookEntireMap(int showLevel) {
 		
 		GRenderer->SetTexture(0, m_mapMarkerTexCont);
 		
-		EERIEDRAWPRIM(Renderer::TriangleFan, verts, 4);
+		EERIEDRAWPRIM(Renderer::TriangleFan, unproject(verts, 4), 4);
 	}
 }
 
@@ -686,7 +686,7 @@ void MiniMap::drawBackground(int showLevel, Rect boundaries, float startX, float
 	}
 
 	if(!m_mapVertices.empty()) {
-		EERIEDRAWPRIM(Renderer::TriangleList, &m_mapVertices[0], m_mapVertices.size());
+		EERIEDRAWPRIM(Renderer::TriangleList, unproject(&m_mapVertices[0], m_mapVertices.size()), m_mapVertices.size());
 	}
 	
 	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
@@ -726,7 +726,7 @@ void MiniMap::drawPlayer(float playerSize, float playerX, float playerY, bool al
 		GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendInvSrcColor);
 	}
 	
-	EERIEDRAWPRIM(Renderer::TriangleFan, verts);
+	EERIEDRAWPRIM(Renderer::TriangleFan, unproject(verts, 3));
 	
 	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
 }

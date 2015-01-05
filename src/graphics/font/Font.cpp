@@ -380,7 +380,7 @@ Vec2i Font::process(int x, int y, text_iterator start, text_iterator end, Color 
 			
 			if(!it->second.empty()) {
 				GRenderer->SetTexture(0, &textures->getTexture(it->first));
-				EERIEDRAWPRIM(Renderer::TriangleList, &it->second[0], it->second.size());
+				EERIEDRAWPRIM(Renderer::TriangleList, unproject(&it->second[0], it->second.size()), it->second.size());
 			}
 		}
 					

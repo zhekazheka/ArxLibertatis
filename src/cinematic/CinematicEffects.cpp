@@ -185,7 +185,7 @@ bool FX_FlashBlanc(Vec2f size, float speed, Color color, float fps, float currfp
 	
 	FlashAlpha -= speed * fps / currfps;
 	
-	EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
 	
 	return true;
 }

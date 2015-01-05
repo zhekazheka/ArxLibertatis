@@ -386,7 +386,7 @@ void ARX_INTERFACE_DrawNumber(const Vec2f & pos, const long num, const int _iNb,
 				v[2].uv.y = v[3].uv.y = divideY * 12;
 				GRenderer->SetTexture(0, inventory_font);
 
-				EERIEDRAWPRIM(Renderer::TriangleFan, v, 4);
+				EERIEDRAWPRIM(Renderer::TriangleFan, unproject(v, 4), 4);
 			}
 		}
 	}

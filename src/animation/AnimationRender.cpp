@@ -126,7 +126,7 @@ static void PopOneTriangleList(TextureContainer * _pTex, bool clear) {
 	}
 
 
-	EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Opaque], _pTex->count[TextureContainer::Opaque]);
+	EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Opaque], _pTex->count[TextureContainer::Opaque]), _pTex->count[TextureContainer::Opaque]);
 	
 	if(clear) {
 		_pTex->count[TextureContainer::Opaque] = 0;
@@ -153,7 +153,8 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Blended]) {
 		GRenderer->SetBlendFunc(Renderer::BlendDstColor, Renderer::BlendSrcColor);
 		if(_pTex->count[TextureContainer::Blended]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Blended],
+			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Blended],
+						  _pTex->count[TextureContainer::Blended]),
 						  _pTex->count[TextureContainer::Blended]);
 			_pTex->count[TextureContainer::Blended]=0;
 		}
@@ -162,7 +163,8 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Additive]) {
 		GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendOne);
 		if(_pTex->count[TextureContainer::Additive]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Additive],
+			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Additive],
+						  _pTex->count[TextureContainer::Additive]),
 						  _pTex->count[TextureContainer::Additive]);
 			_pTex->count[TextureContainer::Additive]=0;
 		}
@@ -171,7 +173,8 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Subtractive]) {
 		GRenderer->SetBlendFunc(Renderer::BlendZero, Renderer::BlendInvSrcColor);
 		if(_pTex->count[TextureContainer::Subtractive]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Subtractive],
+			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Subtractive],
+						  _pTex->count[TextureContainer::Subtractive]),
 						  _pTex->count[TextureContainer::Subtractive]);
 			_pTex->count[TextureContainer::Subtractive]=0;
 		}
@@ -180,7 +183,8 @@ static void PopOneTriangleListTransparency(TextureContainer *_pTex) {
 	if(_pTex->count[TextureContainer::Multiplicative]) {
 		GRenderer->SetBlendFunc(Renderer::BlendOne, Renderer::BlendOne);
 		if(_pTex->count[TextureContainer::Multiplicative]) {
-			EERIEDRAWPRIM(Renderer::TriangleList, _pTex->list[TextureContainer::Multiplicative],
+			EERIEDRAWPRIM(Renderer::TriangleList, unproject(_pTex->list[TextureContainer::Multiplicative],
+						  _pTex->count[TextureContainer::Multiplicative]),
 						  _pTex->count[TextureContainer::Multiplicative]);
 			_pTex->count[TextureContainer::Multiplicative] = 0;
 		}

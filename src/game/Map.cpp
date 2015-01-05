@@ -239,7 +239,7 @@ bool C_ARX_Carte::Render(void)
 					else
 						GRenderer->ResetTexture(0);
 
-					EERIEDRAWPRIM(Renderer::TriangleStrip, ep->tv, nb, true);
+					EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(ep->tv, nb), nb, true);
 				}
 
 			}

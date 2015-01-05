@@ -258,7 +258,7 @@ static void FadeInOut(float _fVal) {
 	GRenderer->SetRenderState(Renderer::DepthTest, false);
 	GRenderer->SetCulling(Renderer::CullNone);
 
-	EERIEDRAWPRIM(Renderer::TriangleStrip, d3dvertex, 4, true);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(d3dvertex, 4), 4, true);
 
 	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
 	GRenderer->SetRenderState(Renderer::DepthWrite, true);
@@ -1721,7 +1721,7 @@ void CWindowMenuConsole::UpdateText() {
 	v[3].p.x = v[1].p.x;
 	v[3].p.y = v[2].p.y;
 
-	EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
 	}
 }
 
@@ -2958,7 +2958,7 @@ void MenuCursor::DrawLine2D(float _fSize, Color3f color) {
 		if(ComputePer(iOldCoord[i], iOldCoord[i + 1], &v[1], &v[3], fTaille)) {
 			
 			v[1].color = v[3].color = Color3f(fColorRed, fColorGreen, fColorBlue).toRGB();
-			EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
+			EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
 			
 			v[0].p.x = v[1].p.x;
 			v[0].p.y = v[1].p.y;

@@ -214,7 +214,7 @@ void ARXDRAW_DrawInterShadows()
 		GRenderer->SetRenderState(Renderer::AlphaBlending, true);
 		GRenderer->SetTexture(0, Boom);
 		
-		EERIEDRAWPRIM(Renderer::TriangleList, &g_shadowBatch[0], g_shadowBatch.size());
+		EERIEDRAWPRIM(Renderer::TriangleList, unproject(&g_shadowBatch[0], g_shadowBatch.size()), g_shadowBatch.size());
 		
 		GRenderer->SetRenderState(Renderer::AlphaBlending, false);
 		GRenderer->SetRenderState(Renderer::DepthWrite, true);

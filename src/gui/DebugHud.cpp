@@ -406,7 +406,7 @@ void ShowFpsGraph() {
 	}
 	avg /= lastFPSArray.size();
 
-	EERIEDRAWPRIM(Renderer::LineStrip, &vertices[0], vertices.size());
+	EERIEDRAWPRIM(Renderer::LineStrip, unproject(&vertices[0], vertices.size()), vertices.size());
 
 	Color avgColor = Color::blue * 0.5f + Color::white * 0.5f;
 	float avgPos = windowSize.y - (avg * SCALE_Y);

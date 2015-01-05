@@ -41,7 +41,7 @@ void drawLine2D(float x0, float y0, float x1, float y1, float z, Color col) {
 	v[1].rhw = v[0].rhw = 1.f;
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::LineList, v, 2);
+	EERIEDRAWPRIM(Renderer::LineList, unproject(v, 2), 2);
 }
 
 void drawLineRectangle(const Rectf & rect, float z, Color col) {
@@ -57,7 +57,7 @@ void drawLineRectangle(const Rectf & rect, float z, Color col) {
 	v[4].rhw = v[3].rhw = v[2].rhw = v[1].rhw = v[0].rhw = 1.f;
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::LineStrip, v, 5);
+	EERIEDRAWPRIM(Renderer::LineStrip, unproject(v, 5), 5);
 }
 
 void EERIEDrawFill2DRectDegrad(float x0, float y0, float x1, float y1, float z, Color cold, Color cole) {
@@ -73,7 +73,7 @@ void EERIEDrawFill2DRectDegrad(float x0, float y0, float x1, float y1, float z, 
 	v[3].rhw = v[2].rhw = v[1].rhw = v[0].rhw = 1.f;
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
 }
 
 void drawLineSphere(const Sphere & sphere, Color color) {
@@ -126,7 +126,7 @@ void drawLineSphere(const Sphere & sphere, Color color) {
 	}
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::LineStrip, &vertices[0], vertices.size());
+	EERIEDRAWPRIM(Renderer::LineStrip, unproject(&vertices[0], vertices.size()), vertices.size());
 }
 
 void drawLineCylinder(const Cylinder & cyl, Color col) {
@@ -172,7 +172,7 @@ void drawLine(const Vec3f & orgn, const Vec3f & dest, Color color1, Color color2
 	v[0].color = color1.toRGBA();
 	v[1].color = color2.toRGBA();
 	
-	EERIEDRAWPRIM(Renderer::LineList, v, 2);
+	EERIEDRAWPRIM(Renderer::LineList, unproject(v, 2), 2);
 }
 
 void drawLine(const Vec3f & orgn, const Vec3f & dest, Color color, float zbias) {
