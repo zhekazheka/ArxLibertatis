@@ -87,7 +87,7 @@ void drawLineSphere(const Sphere & sphere, Color color) {
 	if(rings < 7)
 		rings = 7;
 
-	std::vector<ProjectedVertex> vertices;
+	std::vector<TexturedVertex> vertices;
 
 	bool skip = false;
 
@@ -104,9 +104,8 @@ void drawLineSphere(const Sphere & sphere, Color color) {
 			pos *= sphere.radius;
 			pos += sphere.origin;
 			
-			ProjectedVertex out;
-			Vec3f temp = EE_RT(pos);
-			EE_P(&temp, &out);
+			TexturedVertex out;
+			EE_RTP(pos, &out);
 
 			if(skip) {
 				skip = false;
@@ -126,7 +125,7 @@ void drawLineSphere(const Sphere & sphere, Color color) {
 	}
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::LineStrip, unproject(&vertices[0], vertices.size()), vertices.size());
+	EERIEDRAWPRIM(Renderer::LineStrip, &vertices[0], vertices.size());
 }
 
 void drawLineCylinder(const Cylinder & cyl, Color col) {
