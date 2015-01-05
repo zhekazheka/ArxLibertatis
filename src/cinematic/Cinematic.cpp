@@ -300,10 +300,12 @@ static Color CalculLight(CinematicLight * light, Vec2f pos, Color col) {
 static Vec3f LocalPos;
 static float LocalSin, LocalCos;
 
-static void TransformLocalVertex(Vec3f * vbase, ProjectedVertex * d3dv) {
-	d3dv->p.x = vbase->x * LocalCos + vbase->y * LocalSin + LocalPos.x;
-	d3dv->p.y = vbase->x * -LocalSin + vbase->y * LocalCos + LocalPos.y;
-	d3dv->p.z = vbase->z + LocalPos.z;
+static Vec3f TransformLocalVertex(Vec3f * vbase) {
+	Vec3f p;
+	p.x = vbase->x * LocalCos + vbase->y * LocalSin + LocalPos.x;
+	p.y = vbase->x * -LocalSin + vbase->y * LocalCos + LocalPos.y;
+	p.z = vbase->z + LocalPos.z;
+	return p;
 }
 
 void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * light, Vec3f * posgrille, float angzgrille)
@@ -320,13 +322,12 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 		float * dream = DreamTable;
 
 		while(nb--) {
-			ProjectedVertex vtemp;
 			Vec3f t;
 			t.x = v->x + *dream++;
 			t.y = v->y + *dream++;
 			t.z = v->z;
-			TransformLocalVertex(&t, &vtemp);
-			EE_RTP(vtemp.p, d3dv);
+			Vec3f p = TransformLocalVertex(&t);
+			EE_RTP(p, d3dv);
 			d3dv->w = 1.f / d3dv->w;
 			d3dv->p *= d3dv->w;
 			if(light) {
@@ -343,9 +344,8 @@ void DrawGrille(CinematicGrid * grille, Color col, int fx, CinematicLight * ligh
 		}
 	} else {
 		while(nb--) {
-			ProjectedVertex vtemp;
-			TransformLocalVertex(v, &vtemp);
-			EE_RTP(vtemp.p, d3dv);
+			Vec3f p = TransformLocalVertex(v);
+			EE_RTP(p, d3dv);
 			d3dv->w = 1.f / d3dv->w;
 			d3dv->p *= d3dv->w;
 			if(light) {
