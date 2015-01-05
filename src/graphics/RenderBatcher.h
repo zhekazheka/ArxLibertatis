@@ -29,7 +29,7 @@
 #include <map>
 #include <vector>
 
-struct TexturedQuad {
+struct ProjectedQuad {
 	ProjectedVertex v[4];
 };
 
@@ -101,7 +101,7 @@ public:
 	~RenderBatcher();
 
 	void add(const RenderMaterial& mat, const TexturedVertex(&vertices)[3]);
-	void add(const RenderMaterial& mat, const TexturedQuad& sprite);
+	void add(const RenderMaterial& mat, const ProjectedQuad& sprite);
 
 	//! Render all batches
 	void render();

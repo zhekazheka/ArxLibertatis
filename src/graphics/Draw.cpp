@@ -71,7 +71,7 @@ static void SetTextureDrawPrim(TextureContainer * tex, ProjectedVertex * v,
 	EERIEDRAWPRIM(prim, v, 4);
 }
 
-static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz,
+static bool EERIECreateSprite(ProjectedQuad & sprite, const Vec3f & in, float siz,
                               Color color, float Zpos, float rot = 0) {
 	
 	ProjectedVertex out;
@@ -135,7 +135,7 @@ static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz
 }
 
 void EERIEAddSprite(const RenderMaterial & mat, const Vec3f & in, float siz, Color color, float Zpos, float rot) {
-	TexturedQuad s;
+	ProjectedQuad s;
 
 	if(EERIECreateSprite(s, in, siz, color, Zpos, rot)) {
 		RenderBatcher::getInstance().add(mat, s);
@@ -144,14 +144,14 @@ void EERIEAddSprite(const RenderMaterial & mat, const Vec3f & in, float siz, Col
 
 void EERIEDrawSprite(const Vec3f & in, float siz, TextureContainer * tex, Color color, float Zpos) {
 	
-	TexturedQuad s;
+	ProjectedQuad s;
 
 	if(EERIECreateSprite(s, in, siz, color, Zpos)) {
 		SetTextureDrawPrim(tex, s.v, Renderer::TriangleFan);
 	}
 }
 
-static void CreateBitmap(TexturedQuad & s, Rectf rect, float z, TextureContainer * tex,
+static void CreateBitmap(ProjectedQuad & s, Rectf rect, float z, TextureContainer * tex,
                          Color color, bool isRhw) {
 	
 	rect.move(-.5f, -.5f);
@@ -173,7 +173,7 @@ static void CreateBitmap(TexturedQuad & s, Rectf rect, float z, TextureContainer
 static void DrawBitmap(const Rectf & rect, float z, TextureContainer * tex,
                        Color color, bool isRhw) {
 	
-	TexturedQuad s;
+	ProjectedQuad s;
 	CreateBitmap(s, rect, z, tex, color, isRhw);
 	
 	GRenderer->SetTexture(0, tex);
@@ -189,7 +189,7 @@ static void DrawBitmap(const Rectf & rect, float z, TextureContainer * tex,
 }
 
 void EERIEAddBitmap(const RenderMaterial & mat, const Vec3f & p, float sx, float sy, TextureContainer * tex, Color color) {
-	TexturedQuad s;
+	ProjectedQuad s;
 	CreateBitmap(s, Rectf(Vec2f(p.x, p.y), sx, sy), p.z, tex, color, false);
 	RenderBatcher::getInstance().add(mat, s);
 }

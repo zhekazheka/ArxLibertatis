@@ -397,7 +397,7 @@ void CLightning::Render()
 		}
 		
 		{
-		TexturedQuad q;
+		ProjectedQuad q;
 		
 		q.v[0].color = Color(255, 255, 255, 255).toRGBA();
 		q.v[1].color = Color(0, 0, 90, 255).toRGBA();
@@ -416,7 +416,7 @@ void CLightning::Render()
 		}
 		
 		{
-		TexturedQuad q;
+		ProjectedQuad q;
 
 		q.v[0].color = Color(255, 255, 255, 255).toRGBA();
 		q.v[1].color = Color(0, 0, 90, 255).toRGBA();
@@ -437,7 +437,7 @@ void CLightning::Render()
 		zz *= glm::sin(glm::radians(fbeta));
 		
 		{
-		TexturedQuad q;
+		ProjectedQuad q;
 		
 		q.v[0].color = Color(255, 255, 255, 255).toRGBA();
 		q.v[1].color = Color(0, 0, 90, 255).toRGBA();
@@ -456,7 +456,7 @@ void CLightning::Render()
 		}
 		
 		{
-		TexturedQuad q;
+		ProjectedQuad q;
 		
 		q.v[0].color = Color(255, 255, 255, 255).toRGBA();
 		q.v[1].color = Color(0, 0, 90, 255).toRGBA();

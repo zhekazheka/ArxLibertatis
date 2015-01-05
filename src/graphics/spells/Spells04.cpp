@@ -120,7 +120,7 @@ void CBless::Render()
 	ColorRGBA color = Color::white.toRGB();
 	
 	{
-	TexturedQuad q;
+	ProjectedQuad q;
 	
 	q.v[0].color = color;
 	q.v[1].color = color;

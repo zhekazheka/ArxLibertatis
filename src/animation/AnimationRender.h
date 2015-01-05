@@ -54,7 +54,7 @@ struct ANIM_USE;
 class Entity;
 struct ProjectedVertex;
 struct RenderMaterial;
-struct TexturedQuad;
+struct ProjectedQuad;
 
 float Cedric_GetInvisibility(Entity *io);
 
@@ -63,7 +63,7 @@ void Cedric_ApplyLightingFirstPartRefactor(Entity *io);
 void PopAllTriangleList(bool clear = true);
 void PopAllTriangleListTransparency();
 
-void drawQuadRTP(const RenderMaterial & mat, TexturedQuad quat);
+void drawQuadRTP(const RenderMaterial & mat, ProjectedQuad quat);
 void drawTriangle(const RenderMaterial & mat, const ProjectedVertex * vertices);
 
 struct TransformInfo {
