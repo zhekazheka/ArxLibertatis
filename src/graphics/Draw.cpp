@@ -204,12 +204,12 @@ void EERIEDrawBitmap_uv(Rectf rect, float z, TextureContainer * tex,
 	u0 *= uv.x, u1 *= uv.x, v0 *= uv.y, v1 *= uv.y;
 
 	ColorRGBA col = color.toRGBA();
-	ProjectedVertex v[4];
-	v[0] = ProjectedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, Vec2f(u0, v0));
-	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, Vec2f(u1, v0));
-	v[2] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, Vec2f(u1, v1));
-	v[3] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, Vec2f(u0, v1));
-	SetTextureDrawPrim(tex, unproject(v, 4), Renderer::TriangleFan);
+	TexturedVertex v[4];
+	v[0] = TexturedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, Vec2f(u0, v0));
+	v[1] = TexturedVertex(Vec3f(rect.topRight(),    z), 1.f, col, Vec2f(u1, v0));
+	v[2] = TexturedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, Vec2f(u1, v1));
+	v[3] = TexturedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, Vec2f(u0, v1));
+	SetTextureDrawPrim(tex, v, Renderer::TriangleFan);
 }
 
 void EERIEDrawBitmapUVs(Rectf rect, float z, TextureContainer * tex,
