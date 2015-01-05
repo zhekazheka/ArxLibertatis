@@ -29,6 +29,10 @@
 #include <map>
 #include <vector>
 
+struct TexturedQuad {
+	TexturedVertex v[4];
+};
+
 struct ProjectedQuad {
 	ProjectedVertex v[4];
 };
