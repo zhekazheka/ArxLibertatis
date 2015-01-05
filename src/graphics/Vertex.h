@@ -44,9 +44,43 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #ifndef ARX_GRAPHICS_VERTEX_H
 #define ARX_GRAPHICS_VERTEX_H
 
+#include <stddef.h>
+#include <algorithm>
+
 #include "graphics/Color.h"
 #include "platform/Platform.h"
 #include "math/Vector.h"
+
+struct TexturedVertex {
+	
+	Vec3f p;
+	float w;
+	
+	ColorRGBA color;
+	
+	Vec2f uv;
+	
+	TexturedVertex()
+		: p(Vec3f_ZERO)
+		, w(1.f)
+		, color(0x00000000)
+		, uv(0.f, 0.f)
+	{}
+
+	TexturedVertex(const TexturedVertex & o)
+		: p(o.p)
+		, w(o.w)
+		, color(o.color)
+		, uv(o.uv)
+	{}
+
+	TexturedVertex(const Vec3f & _p, float _rhw, ColorRGBA _color, Vec2f _uv)
+		: p(_p)
+		, w(_rhw)
+		, color(_color)
+		, uv(_uv)
+	{}
+};
 
 struct ProjectedVertex {
 	
@@ -77,7 +111,25 @@ struct ProjectedVertex {
 		, color(_color)
 		, uv(_uv)
 	{}
+	
+	operator TexturedVertex() const {
+		TexturedVertex v;
+		float w = 1.f / rhw;
+		v.p = p * w;
+		v.w = w;
+		v.color = color;
+		v.uv = uv;
+		return v;
+	}
+	
 };
+
+inline TexturedVertex * unproject(const ProjectedVertex * vertices, size_t count) {
+	static std::vector<TexturedVertex> buffer;
+	buffer.resize(count);
+	std::copy_n(vertices, count, buffer.begin());
+	return &buffer.front();
+}
 
 template <class Vertex>
 class VertexBuffer;
