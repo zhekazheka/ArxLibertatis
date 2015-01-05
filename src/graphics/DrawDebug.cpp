@@ -125,15 +125,14 @@ static void drawDebugLights() {
 			continue;
 		}
 		
-		ProjectedVertex center;
+		TexturedVertex center;
 		EE_RTP(light->pos, &center);
+		if(center.w < 0.000001f) {
+			continue;
+		}
 		
-		const Rect mouseTestRect(
-		center.p.x - 20,
-		center.p.y - 20,
-		center.p.x + 20,
-		center.p.y + 20
-		);
+		Vec3f p = center.p / center.w;
+		const Rect mouseTestRect(p.x - 20, p.y - 20, p.x + 20, p.y + 20);
 		
 		if(mouseTestRect.contains(Vec2i(DANAEMouse))) {
 			
