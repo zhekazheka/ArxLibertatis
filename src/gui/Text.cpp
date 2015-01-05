@@ -451,14 +451,14 @@ void drawTextAt(Font * font, const Vec3f & pos, const std::string & text, Color 
                 const std::string & text2, Color color2) {
 	
 	// Project the 3d coordinates to get an on-screen position
-	ProjectedVertex out;
+	TexturedVertex out;
 	EE_RTP(pos, &out);
 	if(out.p.z < 0.f) {
 		// Don't draw text behind the camera!
 		return;
 	}
 	
-	Vec2f pos2d = Vec2f(out.p.x, out.p.y);
+	Vec2f pos2d = Vec2f(out.p.x, out.p.y) / out.w;
 	drawTextCentered(font, pos2d, text, color);
 	
 	if(!text2.empty()) {
