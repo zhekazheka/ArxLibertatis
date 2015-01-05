@@ -218,12 +218,12 @@ void EERIEDrawBitmapUVs(Rectf rect, float z, TextureContainer * tex,
 	rect.move(-.5f, -.5f);
 	
 	ColorRGBA col = color.toRGBA();
-	ProjectedVertex v[4];
-	v[0] = ProjectedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv0);
-	v[1] = ProjectedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv1);
-	v[2] = ProjectedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv2);
-	v[3] = ProjectedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
-	SetTextureDrawPrim(tex, unproject(v, 4), Renderer::TriangleStrip);
+	TexturedVertex v[4];
+	v[0] = TexturedVertex(Vec3f(rect.topLeft(),     z), 1.f, col, uv0);
+	v[1] = TexturedVertex(Vec3f(rect.topRight(),    z), 1.f, col, uv1);
+	v[2] = TexturedVertex(Vec3f(rect.bottomLeft(),  z), 1.f, col, uv2);
+	v[3] = TexturedVertex(Vec3f(rect.bottomRight(), z), 1.f, col, uv3);
+	SetTextureDrawPrim(tex, v, Renderer::TriangleStrip);
 }
 
 void EERIEDrawBitmap2DecalY(Rectf rect, float z, TextureContainer * tex, Color color, float _fDeltaY) {
