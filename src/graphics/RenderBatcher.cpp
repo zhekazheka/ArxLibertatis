@@ -32,7 +32,7 @@ RenderBatcher::~RenderBatcher() {
 	reset();
 }
 
-void RenderBatcher::add(const RenderMaterial& mat, const ProjectedVertex (&tri)[3]) {
+void RenderBatcher::add(const RenderMaterial& mat, const TexturedVertex (&tri)[3]) {
 	
 	VertexBatch & batch = m_BatchedSprites[mat];
 	

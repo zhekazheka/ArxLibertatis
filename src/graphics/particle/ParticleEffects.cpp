@@ -1175,7 +1175,9 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 				
 				RenderMaterial mat;
 				mat.setBlendType(RenderMaterial::Additive);
-				RenderBatcher::getInstance().add(mat, tv);
+				TexturedVertex unprojected[3];
+				std::copy_n(tv, 3, unprojected);
+				RenderBatcher::getInstance().add(mat, unprojected);
 				
 				if(!arxtime.is_paused()) {
 					part->oldpos = in;

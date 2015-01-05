@@ -100,7 +100,7 @@ public:
 	RenderBatcher();
 	~RenderBatcher();
 
-	void add(const RenderMaterial& mat, const ProjectedVertex(&vertices)[3]);
+	void add(const RenderMaterial& mat, const TexturedVertex(&vertices)[3]);
 	void add(const RenderMaterial& mat, const TexturedQuad& sprite);
 
 	//! Render all batches

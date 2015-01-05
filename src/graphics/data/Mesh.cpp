@@ -1366,7 +1366,9 @@ void Draw3DObject(EERIE_3DOBJ *eobj, const Anglef & angle, const Vec3f & pos, co
 		else
 			mat.setCulling(Renderer::CullCW);
 
-		RenderBatcher::getInstance().add(mat, vert_list);
+		TexturedVertex unprojected[3];
+		std::copy_n(vert_list, 3, unprojected);
+		RenderBatcher::getInstance().add(mat, unprojected);
 	}
 }
 
