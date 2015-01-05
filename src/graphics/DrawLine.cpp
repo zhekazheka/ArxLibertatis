@@ -62,7 +62,7 @@ void drawLineRectangle(const Rectf & rect, float z, Color col) {
 
 void EERIEDrawFill2DRectDegrad(float x0, float y0, float x1, float y1, float z, Color cold, Color cole) {
 
-	ProjectedVertex v[4];
+	TexturedVertex v[4];
 	v[0].p.x = v[2].p.x = x0;
 	v[0].p.y = v[1].p.y = y0;
 	v[1].p.x = v[3].p.x = x1;
@@ -70,10 +70,10 @@ void EERIEDrawFill2DRectDegrad(float x0, float y0, float x1, float y1, float z, 
 	v[0].color = v[1].color = cold.toRGBA();
 	v[2].color = v[3].color = cole.toRGBA();
 	v[0].p.z = v[1].p.z = v[2].p.z = v[3].p.z = z;
-	v[3].rhw = v[2].rhw = v[1].rhw = v[0].rhw = 1.f;
+	v[3].w = v[2].w = v[1].w = v[0].w = 1.f;
 
 	GRenderer->ResetTexture(0);
-	EERIEDRAWPRIM(Renderer::TriangleStrip, unproject(v, 4), 4);
+	EERIEDRAWPRIM(Renderer::TriangleStrip, v, 4);
 }
 
 void drawLineSphere(const Sphere & sphere, Color color) {
