@@ -88,7 +88,7 @@ u32 RenderBatcher::getMemoryUsed() const {
 	u32 memoryUsed = 0;
 
 	for(Batches::const_iterator it = m_BatchedSprites.begin(); it != m_BatchedSprites.end(); ++it) {
-		memoryUsed += it->second.capacity() * sizeof(ProjectedVertex);
+		memoryUsed += it->second.capacity() * sizeof(TexturedVertex);
 	}
 
 	return memoryUsed;
