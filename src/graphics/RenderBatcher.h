@@ -33,10 +33,6 @@ struct TexturedQuad {
 	TexturedVertex v[4];
 };
 
-struct ProjectedQuad {
-	ProjectedVertex v[4];
-};
-
 struct RenderMaterial {
 
 	enum BlendType {
