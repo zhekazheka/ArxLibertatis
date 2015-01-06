@@ -165,12 +165,6 @@ void AddFlare(const Vec2s & pos, float sm, short typ, Entity * io, bool bookDraw
 	fl->pos.y = float(pos.y) - rnd() * 4.f - 50.f;
 
 	if(!bookDraw) {
-		EERIE_CAMERA ka = subj;
-		ka.angle = Anglef(360.f, 360.f, 360.f) - ka.angle;
-		EERIE_CAMERA * oldcam = ACTIVECAM;
-		SetActiveCamera(&ka);
-		PrepareCamera(&ka, g_size);
-
 		float vx = -(fl->pos.x - subj.center.x) * 0.2173913f;
 		float vy = (fl->pos.y - subj.center.y) * 0.1515151515151515f;
 		if(io) {
@@ -181,17 +175,12 @@ void AddFlare(const Vec2s & pos, float sm, short typ, Entity * io, bool bookDraw
 			fl->p.x = float(pos.x - (g_size.width() / 2)) * 150.f / float(g_size.width());
 			fl->p.y = float(pos.y - (g_size.height() / 2)) * 150.f / float(g_size.width());
 			fl->p.z = 75.f;
-			ka = *oldcam;
-			SetActiveCamera(&ka);
-			PrepareCamera(&ka, g_size);
-			float temp = (fl->p.y * -ka.orgTrans.xsin) + (fl->p.z * ka.orgTrans.xcos);
-			fl->p.y = (fl->p.y * ka.orgTrans.xcos) - (-fl->p.z * ka.orgTrans.xsin);
-			fl->p.z = (temp * ka.orgTrans.ycos) - (-fl->p.x * ka.orgTrans.ysin);
-			fl->p.x = (temp * -ka.orgTrans.ysin) + (fl->p.x * ka.orgTrans.ycos);
-			fl->p += oldcam->orgTrans.pos;
+			float temp = (fl->p.y * -ACTIVECAM->orgTrans.xsin) + (fl->p.z * ACTIVECAM->orgTrans.xcos);
+			fl->p.y = (fl->p.y * ACTIVECAM->orgTrans.xcos) - (-fl->p.z * ACTIVECAM->orgTrans.xsin);
+			fl->p.z = (temp * ACTIVECAM->orgTrans.ycos) - (-fl->p.x * ACTIVECAM->orgTrans.ysin);
+			fl->p.x = (temp * -ACTIVECAM->orgTrans.ysin) + (fl->p.x * ACTIVECAM->orgTrans.ycos);
+			fl->p += ACTIVECAM->orgTrans.pos;
 		}
-		SetActiveCamera(oldcam);
-		PrepareCamera(oldcam, g_size);
 	} else {
 		fl->p = Vec3f(fl->pos.x, fl->pos.y, 0.001f);
 	}
