@@ -669,21 +669,17 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 		if(_ffr[first] > 70.f && _ffr[second] > 60.f) {
 			TexturedVertex vert[4];
 			
-			float first_rhw = 1.f / tvList[first].w;
-			Vec3f first_p = tvList[first].p * first_rhw;
-			float second_rhw = 1.f / tvList[second].w;
-			Vec3f second_p = tvList[second].p * second_rhw;
-			float third_rhw = 1.f / tvList[third].w;
-			Vec3f third_p = tvList[third].p * third_rhw;
-
+			Vec3f first_p = tvList[first].p * (1.f / tvList[first].w);
+			Vec3f second_p = tvList[second].p * (1.f / tvList[second].w);
+			Vec3f third_p = tvList[third].p * (1.f / tvList[third].w);
 			vert[0].p = first_p;
-			vert[0].w = first_rhw;
+			vert[0].w = tvList[first].w;
 			vert[1].p = first_p;
-			vert[1].w = first_rhw;
+			vert[1].w = tvList[first].w * (1.f / 0.8f);
 			vert[2].p = second_p;
-			vert[2].w = second_rhw;
+			vert[2].w = tvList[second].w * (1.f / 0.8f);
 			vert[3].p = second_p;
-			vert[3].w = second_rhw;
+			vert[3].w = tvList[second].w;
 			vert[0].color = tvList[first].color;
 			vert[1].color = Color::black.toRGB();
 			vert[2].color = Color::black.toRGB();
@@ -718,15 +714,12 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 
 			vert[0].p.z += 0.0001f;
 			vert[3].p.z += 0.0001f;
-			vert[1].w *= .8f;
-			vert[2].w *= .8f;
 
 			vert[2].p.x += (vect2.x + 0.2f - rnd() * 0.1f) * siz;
 			vert[2].p.y += (vect2.y + 0.2f - rnd() * 0.1f) * siz;
 			
 			for(size_t i = 0; i < 4; i++) {
 				vert[i].uv = Vec2f_ZERO;
-				vert[i].w = 1.f / vert[i].w;
 				vert[i].p *= vert[i].w;
 			}
 			
@@ -1028,21 +1021,17 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 		if(_ffr[first] > 150.f && _ffr[second] > 110.f) {
 			TexturedVertex vert[4];
 			
-			float first_rhw = 1.f / tvList[first].w;
-			Vec3f first_p = tvList[first].p * first_rhw;
-			float second_rhw = 1.f / tvList[second].w;
-			Vec3f second_p = tvList[second].p * second_rhw;
-			float third_rhw = 1.f / tvList[third].w;
-			Vec3f third_p = tvList[third].p * third_rhw;
-
+			Vec3f first_p = tvList[first].p * (1.f / tvList[first].w);
+			Vec3f second_p = tvList[second].p * (1.f / tvList[second].w);
+			Vec3f third_p = tvList[third].p * (1.f / tvList[third].w);
 			vert[0].p = first_p;
-			vert[0].w = first_rhw;
+			vert[0].w = tvList[first].w * (1.f / 0.98f);
 			vert[1].p = first_p;
-			vert[1].w = first_rhw;
+			vert[1].w = tvList[first].w * (1.f / 0.98f);
 			vert[2].p = second_p;
-			vert[2].w = second_rhw;
+			vert[2].w = tvList[second].w * (1.f / 0.98f);
 			vert[3].p = second_p;
-			vert[3].w = second_rhw;
+			vert[3].w = tvList[second].w * (1.f / 0.98f);
 			vert[0].color = colors[first];
 			vert[1].color = Color::black.toRGB();
 			vert[2].color = Color::black.toRGB();
@@ -1100,7 +1089,6 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			
 			for(size_t i = 0; i < 4; i++) {
 				vert[i].uv = Vec2f_ZERO;
-				vert[i].w = 1.f / (vert[i].w * 0.98f);
 				vert[i].p *= vert[i].w;
 			}
 
