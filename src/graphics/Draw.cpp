@@ -74,10 +74,14 @@ static void SetTextureDrawPrim(TextureContainer * tex, TexturedVertex * v,
 static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz,
                               Color color, float Zpos, float rot = 0) {
 	
-	ProjectedVertex out;
+	TexturedVertex out;
 	EE_RTP(in, &out);
-	out.rhw *= 3000.f;
-
+	if(out.w < 0.000001f) {
+		return false;
+	}
+	
+	out.p /= out.w;
+	
 	if(   out.p.z > 0.f
 	   && out.p.z < 1000.f
 	   && out.p.x > -1000.f
@@ -88,10 +92,11 @@ static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz
 		float use_focal=BASICFOCAL*g_sizeRatio.x;
 		float t;
 
+		float rhw = 3000.f / out.w;
 		if(siz < 0) {
 			t = -siz;
 		} else {
-			t = siz * ((out.rhw-1.f)*use_focal*0.001f);
+			t = siz * ((rhw-1.f)*use_focal*0.001f);
 
 			if(t <= 0.f)
 				t = 0.00000001f;
@@ -99,14 +104,14 @@ static bool EERIECreateSprite(TexturedQuad & sprite, const Vec3f & in, float siz
 		
 		if(Zpos <= 1.f) {
 			out.p.z = Zpos;
-			out.rhw = 1.f - out.p.z;
+			rhw = 1.f - out.p.z;
 		} else {
-			out.rhw *= (1.f/3000.f);
+			rhw *= (1.f/3000.f);
 		}
 		
 		ColorRGBA col = color.toRGBA();
 		
-		float w = 1.f / out.rhw;
+		float w = 1.f / rhw;
 		sprite.v[0] = TexturedVertex(Vec3f(), w, col, Vec2f_ZERO);
 		sprite.v[1] = TexturedVertex(Vec3f(), w, col, Vec2f_X_AXIS);
 		sprite.v[2] = TexturedVertex(Vec3f(), w, col, Vec2f(1.f, 1.f));
