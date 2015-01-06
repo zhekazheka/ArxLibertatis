@@ -960,7 +960,7 @@ static void PrepareAnimatedObjectHalo(HaloInfo & haloInfo, const Vec3f & pos,
 
 static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * paf,
                                   float invisibility, EERIE_3DOBJ * eobj, Entity * io,
-                                  ProjectedVertex * tvList) {
+                                  const TexturedVertex * tvList) {
 	
 	float & ddist = haloInfo.ddist;
 	float & MAX_ZEDE = haloInfo.MAX_ZEDE;
@@ -1030,16 +1030,24 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 		}
 
 		if(_ffr[first] > 150.f && _ffr[second] > 110.f) {
-			ProjectedVertex vert[4];
+			TexturedVertex vert[4];
+			
+			float first_rhw = 1.f / tvList[first].w;
+			Vec3f first_p = tvList[first].p * first_rhw;
+			float second_rhw = 1.f / tvList[second].w;
+			Vec3f second_p = tvList[second].p * second_rhw;
+			float third_rhw = 1.f / tvList[third].w;
+			Vec3f third_p = tvList[third].p * third_rhw;
 
-			vert[0] = tvList[first];
-			vert[1] = tvList[first];
-			vert[2] = tvList[second];
-			vert[3] = tvList[second];
-
+			vert[0].p = first_p;
+			vert[0].w = first_rhw;
+			vert[1].p = first_p;
+			vert[1].w = first_rhw;
+			vert[2].p = second_p;
+			vert[2].w = second_rhw;
+			vert[3].p = second_p;
+			vert[3].w = second_rhw;
 			vert[0].color = colors[first];
-			vert[1].color = colors[first];
-			vert[2].color = colors[second];
 			vert[3].color = colors[second];
 
 			float siz = ddist * (curhalo->radius * (std::sin(arxtime.get_frame_time() * .01f) * .1f + 1.f)) * .6f;
@@ -1048,8 +1056,8 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 				siz *= 1.5f;
 
 			Vec3f vect1;
-			vect1.x = tvList[first].p.x - tvList[third].p.x;
-			vect1.y = tvList[first].p.y - tvList[third].p.y;
+			vect1.x = first_p.x - third_p.x;
+			vect1.y = first_p.y - third_p.y;
 			float len1 = 2.f / ffsqrt(vect1.x * vect1.x + vect1.y * vect1.y);
 
 			if(vect1.x < 0.f)
@@ -1059,8 +1067,8 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			vect1.y *= len1;
 
 			Vec3f vect2;
-			vect2.x = tvList[second].p.x - tvList[third].p.x;
-			vect2.y = tvList[second].p.y - tvList[third].p.y;
+			vect2.x = second_p.x - third_p.x;
+			vect2.y = second_p.y - third_p.y;
 			float len2 = 1.f / ffsqrt(vect2.x * vect2.x + vect2.y * vect2.y);
 
 			if(vect2.x < 0.f)
@@ -1074,8 +1082,8 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			vert[1].color = Color(0, 0, 0, 255).toRGBA();
 
 			float valll;
-			valll = 0.005f + (glm::abs(tvList[first].p.z) - glm::abs(tvList[third].p.z))
-						   + (glm::abs(tvList[second].p.z) - glm::abs(tvList[third].p.z));
+			valll = 0.005f + (glm::abs(first_p.z) - glm::abs(third_p.z))
+						   + (glm::abs(second_p.z) - glm::abs(third_p.z));
 			valll = 0.0001f + valll * ( 1.0f / 10 );
 
 			if(valll < 0.f)
@@ -1085,11 +1093,7 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			vert[2].p.z	+= valll;
 
 			vert[0].p.z	+= 0.0001f;
-			vert[3].p.z	+= 0.0001f;//*( 1.0f / 2 );
-			vert[1].rhw	*= .98f;
-			vert[2].rhw	*= .98f;
-			vert[0].rhw	*= .98f;
-			vert[3].rhw	*= .98f;
+			vert[3].p.z	+= 0.0001f;
 
 			vert[2].p.x += (vect2.x + 0.2f - rnd() * 0.1f) * siz;
 			vert[2].p.y += (vect2.y + 0.2f - rnd() * 0.1f) * siz;
@@ -1101,11 +1105,14 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 				vert[2].color = Color(0, 0, 0, 0).toRGBA();
 			else
 				vert[2].color = Color(0, 0, 0, 255).toRGBA();
+			
+			for(size_t i = 0; i < 4; i++) {
+				vert[i].uv = Vec2f_ZERO;
+				vert[i].w = 1.f / (vert[i].w * 0.98f);
+				vert[i].p *= vert[i].w;
+			}
 
-			TexturedVertex v[4];
-			// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
-			std::copy_n(vert, 4, v);
-			Halo_AddVertices(v);
+			Halo_AddVertices(vert);
 		}
 	}
 }
@@ -1168,12 +1175,12 @@ static void Cedric_RenderObject(EERIE_3DOBJ * eobj, Skeleton * obj, Entity * io,
 			vertices[0].color = vertices[1].color = vertices[2].color = Color::gray(fTransp).toRGB();
 		}
 
-		if(haloInfo.need_halo) {
-			AddAnimatedObjectHalo(haloInfo, face.vid, invisibility, eobj, io, vertices);
-		}
-
 		// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
 		std::copy_n(vertices, 3, tvList);
+
+		if(haloInfo.need_halo) {
+			AddAnimatedObjectHalo(haloInfo, face.vid, invisibility, eobj, io, tvList);
+		}
 		
 		if(glow) {
 			TexturedVertex * tv2 = PushVertexInTable(&TexSpecialColor, TextureContainer::Opaque);
