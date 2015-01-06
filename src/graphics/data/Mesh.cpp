@@ -2122,12 +2122,7 @@ static void EERIEAddPolyToBackground(ProjectedVertex * vert2, TextureContainer *
 	EERIEPOLY ep;
 	
 	memset(ep.tv, 0, sizeof(ProjectedVertex) * 3);
-	
-	if(vert2) {
-		memcpy(ep.v, vert2, sizeof(ProjectedVertex) * 3);
-	} else {
-		memset(ep.tv, 0, sizeof(ProjectedVertex) * 3);
-	}
+	memcpy(ep.v, vert2, sizeof(ProjectedVertex) * 3);
 	
 	ep.type = render;
 	ep.tex = tex;
