@@ -605,7 +605,7 @@ static bool CullFace(const EERIE_3DOBJ * eobj, const EERIE_FACE & face) {
 }
 
 static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
-                               const Entity * io, ProjectedVertex * tvList,
+                               const Entity * io, TexturedVertex * tvList,
                                const EERIE_3DOBJ * eobj) {
 	
 	float mdist=ACTIVECAM->cdepth;
@@ -667,18 +667,31 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 		}
 
 		if(_ffr[first] > 70.f && _ffr[second] > 60.f) {
-			ProjectedVertex vert[4];
+			TexturedVertex vert[4];
+			
+			float first_rhw = 1.f / tvList[first].w;
+			Vec3f first_p = tvList[first].p * first_rhw;
+			float second_rhw = 1.f / tvList[second].w;
+			Vec3f second_p = tvList[second].p * second_rhw;
+			float third_rhw = 1.f / tvList[third].w;
+			Vec3f third_p = tvList[third].p * third_rhw;
 
-			vert[0] = tvList[first];
-			vert[1] = tvList[first];
-			vert[2] = tvList[second];
-			vert[3] = tvList[second];
+			vert[0].p = first_p;
+			vert[0].w = first_rhw;
+			vert[1].p = first_p;
+			vert[1].w = first_rhw;
+			vert[2].p = second_p;
+			vert[2].w = second_rhw;
+			vert[3].p = second_p;
+			vert[3].w = second_rhw;
+			vert[0].color = tvList[first].color;
+			vert[3].color = tvList[second].color;
 
 			float siz = ddist * (io->halo.radius * 1.5f * (std::sin(arxtime.get_frame_time() * .01f) * .1f + .7f)) * .6f;
 
-			Vec3f vect1;
-			vect1.x = tvList[first].p.x - tvList[third].p.x;
-			vect1.y = tvList[first].p.y - tvList[third].p.y;
+			Vec2f vect1;
+			vect1.x = first_p.x - third_p.x;
+			vect1.y = first_p.y - third_p.y;
 			float len1 = 1.f / ffsqrt(vect1.x * vect1.x + vect1.y * vect1.y);
 
 			if(vect1.x < 0.f)
@@ -687,9 +700,9 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 			vect1.x *= len1;
 			vect1.y *= len1;
 
-			Vec3f vect2;
-			vect2.x = tvList[second].p.x - tvList[third].p.x;
-			vect2.y = tvList[second].p.y - tvList[third].p.y;
+			Vec2f vect2;
+			vect2.x = second_p.x - third_p.x;
+			vect2.y = second_p.y - third_p.y;
 			float len2 = 1.f / ffsqrt(vect2.x * vect2.x + vect2.y * vect2.y);
 
 			if(vect2.x < 0.f)
@@ -704,8 +717,8 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 
 			vert[0].p.z += 0.0001f;
 			vert[3].p.z += 0.0001f;
-			vert[1].rhw *= .8f;
-			vert[2].rhw *= .8f;
+			vert[1].w *= .8f;
+			vert[2].w *= .8f;
 
 			vert[2].p.x += (vect2.x + 0.2f - rnd() * 0.1f) * siz;
 			vert[2].p.y += (vect2.y + 0.2f - rnd() * 0.1f) * siz;
@@ -714,11 +727,14 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 				vert[2].color = Color(0, 0, 0, 0).toRGBA();
 			else
 				vert[2].color = Color(0, 0, 0, 255).toRGBA();
-
-			TexturedVertex v[4];
-			// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
-			std::copy_n(vert, 4, v);
-			Halo_AddVertices(v);
+			
+			for(size_t i = 0; i < 4; i++) {
+				vert[i].uv = Vec2f_ZERO;
+				vert[i].w = 1.f / vert[i].w;
+				vert[i].p *= vert[i].w;
+			}
+			
+			Halo_AddVertices(vert);
 		}
 	}
 }
@@ -818,14 +834,14 @@ void DrawEERIEInter_Render(EERIE_3DOBJ *eobj, const TransformInfo &t, Entity *io
 				vertices[n].color = Color::gray(fTransp).toRGB();
 			}
 		}
-
-		// HALO HANDLING START
-		if(io && (io->halo.flags & HALO_ACTIVE)) {
-			AddFixedObjectHalo(face, t, io, vertices, eobj);
-		}
 		
 		// TODO unproject: implicit unproject ProjectedVertex -> TexturedVertex
 		std::copy_n(vertices, 3, tvList);
+
+		// HALO HANDLING START
+		if(io && (io->halo.flags & HALO_ACTIVE)) {
+			AddFixedObjectHalo(face, t, io, tvList, eobj);
+		}
 	}
 }
 
