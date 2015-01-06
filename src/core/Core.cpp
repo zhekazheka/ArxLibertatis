@@ -556,8 +556,6 @@ void FirstFrameHandling() {
 		ARX_SOUND_PlaySFX(SND_TORCH_LOOP, NULL, 1.0F, ARX_SOUND_PLAY_LOOPED);
 	}
 	
-	MagicFlareSetCamera(&subj);
-	
 	lastteleport = player.basePosition();
 	subj.orgTrans.pos = moveto = player.pos;
 
