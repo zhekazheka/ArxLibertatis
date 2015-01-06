@@ -685,6 +685,8 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 			vert[3].p = second_p;
 			vert[3].w = second_rhw;
 			vert[0].color = tvList[first].color;
+			vert[1].color = Color::black.toRGB();
+			vert[2].color = Color::black.toRGB();
 			vert[3].color = tvList[second].color;
 
 			float siz = ddist * (io->halo.radius * 1.5f * (std::sin(arxtime.get_frame_time() * .01f) * .1f + .7f)) * .6f;
@@ -713,7 +715,6 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 
 			vert[1].p.x += (vect1.x + 0.2f - rnd() * 0.1f) * siz;
 			vert[1].p.y += (vect1.y + 0.2f - rnd() * 0.1f) * siz;
-			vert[1].color = Color(0, 0, 0, 255).toRGBA();
 
 			vert[0].p.z += 0.0001f;
 			vert[3].p.z += 0.0001f;
@@ -722,11 +723,6 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 
 			vert[2].p.x += (vect2.x + 0.2f - rnd() * 0.1f) * siz;
 			vert[2].p.y += (vect2.y + 0.2f - rnd() * 0.1f) * siz;
-
-			if(io->halo.flags & HALO_NEGATIVE)
-				vert[2].color = Color(0, 0, 0, 0).toRGBA();
-			else
-				vert[2].color = Color(0, 0, 0, 255).toRGBA();
 			
 			for(size_t i = 0; i < 4; i++) {
 				vert[i].uv = Vec2f_ZERO;
@@ -734,7 +730,7 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 				vert[i].p *= vert[i].w;
 			}
 			
-			Halo_AddVertices(vert);
+			Halo_AddVertices(vert, io->halo.flags & HALO_NEGATIVE);
 		}
 	}
 }
@@ -1048,6 +1044,8 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			vert[3].p = second_p;
 			vert[3].w = second_rhw;
 			vert[0].color = colors[first];
+			vert[1].color = Color::black.toRGB();
+			vert[2].color = Color::black.toRGB();
 			vert[3].color = colors[second];
 
 			float siz = ddist * (curhalo->radius * (std::sin(arxtime.get_frame_time() * .01f) * .1f + 1.f)) * .6f;
@@ -1079,7 +1077,6 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 
 			vert[1].p.x += (vect1.x + 0.2f - rnd() * 0.1f) * siz;
 			vert[1].p.y += (vect1.y + 0.2f - rnd() * 0.1f) * siz;
-			vert[1].color = Color(0, 0, 0, 255).toRGBA();
 
 			float valll;
 			valll = 0.005f + (glm::abs(first_p.z) - glm::abs(third_p.z))
@@ -1100,11 +1097,6 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 
 			vert[1].p.z = (vert[1].p.z + MAX_ZEDE) * ( 1.0f / 2 );
 			vert[2].p.z = (vert[2].p.z + MAX_ZEDE) * ( 1.0f / 2 );
-
-			if(curhalo->flags & HALO_NEGATIVE)
-				vert[2].color = Color(0, 0, 0, 0).toRGBA();
-			else
-				vert[2].color = Color(0, 0, 0, 255).toRGBA();
 			
 			for(size_t i = 0; i < 4; i++) {
 				vert[i].uv = Vec2f_ZERO;
@@ -1112,7 +1104,7 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 				vert[i].p *= vert[i].w;
 			}
 
-			Halo_AddVertices(vert);
+			Halo_AddVertices(vert, curhalo->flags & HALO_NEGATIVE);
 		}
 	}
 }
