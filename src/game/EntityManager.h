@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/iterator/filter_iterator.hpp>
+
 #include "game/EntityId.h"
 #include "game/GameTypes.h"
 
@@ -78,11 +80,19 @@ public:
 	 */
 	size_t size() const { return entries.size(); }
 	
-	typedef Entries::const_iterator iterator;
-	typedef Entries::const_iterator const_iterator;
+	struct ValidEntryFilter {
+		bool operator()(const Entity * c){
+			return c != NULL;
+		}
+	};
 	
-	iterator begin() const { return entries.begin(); }
-	iterator end() const { return entries.end(); }
+	typedef boost::filter_iterator<ValidEntryFilter, Entries::iterator> iterator;
+	typedef boost::filter_iterator<ValidEntryFilter, Entries::const_iterator> const_iterator;
+	
+	iterator begin() { return iterator(entries.begin(), entries.end()); }
+	iterator end() { return iterator(entries.end(), entries.end()); }
+	const_iterator begin() const { return const_iterator(entries.begin(), entries.end()); }
+	const_iterator end() const { return const_iterator(entries.end(), entries.end()); }
 	
 	typedef bool (*AutocompleteHandler)(void * context, const std::string & suggestion);
 	void autocomplete(const std::string & prefix, AutocompleteHandler handler, void * context);

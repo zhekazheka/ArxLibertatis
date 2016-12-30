@@ -21,6 +21,8 @@
 
 #include <sstream>
 
+#include <boost/foreach.hpp>
+
 #include "ai/Paths.h"
 
 #include "animation/AnimationRender.h"
@@ -309,9 +311,9 @@ static void drawDebugPathFinding() {
 	}
 	
 	// Highlight active paths
-	for(size_t i = 1; i < entities.size(); i++) {
-		const EntityHandle handle = EntityHandle(i);
-		const Entity * entity = entities[handle];
+	BOOST_FOREACH(const Entity * entity, entities) {
+		
+		arx_assert(entity);
 		
 		if(!entity || !(entity->ioflags & IO_NPC)) {
 			continue;
