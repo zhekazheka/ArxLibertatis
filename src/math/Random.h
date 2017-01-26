@@ -22,6 +22,7 @@
 
 #include <limits>
 
+#include <boost/atomic.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
@@ -70,6 +71,17 @@ private:
 	typedef boost::random::mt19937 Generator;
 	
 	static Generator rng;
+	
+	typedef enum {Locked, Unlocked} LockState;
+	static boost::atomic<LockState> lockState;
+	static void lock() {
+		while(lockState.exchange(Locked, boost::memory_order_acquire) == Locked) {
+			// wait
+		}
+	}
+	static void unlock() {
+		lockState.store(Unlocked, boost::memory_order_release);
+	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,7 +90,10 @@ template <class IntType>
 IntType Random::get(IntType min, IntType max) {
 	ARX_STATIC_ASSERT(boost::is_integral<IntType>::value, "get must be called with ints");
 	
-	return typename boost::random::uniform_int_distribution<IntType>(min, max)(rng);
+	lock();
+	IntType result = typename boost::random::uniform_int_distribution<IntType>(min, max)(rng);
+	unlock();
+	return result;
 }
 
 template <class IntType>
@@ -98,7 +113,10 @@ template <class RealType>
 RealType Random::getf(RealType min, RealType max) {
 	ARX_STATIC_ASSERT(boost::is_float<RealType>::value, "getf must be called with floats");
 	
-	return typename boost::random::uniform_real_distribution<RealType>(min, max)(rng);
+	lock();
+	RealType result = typename boost::random::uniform_real_distribution<RealType>(min, max)(rng);
+	unlock();
+	return result;
 }
 
 template <class RealType>
