@@ -23,6 +23,8 @@
 
 Random::Generator Random::rng;
 
+boost::atomic<Random::LockState> Random::lockState(Random::Unlocked);
+
 void Random::seed() {
 	rng.seed((size_t)std::time(NULL));
 }
