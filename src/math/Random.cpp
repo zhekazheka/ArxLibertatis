@@ -25,8 +25,16 @@ Random g_rand;
 
 void Random::seed() {
 	rng.seed((size_t)std::time(NULL));
+	
+#ifdef ARX_RANDOM_DEBUG
+	m_dbg_threadId = Thread::getCurrentThreadId();
+#endif
 }
 
 void Random::seed(unsigned int seedVal) {
 	rng.seed(seedVal);
+	
+#ifdef ARX_RANDOM_DEBUG
+	m_dbg_threadId = Thread::getCurrentThreadId();
+#endif
 }

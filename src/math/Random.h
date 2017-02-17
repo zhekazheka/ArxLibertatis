@@ -29,6 +29,12 @@
 
 #include "platform/Platform.h"
 
+//#define ARX_RANDOM_DEBUG
+
+#ifdef ARX_RANDOM_DEBUG
+	#include "platform/Thread.h"
+#endif
+
 /*!
  * Random number generator.
  */
@@ -70,6 +76,10 @@ private:
 	typedef boost::random::mt19937 Generator;
 	
 	Generator rng;
+	
+#ifdef ARX_RANDOM_DEBUG
+	thread_id_type m_dbg_threadId;
+#endif
 };
 
 extern Random g_rand;
@@ -79,6 +89,10 @@ extern Random g_rand;
 template <class IntType>
 IntType Random::get(IntType min, IntType max) {
 	ARX_STATIC_ASSERT(boost::is_integral<IntType>::value, "get must be called with ints");
+	
+#ifdef ARX_RANDOM_DEBUG
+	arx_assert(m_dbg_threadId == Thread::getCurrentThreadId());
+#endif
 	
 	return typename boost::random::uniform_int_distribution<IntType>(min, max)(rng);
 }
@@ -99,6 +113,10 @@ inline unsigned int Random::getu(unsigned int min, unsigned int max) {
 template <class RealType>
 RealType Random::getf(RealType min, RealType max) {
 	ARX_STATIC_ASSERT(boost::is_float<RealType>::value, "getf must be called with floats");
+	
+#ifdef ARX_RANDOM_DEBUG
+	arx_assert(m_dbg_threadId == Thread::getCurrentThreadId());
+#endif
 	
 	return typename boost::random::uniform_real_distribution<RealType>(min, max)(rng);
 }
