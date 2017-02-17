@@ -48,7 +48,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "game/Player.h"
 #include "graphics/Math.h"
 #include "graphics/RenderBatcher.h"
-#include "math/RandomVector.h"
 #include "scene/Object.h"
 
 
@@ -141,7 +140,7 @@ void Split(Vec3f * v, int a, int b, float yo, float fMul)
 
 		if ((i != a) && (i != b))
 		{
-			v[i] = (v[a] + v[b]) * 0.5f + arx::randomVec(-yo, yo);
+			v[i] = (v[a] + v[b]) * 0.5f + g_rand.randomVec(-yo, yo);
 			Split(v, a, i, yo * fMul);
 			Split(v, i, b, yo * fMul);
 		}

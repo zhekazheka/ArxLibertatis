@@ -35,7 +35,6 @@
 #include "game/spell/Cheat.h"
 #include "graphics/RenderBatcher.h"
 #include "graphics/particle/ParticleEffects.h"
-#include "math/RandomVector.h"
 #include "physics/Collisions.h"
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
@@ -246,7 +245,7 @@ void SummonCreatureSpell::Update() {
 				
 				for(long j = 0; j < 3; j++) {
 					Vec3f pos = m_fissure.m_eSrc;
-					pos += arx::randomVec3f() * 100.f;
+					pos += g_rand.randomVec3f() * 100.f;
 					pos += Vec3f(-50.f, 50.f, -50.f);
 					
 					MakeCoolFx(pos);
@@ -380,7 +379,7 @@ void NegateMagicSpell::Update() {
 				break;
 			}
 			
-			pd->ov = stitepos + arx::randomOffsetXZ(150.f);
+			pd->ov = stitepos + g_rand.randomOffsetXZ(150.f);
 			pd->move = Vec3f(0.f, g_rand.getf(-3.f, 0.f), 0.f);
 			pd->siz = 0.3f;
 			pd->tolive = g_rand.getu(2000, 4000);

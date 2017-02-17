@@ -77,7 +77,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "graphics/effects/Halo.h"
 
 #include "math/Angle.h"
-#include "math/RandomVector.h"
 #include "math/Vector.h"
 
 #include "physics/Collisions.h"
@@ -355,7 +354,7 @@ void Cedric_ApplyLightingFirstPartRefactor(Entity *io) {
 
 							ARX_PARTICLES_Spawn_Splat(sp.origin, 200.f, io->_npcdata->blood_color);
 
-							sp.origin = io->pos + arx::randomVec3f() * Vec3f(200.f, 20.f,200.f) - Vec3f(100.f, 10.f, 100.f);
+							sp.origin = io->pos + g_rand.randomVec3f() * Vec3f(200.f, 20.f,200.f) - Vec3f(100.f, 10.f, 100.f);
 							sp.radius = g_rand.getf(100.f, 200.f);
 						}
 						

@@ -61,7 +61,6 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "graphics/particle/ParticleEffects.h"
 
 #include "math/Random.h"
-#include "math/RandomVector.h"
 #include "math/Vector.h"
 
 #include "platform/profiler/Profiler.h"
@@ -276,11 +275,11 @@ void ARX_MISSILES_Update() {
 				if(pd) {
 					pd->ov = pos;
 					pd->move = missiles[i].velocity;
-					pd->move += Vec3f(3.f, 4.f, 3.f) + Vec3f(-6.f, -12.f, -6.f) * arx::randomVec3f();
+					pd->move += Vec3f(3.f, 4.f, 3.f) + Vec3f(-6.f, -12.f, -6.f) * g_rand.randomVec3f();
 					pd->tolive = g_rand.getu(500, 1000);
 					pd->tc = tc;
 					pd->siz = 12.f * float(missiles[i].tolive - framediff3) * (1.f / 4000);
-					pd->scale = arx::randomVec(15.f, 20.f);
+					pd->scale = g_rand.randomVec(15.f, 20.f);
 					pd->m_flags = FIRE_TO_SMOKE;
 				}
 				

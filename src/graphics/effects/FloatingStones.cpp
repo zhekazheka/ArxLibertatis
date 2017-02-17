@@ -23,7 +23,6 @@
 #include "graphics/RenderBatcher.h"
 #include "graphics/particle/ParticleEffects.h"
 #include "math/Random.h"
-#include "math/RandomVector.h"
 
 void FloatingStones::Init(float radius) {
 	
@@ -47,7 +46,7 @@ void FloatingStones::Update(float timeDelta, Vec3f pos) {
 	if(m_timestone <= 0) {
 		m_timestone = g_rand.get(50, 150);
 		
-		AddStone(pos + arx::randomOffsetXZ(m_baseRadius));
+		AddStone(pos + g_rand.randomOffsetXZ(m_baseRadius));
 	}
 }
 

@@ -36,7 +36,6 @@
 
 #include "graphics/Draw.h"
 #include "graphics/Renderer.h"
-#include "math/RandomVector.h"
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
 
@@ -143,18 +142,18 @@ void MassLightningStrikeSpell::Update() {
 	
 	Vec3f position;
 
-	position = m_pos + arx::randomVec(-250.f, 250.f);
+	position = m_pos + g_rand.randomVec(-250.f, 250.f);
 	ARX_SOUND_RefreshPosition(m_snd_loop, position);
 	ARX_SOUND_RefreshVolume(m_snd_loop, 1.f);
 	ARX_SOUND_RefreshPitch(m_snd_loop, g_rand.getf(0.8f, 1.2f));
 	
 	if(g_rand.getf() > 0.62f) {
-		position = m_pos + arx::randomVec(-250.f, 250.f);
+		position = m_pos + g_rand.randomVec(-250.f, 250.f);
 		ARX_SOUND_PlaySFX(SND_SPELL_SPARK, &position, g_rand.getf(0.8f, 1.2f));
 	}
 	
 	if(g_rand.getf() > 0.82f) {
-		position = m_pos + arx::randomVec(-250.f, 250.f);
+		position = m_pos + g_rand.randomVec(-250.f, 250.f);
 		ARX_SOUND_PlaySFX(SND_SPELL_ELECTRIC, &position, g_rand.getf(0.8f, 1.2f));
 	}
 	

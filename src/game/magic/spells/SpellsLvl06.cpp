@@ -31,7 +31,6 @@
 #include "game/magic/spells/SpellsLvl05.h"
 #include "graphics/particle/ParticleEffects.h"
 #include "graphics/spells/Spells05.h"
-#include "math/RandomVector.h"
 #include "physics/Collisions.h"
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
@@ -202,7 +201,7 @@ void RiseDeadSpell::Update() {
 				SendIOScriptEvent(io,SM_SUMMONED);
 					
 				Vec3f pos = m_fissure.m_eSrc;
-				pos += arx::randomVec3f() * 100.f;
+				pos += g_rand.randomVec3f() * 100.f;
 				pos += Vec3f(-50.f, 50.f, -50.f);
 				
 				MakeCoolFx(pos);

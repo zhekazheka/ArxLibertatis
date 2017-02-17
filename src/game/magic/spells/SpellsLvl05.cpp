@@ -34,7 +34,6 @@
 #include "graphics/particle/Particle.h"
 #include "graphics/particle/ParticleEffects.h"
 #include "graphics/spells/Spells05.h"
-#include "math/RandomVector.h"
 #include "physics/Collisions.h"
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
@@ -128,8 +127,8 @@ void RuneOfGuardingSpell::Update() {
 			break;
 		}
 		
-		pd->ov = pos + arx::randomOffsetXZ(40.f);
-		pd->move = arx::linearRand(Vec3f(-0.8f, -4.f, -0.8f), Vec3f(0.8f, 0.f, 0.8f));
+		pd->ov = pos + g_rand.randomOffsetXZ(40.f);
+		pd->move = g_rand.linearRand(Vec3f(-0.8f, -4.f, -0.8f), Vec3f(0.8f, 0.f, 0.8f));
 		pd->scale = Vec3f(-0.1f);
 		pd->tolive = g_rand.getu(2600, 3200);
 		pd->tc = tex_p2;
@@ -263,11 +262,11 @@ void LevitateSpell::createDustParticle() {
 		return;
 	}
 	
-	Vec2f pos = arx::circularRand(m_baseRadius);
+	Vec2f pos = g_rand.circularRand(m_baseRadius);
 	
 	pd->ov = m_pos + Vec3f(pos.x, 0.f, pos.y);
 	float t = fdist(pd->ov, m_pos);
-	Vec3f moveFactor = arx::linearRand(Vec3f(5.f, 0.f, 5.f), Vec3f(10.f, 3.f, 10.f));
+	Vec3f moveFactor = g_rand.linearRand(Vec3f(5.f, 0.f, 5.f), Vec3f(10.f, 3.f, 10.f));
 	pd->move = moveFactor * Vec3f((pd->ov.x - m_pos.x) / t, 1.f, (pd->ov.z - m_pos.z) / t);
 	pd->siz = g_rand.getf(30.f, 60.f);
 	pd->tolive = 3000;
@@ -444,10 +443,10 @@ void RepelUndeadSpell::Update() {
 		}
 		
 		// XXX was this supposed to be sphericalRand ?
-		Vec2f d = arx::diskRand(vv);
+		Vec2f d = g_rand.diskRand(vv);
 		
 		pd->ov = m_pos + Vec3f(d.x, 0.f, d.y);
-		pd->move = arx::linearRand(Vec3f(-0.8f, -4.f, -0.8f), Vec3f(0.8f, 0.f, 0.8f));
+		pd->move = g_rand.linearRand(Vec3f(-0.8f, -4.f, -0.8f), Vec3f(0.8f, 0.f, 0.8f));
 		pd->scale = Vec3f(-0.1f);
 		pd->tolive = g_rand.getu(2600, 3200);
 		pd->tc = tex_p2;
@@ -631,7 +630,7 @@ void PoisonProjectileSpell::AddPoisonFog(const Vec3f & pos, float power) {
 		float speed = 1.f;
 		float fval = speed * 0.2f;
 		pd->m_flags = FADE_IN_AND_OUT | ROTATING | DISSIPATING;
-		pd->ov = pos + arx::randomVec(-100.f, 100.f);
+		pd->ov = pos + g_rand.randomVec(-100.f, 100.f);
 		pd->scale = Vec3f(8.f, 8.f, 10.f);
 		pd->move = Vec3f((speed - g_rand.getf()) * fval, (speed - speed * g_rand.getf()) * (1.f / 15),
 		                 (speed - g_rand.getf()) * fval);

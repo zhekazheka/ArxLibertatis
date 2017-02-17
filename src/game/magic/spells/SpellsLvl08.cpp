@@ -32,7 +32,6 @@
 #include "graphics/RenderBatcher.h"
 #include "graphics/Renderer.h"
 #include "graphics/particle/ParticleEffects.h"
-#include "math/RandomVector.h"
 
 #include "scene/GameSound.h"
 #include "scene/Interactive.h"
@@ -228,17 +227,17 @@ void ExplosionSpell::Update() {
 		if(choice > .8f) {
 			long lvl = g_rand.get(9, 13);
 			
-			Vec3f pos = light->pos + arx::sphericalRand(260.f);
+			Vec3f pos = light->pos + g_rand.sphericalRand(260.f);
 			
 			Color3f color = Color3f(0.1f, 0.1f, 0.8f) + randomColor3f() * Color3f(1.f/3, 1.f/3, 1.f/5);
 			
 			LaunchFireballBoom(pos, static_cast<float>(lvl), NULL, &color);
 		} else if(choice > .6f) {
-			Vec3f pos = light->pos + arx::sphericalRand(260.f);
+			Vec3f pos = light->pos + g_rand.sphericalRand(260.f);
 			
 			MakeCoolFx(pos);
 		} else if(choice > 0.4f) {
-			Vec3f pos = light->pos + arx::sphericalRand(160.f);
+			Vec3f pos = light->pos + g_rand.sphericalRand(160.f);
 
 			ARX_PARTICLES_Add_Smoke(pos, 2, 20); // flag 1 = randomize pos
 		}
