@@ -51,7 +51,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 struct ANCHOR_DATA;
 struct EERIE_LIGHT;
-
+class Random;
 
 class PathFinder {
 	
@@ -69,7 +69,7 @@ public:
 	 * The pathfinder instance does not copy the provided data and will not clean it up
 	 * The light data is only used when the stealth parameter is set to true.
 	 */
-	PathFinder(size_t map_size, const ANCHOR_DATA * map_data,
+	PathFinder(Random & random, size_t map_size, const ANCHOR_DATA * map_data,
 	           size_t light_count, const EERIE_LIGHT * const * light_list);
 	
 	typedef unsigned long NodeId;
@@ -144,6 +144,8 @@ private:
 	static void buildPath(const Node & node, Result & rlist);
 	float getIlluminationCost(const Vec3f & pos) const;
 	NodeId getNearestNode(const Vec3f & pos) const;
+	
+	Random & m_random;
 	
 	float radius;
 	float height;

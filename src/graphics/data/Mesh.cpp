@@ -1532,7 +1532,7 @@ static void ComputeRoomDistance() {
 		}
 	}
 
-	PathFinder pathfinder(NbRoomDistance, ad.data(), 0, NULL);
+	PathFinder pathfinder(g_rand, NbRoomDistance, ad.data(), 0, NULL);
 
 	for(size_t i = 0; i < NbRoomDistance; i++) {
 		for(size_t j = 0; j < NbRoomDistance; j++) {

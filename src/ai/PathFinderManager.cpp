@@ -243,8 +243,11 @@ static bool EERIE_PATHFINDER_Get_Next_Request(PATHFINDER_REQUEST & request) {
 // Pathfinder Thread
 void PathFinderThread::run() {
 	
+	Random random;
+	random.seed();
+	
 	BackgroundData * eb = ACTIVEBKG;
-	PathFinder pathfinder(eb->nbanchors, eb->anchors, g_staticLightsMax, (EERIE_LIGHT **)g_staticLights);
+	PathFinder pathfinder(random, eb->nbanchors, eb->anchors, g_staticLightsMax, (EERIE_LIGHT **)g_staticLights);
 
 	while(!isStopRequested()) {
 		

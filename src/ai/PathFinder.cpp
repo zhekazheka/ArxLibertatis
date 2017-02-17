@@ -177,9 +177,10 @@ public:
 	
 };
 
-PathFinder::PathFinder(size_t map_size, const ANCHOR_DATA * map_data,
+PathFinder::PathFinder(Random & random, size_t map_size, const ANCHOR_DATA * map_data,
                        size_t slight_count, const EERIE_LIGHT * const * slight_list)
-	: radius(RADIUS_DEFAULT), height(HEIGHT_DEFAULT), heuristic(HEURISTIC_DEFAULT),
+	: m_random(random)
+	, radius(RADIUS_DEFAULT), height(HEIGHT_DEFAULT), heuristic(HEURISTIC_DEFAULT),
 	  map_s(map_size), map_d(map_data), slight_c(slight_count), slight_l(slight_list) { }
 
 void PathFinder::setHeuristic(float _heuristic) {
@@ -339,17 +340,17 @@ bool PathFinder::wanderAround(NodeId from, float rad, Result & rlist, bool steal
 	
 	NodeId last = from;
 	
-	unsigned int step_c = g_rand.getu(4, 9);
+	unsigned int step_c = m_random.getu(4, 9);
 	for(unsigned int i = 0; i < step_c; i++) {
 		
 		NodeId next = from;
 		
 		// Select the next node.
-		unsigned int nb = g_rand.getu(0, rad / 50);
+		unsigned int nb = m_random.getu(0, rad / 50);
 		for(unsigned int j = 0; j < nb && map_d[next].nblinked; j++) {
 			for(int notfinished = 0; notfinished < 4; notfinished++) {
 				
-				size_t r = g_rand.get(0, map_d[next].nblinked - 1);
+				size_t r = m_random.get(0, map_d[next].nblinked - 1);
 				arx_assert(r < (size_t)map_d[next].nblinked);
 				
 				arx_assert(map_d[next].linked[r] >= 0);
@@ -410,10 +411,10 @@ bool PathFinder::lookFor(NodeId from, const Vec3f & pos, float radius, Result & 
 	
 	NodeId last = from;
 	
-	unsigned long step_c = g_rand.getu(4, 9);
+	unsigned long step_c = m_random.getu(4, 9);
 	for(unsigned long i = 0; i < step_c; i++) {
 		
-		Vec3f pos = map_d[to].pos + g_rand.randomVec(-1.f, 1.f) * radius;
+		Vec3f pos = map_d[to].pos + m_random.randomVec(-1.f, 1.f) * radius;
 		
 		NodeId next = getNearestNode(pos);
 		
