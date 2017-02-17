@@ -52,6 +52,8 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 namespace audio {
 
+Random g_audioRandom;
+
 // Audio device interface
 Backend * backend = NULL;
 

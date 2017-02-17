@@ -133,7 +133,7 @@ struct KeySetting {
 			tupdate += interval;
 			if(flags & FLAG_RANDOM) {
 				from = to;
-				to = g_rand.getf(min, max);
+				to = audio::g_audioRandom.getf(min, max);
 			} else {
 				if(from == min) {
 					from = max, to = min;
@@ -195,7 +195,7 @@ struct TrackKey {
 	void updateSynch() {
 		if(delay_min != delay_max) {
 			delay = delay_max - delay;
-			delay += g_rand.get(delay_min, delay_max);
+			delay += audio::g_audioRandom.get(delay_min, delay_max);
 		} else {
 			delay = delay_min;
 		}

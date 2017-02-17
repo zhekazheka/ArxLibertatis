@@ -33,7 +33,7 @@
 #include "platform/Platform.h"
 
 
-//#define ARX_RANDOM_DEBUG
+#define ARX_RANDOM_DEBUG
 
 #ifdef ARX_RANDOM_DEBUG
 	#include "platform/Thread.h"

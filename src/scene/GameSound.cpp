@@ -54,6 +54,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 #include "animation/Animation.h"
 
 #include "audio/Audio.h"
+#include "audio/AudioGlobal.h"
 
 #include "core/Config.h"
 
@@ -1633,6 +1634,8 @@ static float GetSamplePresenceFactor(const res::path & name) {
 class SoundUpdateThread : public StoppableThread {
 	
 	void run() {
+		
+		audio::g_audioRandom.seed();
 		
 		while(!isStopRequested()) {
 			
