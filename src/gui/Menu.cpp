@@ -348,7 +348,7 @@ void ARX_Menu_Render() {
 			{
 				if(FLYING_OVER != OLD_FLYING_OVER) {
 					
-					int t = Random::get(0, 2);
+					int t = g_rand.get(0, 2);
 					
 					pTextManage->Clear();
 					OLD_FLYING_OVER = FLYING_OVER;

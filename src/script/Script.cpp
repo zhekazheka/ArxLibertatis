@@ -572,7 +572,7 @@ ValueType getSystemVar(const EERIE_SCRIPT * es, Entity * entity, const std::stri
 				// if inclusive, use proper integer random, otherwise fix rnd()?
 				if(max[0]) {
 					float t = (float)atof(max);
-					*fcontent = Random::getf(0.f, t);
+					*fcontent = g_rand.getf(0.f, t);
 					return TYPE_FLOAT;
 				}
 				*fcontent = 0;
@@ -1790,7 +1790,7 @@ static bool Manage_Specific_RAT_Timer(SCR_TIMER * st) {
 	GetTargetPos(io);
 	Vec3f target = io->target - io->pos;
 	target = glm::normalize(target);
-	Vec3f targ = VRotateY(target, Random::getf(-30.f, 30.f));
+	Vec3f targ = VRotateY(target, g_rand.getf(-30.f, 30.f));
 	target = io->target + targ * 100.f;
 	
 	if(ARX_INTERACTIVE_ConvertToValidPosForIO(io, &target)) {

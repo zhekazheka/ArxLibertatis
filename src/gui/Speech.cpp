@@ -370,7 +370,7 @@ long ARX_SPEECH_AddSpeech(Entity * io, const std::string & data, long mood,
 		
 		if(count > 1) {
 			do {
-				variant = Random::get(1, count);
+				variant = g_rand.get(1, count);
 			} while(io->lastspeechflag == variant);
 			io->lastspeechflag = checked_range_cast<short>(variant);
 		}

@@ -140,7 +140,7 @@ public:
 		
 		DebugScript(' ' << chance);
 		
-		float t = Random::getf(0.f, 100.f);
+		float t = g_rand.getf(0.f, 100.f);
 		if(chance < t) {
 			context.skipStatement();
 		}

@@ -169,10 +169,10 @@ void ParticleSystem::SetParticleParams(Particle * pP) {
 		pP->p3Pos.x = pos.x;
 		pP->p3Pos.z = pos.y;
 		
-		pP->p3Pos.y = Random::getf();
+		pP->p3Pos.y = g_rand.getf();
 		
 		if((m_parameters.m_spawnFlags & PARTICLE_BORDER) != PARTICLE_BORDER) {
-			pP->p3Pos *= Vec3f(Random::getf(), 1.f, Random::getf());
+			pP->p3Pos *= Vec3f(g_rand.getf(), 1.f, g_rand.getf());
 		}
 	} else {
 		pP->p3Pos = arx::randomVec(-1.f, 1.f);
@@ -180,11 +180,11 @@ void ParticleSystem::SetParticleParams(Particle * pP) {
 	
 	pP->p3Pos *= m_parameters.m_pos;
 	
-	float fTTL = m_parameters.m_life + Random::getf() * m_parameters.m_lifeRandom;
+	float fTTL = m_parameters.m_life + g_rand.getf() * m_parameters.m_lifeRandom;
 	pP->m_timeToLive = checked_range_cast<long>(fTTL);
 	pP->fOneOnTTL = 1.0f / pP->m_timeToLive;
 
-	float fAngleX = Random::getf() * m_parameters.m_angle; //*0.5f;
+	float fAngleX = g_rand.getf() * m_parameters.m_angle; //*0.5f;
  
 	Vec3f vv1, vvz;
 	
@@ -193,29 +193,29 @@ void ParticleSystem::SetParticleParams(Particle * pP) {
 	vv1 = -Vec3f_Y_AXIS;
 	
 	vvz = VRotateZ(vv1, glm::degrees(fAngleX));
-	vv1 = VRotateY(vvz, Random::getf(0.f, 360.0f));
+	vv1 = VRotateY(vvz, g_rand.getf(0.f, 360.0f));
 	
 	vvz = Vec3f(eMat * Vec4f(vv1, 1.f));
 
-	float fSpeed = m_parameters.m_speed + Random::getf() * m_parameters.m_speedRandom;
+	float fSpeed = m_parameters.m_speed + g_rand.getf() * m_parameters.m_speedRandom;
 
 	pP->p3Velocity = vvz * fSpeed;
-	pP->fSizeStart = m_parameters.m_startSegment.m_size + Random::getf() * m_parameters.m_startSegment.m_sizeRandom;
+	pP->fSizeStart = m_parameters.m_startSegment.m_size + g_rand.getf() * m_parameters.m_startSegment.m_sizeRandom;
 
 	{
-	Color4f rndColor = Color4f(Random::getf(), Random::getf(), Random::getf(), Random::getf());
+	Color4f rndColor = Color4f(g_rand.getf(), g_rand.getf(), g_rand.getf(), g_rand.getf());
 	pP->fColorStart = m_parameters.m_startSegment.m_color + rndColor * m_parameters.m_startSegment.m_colorRandom;
 	}
 
-	pP->fSizeEnd = m_parameters.m_endSegment.m_size + Random::getf() * m_parameters.m_endSegment.m_sizeRandom;
+	pP->fSizeEnd = m_parameters.m_endSegment.m_size + g_rand.getf() * m_parameters.m_endSegment.m_sizeRandom;
 
 	{
-	Color4f rndColor = Color4f(Random::getf(), Random::getf(), Random::getf(), Random::getf());
+	Color4f rndColor = Color4f(g_rand.getf(), g_rand.getf(), g_rand.getf(), g_rand.getf());
 	pP->fColorEnd = m_parameters.m_endSegment.m_color + rndColor * m_parameters.m_endSegment.m_colorRandom;
 	}
 	
 	if(m_parameters.m_rotationRandomDirection) {
-		pP->iRot = Random::get(-1, 1);
+		pP->iRot = g_rand.get(-1, 1);
 
 		if(pP->iRot < 0)
 			pP->iRot = -1;
@@ -227,7 +227,7 @@ void ParticleSystem::SetParticleParams(Particle * pP) {
 	}
 
 	if(m_parameters.m_rotationRandomStart) {
-		pP->fRotStart = Random::getf(0.f, 360.0f);
+		pP->fRotStart = g_rand.getf(0.f, 360.0f);
 	} else {
 		pP->fRotStart = 0;
 	}
@@ -317,7 +317,7 @@ void ParticleSystem::Render() {
 
 		if(p->isAlive()) {
 			if(m_parameters.m_flash > 0) {
-				if(Random::getf() < m_parameters.m_flash)
+				if(g_rand.getf() < m_parameters.m_flash)
 					continue;
 			}
 

@@ -188,8 +188,8 @@ void AddFlare(const Vec2f & pos, float sm, short typ, Entity * io, bool bookDraw
 		flare.flags = 0;
 	}
 
-	flare.pos.x = pos.x - Random::getf(0.f, 4.f);
-	flare.pos.y = pos.y - Random::getf(0.f, 4.f) - 50.f;
+	flare.pos.x = pos.x - g_rand.getf(0.f, 4.f);
+	flare.pos.y = pos.y - g_rand.getf(0.f, 4.f) - 50.f;
 	flare.tv.rhw = flare.v.rhw = 1.f;
 
 	if(!bookDraw) {
@@ -246,31 +246,31 @@ void AddFlare(const Vec2f & pos, float sm, short typ, Entity * io, bool bookDraw
 	static const float FLARE_MUL = 2.f;
 	
 	if(typ == -1) {
-		float zz = eeMousePressed1() ? 0.29f : ((sm > 0.5f) ? Random::getf() : 1.f);
+		float zz = eeMousePressed1() ? 0.29f : ((sm > 0.5f) ? g_rand.getf() : 1.f);
 		if(zz < 0.2f) {
 			flare.type = 2;
-			flare.size = Random::getf(42.f, 84.f);
-			flare.tolive = Random::getf(800.f, 1600.f) * FLARE_MUL;
+			flare.size = g_rand.getf(42.f, 84.f);
+			flare.tolive = g_rand.getf(800.f, 1600.f) * FLARE_MUL;
 		} else if(zz < 0.5f) {
 			flare.type = 3;
-			flare.size = Random::getf(16.f, 68.f);
-			flare.tolive = Random::getf(800.f, 1600.f) * FLARE_MUL;
+			flare.size = g_rand.getf(16.f, 68.f);
+			flare.tolive = g_rand.getf(800.f, 1600.f) * FLARE_MUL;
 		} else {
 			flare.type = 1;
-			flare.size = Random::getf(32.f, 56.f) * sm;
-			flare.tolive = Random::getf(1700.f, 2200.f) * FLARE_MUL;
+			flare.size = g_rand.getf(32.f, 56.f) * sm;
+			flare.tolive = g_rand.getf(1700.f, 2200.f) * FLARE_MUL;
 		}
 	} else {
-		flare.type = (Random::getf() > 0.8f) ? 1 : 4;
-		flare.size = Random::getf(64.f, 102.f) * sm;
-		flare.tolive = Random::getf(1700.f, 2200.f) * FLARE_MUL;
+		flare.type = (g_rand.getf() > 0.8f) ? 1 : 4;
+		flare.size = g_rand.getf(64.f, 102.f) * sm;
+		flare.tolive = g_rand.getf(1700.f, 2200.f) * FLARE_MUL;
 	}
 
 	flare.dynlight = LightHandle();
 
 	for(unsigned int kk = 0; kk < 3; kk++) {
 
-		if(Random::getf() < 0.5f) {
+		if(g_rand.getf() < 0.5f) {
 			continue;
 		}
 
@@ -291,13 +291,13 @@ void AddFlare(const Vec2f & pos, float sm, short typ, Entity * io, bool bookDraw
 		pd->ov = flare.v.p + arx::randomVec(-5.f, 5.f);
 		pd->move = Vec3f(0.f, 5.f, 0.f);
 		pd->scale = Vec3f(-2.f);
-		pd->tolive = 1300 + kk * 100 + Random::getu(0, 800);
+		pd->tolive = 1300 + kk * 100 + g_rand.getu(0, 800);
 		pd->tc = fire2;
 		if(kk == 1) {
 			pd->move.y = 4.f;
 			pd->siz = 1.5f;
 		} else {
-			pd->siz = Random::getf(1.f, 2.f);
+			pd->siz = g_rand.getf(1.f, 2.f);
 		}
 		pd->rgb = Color3f(flare.rgb.r * (2.f/3), flare.rgb.g * (2.f/3), flare.rgb.b * (2.f/3));
 		pd->m_rotation = 1.2f;
@@ -330,7 +330,7 @@ void FlareLine(Vec2f tmpPos0, Vec2f tmpPos1, Entity * io) {
 		float i = tmpPos0.x;
 		
 		while(i < tmpPos1.x) {
-			long z = Random::get(0, FLARELINERND);
+			long z = g_rand.get(0, FLARELINERND);
 			z += FLARELINESTEP;
 			if(!io) {
 				z *= g_sizeRatio.y;
@@ -350,7 +350,7 @@ void FlareLine(Vec2f tmpPos0, Vec2f tmpPos1, Entity * io) {
 		float i = tmpPos0.y;
 		
 		while(i < tmpPos1.y) {
-			long z = Random::get(0, FLARELINERND);
+			long z = g_rand.get(0, FLARELINERND);
 			z += FLARELINESTEP;
 			if(!io) {
 				z *= g_sizeRatio.y;

@@ -117,7 +117,7 @@ void PlayerInventoryHud::update() {
 
 					if(bInventorySwitch) {
 						bInventorySwitch = false;
-						ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+						ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 						player.Interface |= INTER_INVENTORYALL;
 						ARX_INTERFACE_NoteClose();
 						InventoryY = 121 * player.bag;
@@ -318,7 +318,7 @@ void PlayerInventoryHud::nextBag() {
 	if((player.Interface & INTER_INVENTORY)) {
 		if(player.bag) {
 			if(g_currentInventoryBag < player.bag - 1) {
-				ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+				ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 				g_currentInventoryBag ++;
 			}
 		}
@@ -330,7 +330,7 @@ void PlayerInventoryHud::previousBag() {
 	if((player.Interface & INTER_INVENTORY)) {
 		if(player.bag) {
 			if(g_currentInventoryBag > 0) {
-				ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+				ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 				g_currentInventoryBag --;
 			}
 		}

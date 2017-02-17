@@ -37,40 +37,42 @@ class Random {
 public:
 	
 	//! Generates a random integer value in the range [intMin, intMax].
-	template <typename IntType> static IntType get();
-	template <typename IntType> static IntType get(IntType min, IntType max);
-	static int get(int min = 0, int max = std::numeric_limits<int>::max());
-	static unsigned int getu(unsigned int min, unsigned int max);
+	template <typename IntType> IntType get();
+	template <typename IntType> IntType get(IntType min, IntType max);
+	int get(int min = 0, int max = std::numeric_limits<int>::max());
+	unsigned int getu(unsigned int min, unsigned int max);
 	
 	//! Generates a random floating point value in the range [realMin, realMax).
-	template <class RealType> static RealType getf();
-	template <class RealType> static RealType getf(RealType realMin, RealType realMax);
-	static float getf(float realMin = 0.0f, float realMax = 1.0f);
+	template <class RealType> RealType getf();
+	template <class RealType> RealType getf(RealType realMin, RealType realMax);
+	float getf(float realMin = 0.0f, float realMax = 1.0f);
 	
 	//! Return a random iterator pointing in the range [begin, end).
 	template <class Iterator>
-	static Iterator getIterator(Iterator begin, Iterator end);
+	Iterator getIterator(Iterator begin, Iterator end);
 	
 	//! Return a random iterator in the given container.
 	template <class Container>
-	static typename Container::iterator getIterator(Container& container);
+	typename Container::iterator getIterator(Container& container);
 	
 	//! Return a random const_iterator in the given container.
 	template <class Container>
-	static typename Container::const_iterator getIterator(const Container& container);
+	typename Container::const_iterator getIterator(const Container& container);
 	
 	//! Seed the random number generator using the current time.
-	static void seed();
+	void seed();
 	
 	//! Seed the random number generator with the given value.
-	static void seed(unsigned int seedVal);
+	void seed(unsigned int seedVal);
 	
 private:
 	
 	typedef boost::random::mt19937 Generator;
 	
-	static Generator rng;
+	Generator rng;
 };
+
+extern Random g_rand;
 
 ///////////////////////////////////////////////////////////////////////////////
 

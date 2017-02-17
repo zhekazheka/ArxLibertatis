@@ -102,7 +102,7 @@ void ParticleSparkSpawn(const Vec3f & pos, unsigned int count, SpawnSparkType ty
 				break;
 		}
 		
-		spark.m_tailLength = len + Random::getf() * len;
+		spark.m_tailLength = len + g_rand.getf() * len;
 	}
 }
 
@@ -161,7 +161,7 @@ void ParticleSparkUpdate() {
 		tv[0].p = out.p;
 		tv[0].rhw = out.rhw;
 		
-		Vec3f temp1 = in + Vec3f(Random::getf(0.f, 0.5f), 0.8f, Random::getf(0.f, 0.5f));
+		Vec3f temp1 = in + Vec3f(g_rand.getf(0.f, 0.5f), 0.8f, g_rand.getf(0.f, 0.5f));
 		Vec3f temp2 = in + tailDirection * spark.m_tailLength;
 		
 		EE_RTP(temp1, tv[1]);

@@ -62,7 +62,7 @@ ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
 
 inline Color3f randomColor3f() {
-	return Color3f(Random::getf(), Random::getf(), Random::getf());
+	return Color3f(g_rand.getf(), g_rand.getf(), g_rand.getf());
 }
 
 inline bool In3DBBoxTolerance(const Vec3f & pos, const EERIE_3D_BBOX & bbox, const float tolerance) {

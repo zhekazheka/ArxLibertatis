@@ -330,7 +330,7 @@ bool CrashHandlerImpl::createSharedMemory() {
 		
 		// Generate a random name for our shared memory object
 		std::ostringstream oss;
-		oss << "arxcrash-" << platform::getProcessId() << "-" << Random::get<u32>();
+		oss << "arxcrash-" << platform::getProcessId() << "-" << g_rand.get<u32>();
 		m_SharedMemoryName = oss.str();
 		
 		// Create a shared memory object.

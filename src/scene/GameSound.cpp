@@ -651,7 +651,7 @@ long ARX_SOUND_PlayCollision(Material mat1, Material mat2, float volume, float p
 	ARX_NPC_SpawnAudibleSound(position, source, power, presence);
 	
 	channel.position = position;
-	channel.pitch = Random::getf(0.9f, 1.1f);
+	channel.pitch = g_rand.getf(0.9f, 1.1f);
 	channel.volume = volume;
 	audio::samplePlay(sample_id, channel);
 	
@@ -704,7 +704,7 @@ long ARX_SOUND_PlayCollision(const std::string & name1, const std::string & name
 		return -1;
 	
 	channel.position = position;
-	channel.pitch = Random::getf(0.975f, 1.475f);
+	channel.pitch = g_rand.getf(0.975f, 1.475f);
 	channel.volume = volume;
 	audio::samplePlay(sample_id, channel);
 	

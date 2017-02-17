@@ -389,7 +389,7 @@ void IO_UnlinkAllLinkedObjects(Entity * io) {
 			continue;
 		}
 		
-		linked->angle = Anglef(Random::getf(340.f, 380.f), Random::getf(0.f, 360.f), 0.f);
+		linked->angle = Anglef(g_rand.getf(340.f, 380.f), g_rand.getf(0.f, 360.f), 0.f);
 		linked->soundtime = ArxInstant_ZERO;
 		linked->soundcount = 0;
 		linked->gameFlags |= GFLAG_NO_PHYS_IO_COL;
@@ -1151,7 +1151,7 @@ void ARX_INTERACTIVE_TeleportBehindTarget(Entity * io)
 			timer.es = NULL;
 			timer.exist = 1;
 			timer.io = io;
-			timer.interval = ArxDurationMs(Random::get(3000, 6000));
+			timer.interval = ArxDurationMs(g_rand.get(3000, 6000));
 			timer.name = "_r_a_t_";
 			timer.pos = -1;
 			timer.start = arxtime.now();

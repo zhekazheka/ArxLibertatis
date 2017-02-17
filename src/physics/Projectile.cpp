@@ -180,7 +180,7 @@ static float ARX_THROWN_ComputeDamages(const Projectile & projectile, EntityHand
 	if(source == EntityHandle_Player) {
 		attack = projectile.damages;
 
-		if(Random::getf(0.f, 100.f) <= float(player.m_attributeFull.dexterity - 9) * 2.f
+		if(g_rand.getf(0.f, 100.f) <= float(player.m_attributeFull.dexterity - 9) * 2.f
 						   + float(player.m_skillFull.projectile * 0.2f)) {
 			if(SendIOScriptEvent(io_source, SM_CRITICAL, "bow") != REFUSE)
 				critical = true;
@@ -189,7 +189,7 @@ static float ARX_THROWN_ComputeDamages(const Projectile & projectile, EntityHand
 		dmgs = attack;
 
 		if(io_target->_npcdata->npcflags & NPCFLAG_BACKSTAB) {
-			if(Random::getf(0.f, 100.f) <= player.m_skillFull.stealth) {
+			if(g_rand.getf(0.f, 100.f) <= player.m_skillFull.stealth) {
 				if(SendIOScriptEvent(io_source, SM_BACKSTAB, "bow") != REFUSE)
 					backstab = 1.5f;
 			}
@@ -244,7 +244,7 @@ static float ARX_THROWN_ComputeDamages(const Projectile & projectile, EntityHand
 	dmgs -= dmgs * (absorb * ( 1.0f / 100 ));
 
 	float chance = 100.f - (ac - attack);
-	float dice = Random::getf(0.f, 100.f);
+	float dice = g_rand.getf(0.f, 100.f);
 
 	if(dice <= chance) {
 		if(dmgs > 0.f) {
@@ -545,7 +545,7 @@ void ARX_THROWN_OBJECT_Manage(float time_offset)
 												ARX_PARTICLES_Spawn_Blood2(pos, damages, color, target);
 												ARX_DAMAGES_DamageNPC(target, damages, projectile.source, false, &pos);
 
-												if(Random::getf(0.f, 100.f) > target->_npcdata->resist_poison) {
+												if(g_rand.getf(0.f, 100.f) > target->_npcdata->resist_poison) {
 													target->_npcdata->poisonned += projectile.poisonous;
 												}
 

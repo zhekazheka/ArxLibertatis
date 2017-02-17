@@ -41,11 +41,11 @@ public:
 	
 	void update(float time) {
 		
-		m_time += time * Random::getf(0.f, 2.f);
+		m_time += time * g_rand.getf(0.f, 2.f);
 		
 		if(m_time >= 1.f) {
 			m_lastValue = m_nextValue;
-			m_nextValue = Random::getf();
+			m_nextValue = g_rand.getf();
 			m_time -= long(m_time);
 		}
 		

@@ -150,7 +150,7 @@ void HealSpell::Update() {
 			}
 
 			if(dist<300.f) {
-				float gain = Random::getf(0.8f, 2.4f) * m_level * (300.f - dist) * (1.0f/300) * g_framedelay * (1.0f/1000);
+				float gain = g_rand.getf(0.8f, 2.4f) * m_level * (300.f - dist) * (1.0f/300) * g_framedelay * (1.0f/1000);
 
 				if(handle == EntityHandle_Player) {
 					if(!BLOCK_PLAYER_CONTROLS) {

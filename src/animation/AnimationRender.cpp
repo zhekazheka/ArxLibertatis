@@ -349,19 +349,19 @@ void Cedric_ApplyLightingFirstPartRefactor(Entity *io) {
 						
 						long count = 6;
 						while(count--) {
-							Sphere splatSphere = Sphere(sp.origin, Random::getf(30.f, 60.f));
+							Sphere splatSphere = Sphere(sp.origin, g_rand.getf(30.f, 60.f));
 							PolyBoomAddSplat(splatSphere, rgb, 1);
-							sp.origin.y -= Random::getf(0.f, 150.f);
+							sp.origin.y -= g_rand.getf(0.f, 150.f);
 
 							ARX_PARTICLES_Spawn_Splat(sp.origin, 200.f, io->_npcdata->blood_color);
 
 							sp.origin = io->pos + arx::randomVec3f() * Vec3f(200.f, 20.f,200.f) - Vec3f(100.f, 10.f, 100.f);
-							sp.radius = Random::getf(100.f, 200.f);
+							sp.radius = g_rand.getf(100.f, 200.f);
 						}
 						
 						EERIE_LIGHT * light = dynLightCreate();
 						if(light) {
-							light->intensity = Random::getf(0.7f, 2.7f);
+							light->intensity = g_rand.getf(0.7f, 2.7f);
 							light->fallend = 600.f;
 							light->fallstart = 400.f;
 							light->rgb = Color3f(1.0f, 0.8f, 0.f);
@@ -715,8 +715,8 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 			vect2.x *= len2;
 			vect2.y *= len2;
 
-			vert[1].p.x += (vect1.x + Random::getf(0.1f, 0.2f)) * siz;
-			vert[1].p.y += (vect1.y + Random::getf(0.1f, 0.2f)) * siz;
+			vert[1].p.x += (vect1.x + g_rand.getf(0.1f, 0.2f)) * siz;
+			vert[1].p.y += (vect1.y + g_rand.getf(0.1f, 0.2f)) * siz;
 			vert[1].color = Color(0, 0, 0, 255).toRGBA();
 
 			vert[0].p.z += 0.0001f;
@@ -724,8 +724,8 @@ static void AddFixedObjectHalo(const EERIE_FACE & face, const TransformInfo & t,
 			vert[1].rhw *= .8f;
 			vert[2].rhw *= .8f;
 
-			vert[2].p.x += (vect2.x + Random::getf(0.1f, 0.2f)) * siz;
-			vert[2].p.y += (vect2.y + Random::getf(0.1f, 0.2f)) * siz;
+			vert[2].p.x += (vect2.x + g_rand.getf(0.1f, 0.2f)) * siz;
+			vert[2].p.y += (vect2.y + g_rand.getf(0.1f, 0.2f)) * siz;
 
 			if(halo.flags & HALO_NEGATIVE)
 				vert[2].color = Color(0, 0, 0, 0).toRGBA();
@@ -1065,8 +1065,8 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			vect2.x *= len2;
 			vect2.y *= len2;
 
-			vert[1].p.x += (vect1.x + Random::getf(0.1f, 0.2f)) * siz;
-			vert[1].p.y += (vect1.y + Random::getf(0.1f, 0.2f)) * siz;
+			vert[1].p.x += (vect1.x + g_rand.getf(0.1f, 0.2f)) * siz;
+			vert[1].p.y += (vect1.y + g_rand.getf(0.1f, 0.2f)) * siz;
 			vert[1].color = Color(0, 0, 0, 255).toRGBA();
 
 			float valll;
@@ -1087,8 +1087,8 @@ static void AddAnimatedObjectHalo(HaloInfo & haloInfo, const unsigned short * pa
 			vert[0].rhw	*= .98f;
 			vert[3].rhw	*= .98f;
 
-			vert[2].p.x += (vect2.x + Random::getf(0.1f, 0.2f)) * siz;
-			vert[2].p.y += (vect2.y + Random::getf(0.1f, 0.2f)) * siz;
+			vert[2].p.x += (vect2.x + g_rand.getf(0.1f, 0.2f)) * siz;
+			vert[2].p.y += (vect2.y + g_rand.getf(0.1f, 0.2f)) * siz;
 
 			vert[1].p.z = (vert[1].p.z + haloInfo.MAX_ZEDE) * ( 1.0f / 2 );
 			vert[2].p.z = (vert[2].p.z + haloInfo.MAX_ZEDE) * ( 1.0f / 2 );

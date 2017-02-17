@@ -317,14 +317,14 @@ void PolyBoomAddSplat(const Sphere & sp, const Color3f & col, long flags) {
 					if(flags & 2) {
 						pb.type = 2;
 						
-						long num = Random::get(0, 2);
+						long num = g_rand.get(0, 2);
 						pb.tc = water_splat[num];
 						
 						pb.tolive = ArxDurationMs(1500);
 					} else {
 						pb.type = 1;
 						
-						long num = Random::get(0, 5);
+						long num = g_rand.get(0, 5);
 						pb.tc = bloodsplat[num];
 						
 						pb.tolive = ArxDurationMs(16000 * size * (1.0f/40));

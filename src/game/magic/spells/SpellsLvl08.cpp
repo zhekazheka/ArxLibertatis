@@ -224,9 +224,9 @@ void ExplosionSpell::Update() {
 		light->rgb = Color3f(0.1f, 0.1f, 0.8f) + randomColor3f() * Color3f(1.f/3, 1.f/3, 1.f/5);
 		light->duration = ArxDurationMs(200);
 		
-		float choice = Random::getf();
+		float choice = g_rand.getf();
 		if(choice > .8f) {
-			long lvl = Random::get(9, 13);
+			long lvl = g_rand.get(9, 13);
 			
 			Vec3f pos = light->pos + arx::sphericalRand(260.f);
 			

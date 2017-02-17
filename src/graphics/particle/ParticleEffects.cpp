@@ -113,7 +113,7 @@ long getParticleCount() {
 void createFireParticles(Vec3f & pos, int perPos, int delay) {
 	for(long nn = 0 ; nn < perPos; nn++) {
 
-		if(Random::getf() >= 0.4f) {
+		if(g_rand.getf() >= 0.4f) {
 			continue;
 		}
 
@@ -125,10 +125,10 @@ void createFireParticles(Vec3f & pos, int perPos, int delay) {
 		pd->ov = pos;
 		pd->move = Vec3f(2.f, 2.f, 2.f) - Vec3f(4.f, 22.f, 4.f) * arx::randomVec3f();
 		pd->siz = 7.f;
-		pd->tolive = Random::getu(500, 1500);
+		pd->tolive = g_rand.getu(500, 1500);
 		pd->m_flags = FIRE_TO_SMOKE | ROTATING;
 		pd->tc = fire2;
-		pd->m_rotation = Random::getf(-0.1f, 0.1f);
+		pd->m_rotation = g_rand.getf(-0.1f, 0.1f);
 		pd->scale = Vec3f(-8.f);
 		pd->rgb = Color3f(0.71f, 0.43f, 0.29f);
 		pd->delay = nn * delay;
@@ -143,7 +143,7 @@ void createObjFireParticles(const EERIE_3DOBJ * obj, int particlePositions, int 
 		std::vector<EERIE_FACE>::const_iterator it;
 		
 		while(notok-- > 0) {
-			it = Random::getIterator(obj->facelist);
+			it = g_rand.getIterator(obj->facelist);
 			arx_assert(it != obj->facelist.end());
 			
 			if(it->facetype & POLY_HIDE)
@@ -167,7 +167,7 @@ void ARX_PARTICLES_Spawn_Lava_Burn(Vec3f pos, Entity * io) {
 		size_t num = 0;
 		long notok = 10;
 		while(notok-- > 0) {
-			num = Random::getu(0, io->obj->facelist.size() - 1);
+			num = g_rand.getu(0, io->obj->facelist.size() - 1);
 			if(io->obj->facelist[num].facetype & POLY_HIDE) {
 				continue;
 			}
@@ -192,7 +192,7 @@ void ARX_PARTICLES_Spawn_Lava_Burn(Vec3f pos, Entity * io) {
 	pd->siz = 15.f;
 	pd->scale = arx::randomVec(15.f, 20.f);
 	pd->m_flags = FIRE_TO_SMOKE;
-	if(Random::getf() > 0.5f) {
+	if(g_rand.getf() > 0.5f) {
 		pd->m_flags |= SUBSTRACT;
 	}
 }
@@ -211,9 +211,9 @@ static void ARX_PARTICLES_Spawn_Rogue_Blood(const Vec3f & pos, float dmgs, Color
 	pd->tolive = 1600;
 	pd->move = arx::randomVec3f() * Vec3f(60.f, -10.f, 60.f) - Vec3f(30.f, 15.f, 30.f);
 	pd->rgb = col.to<float>();
-	long num = Random::get(0, 5);
+	long num = g_rand.get(0, 5);
 	pd->tc = bloodsplat[num];
-	pd->m_rotation = Random::getf(-0.05f, 0.05f);
+	pd->m_rotation = g_rand.getf(-0.05f, 0.05f);
 	
 }
 
@@ -232,10 +232,10 @@ static void ARX_PARTICLES_Spawn_Blood3(const Vec3f & pos, float dmgs, Color col,
 		pd->tolive = 1100;
 		pd->rgb = col.to<float>();
 		pd->tc = bloodsplat[0];
-		pd->m_rotation = Random::getf(-0.05f, 0.05f);
+		pd->m_rotation = g_rand.getf(-0.05f, 0.05f);
 	}
 	
-	if(Random::getf() > .90f) {
+	if(g_rand.getf() > .90f) {
 		ARX_PARTICLES_Spawn_Rogue_Blood(pos, dmgs, col);
 	}
 	
@@ -336,11 +336,11 @@ void ARX_PARTICLES_Spawn_Blood(const Vec3f & pos, float dmgs, EntityHandle sourc
 		pd->source = &sourceIo->obj->vertexlist3[nearest].v;
 		pd->sourceionum = source;
 		pd->tolive = 1200 + spawn_nb * 5;
-		totdelay += 45 + Random::getu(0, 150 - spawn_nb);
+		totdelay += 45 + g_rand.getu(0, 150 - spawn_nb);
 		pd->delay = totdelay;
 		pd->rgb = Color3f(.9f, 0.f, 0.f);
 		pd->tc = bloodsplat[0];
-		pd->m_rotation = Random::getf(-0.05f, 0.05f);
+		pd->m_rotation = g_rand.getf(-0.05f, 0.05f);
 	}
 }
 
@@ -370,15 +370,15 @@ void AddRandomSmoke(Entity * io, long amount) {
 			return;
 		}
 		
-		long vertex = Random::get(0, io->obj->vertexlist.size() - 1);
+		long vertex = g_rand.get(0, io->obj->vertexlist.size() - 1);
 		pd->ov = io->obj->vertexlist3[vertex].v + arx::randomVec(-5.f, 5.f);
-		pd->siz = Random::getf(0.f, 8.f);
+		pd->siz = g_rand.getf(0.f, 8.f);
 		if(pd->siz < 4.f) {
 			pd->siz = 4.f;
 		}
 		pd->scale = Vec3f(10.f);
 		pd->m_flags = ROTATING | FADE_IN_AND_OUT;
-		pd->tolive = Random::getu(900, 1300);
+		pd->tolive = g_rand.getu(900, 1300);
 		pd->move = arx::linearRand(Vec3f(-0.25f, -0.7f, -0.25f), Vec3f(0.25f, 0.3f, 0.25f));
 		pd->rgb = Color3f(0.3f, 0.3f, 0.34f);
 		pd->tc = smokeparticle;
@@ -400,15 +400,15 @@ void ARX_PARTICLES_Add_Smoke(const Vec3f & pos, long flags, long amount, const C
 		
 		pd->ov = pos + mod;
 		if(flags & 2) {
-			pd->siz = Random::getf(15.f, 35.f);
+			pd->siz = g_rand.getf(15.f, 35.f);
 			pd->scale = arx::randomVec(40.f, 55.f);
 		} else {
-			pd->siz = Random::getf(5.f, 13.f);
+			pd->siz = g_rand.getf(5.f, 13.f);
 			pd->scale = arx::randomVec(10.f, 15.f);
 		}
 		pd->m_flags = ROTATING | FADE_IN_AND_OUT;
-		pd->tolive = Random::getu(1100, 1500);
-		pd->delay = amount * 120 + Random::getu(0, 100);
+		pd->tolive = g_rand.getu(1100, 1500);
+		pd->delay = amount * 120 + g_rand.getu(0, 100);
 		pd->move = arx::linearRand(Vec3f(-0.25f, -0.7f, -0.25f), Vec3f(0.25f, 0.3f, 0.25f));
 		pd->rgb = rgb;
 		pd->tc = smokeparticle;
@@ -425,7 +425,7 @@ void ManageTorch() {
 	
 	if(player.torch) {
 		
-		float rr = Random::getf();
+		float rr = g_rand.getf();
 		el->pos = player.pos;
 		el->intensity = 1.6f;
 		el->fallstart = 280.f + rr * 20.f;
@@ -451,7 +451,7 @@ void ManageTorch() {
 		long count = MagicFlareCountNonFlagged();
 		
 		if(count) {
-			float rr = Random::getf();
+			float rr = g_rand.getf();
 			el->pos = player.pos;
 			el->fallstart = 140.f + float(count) * 0.333333f + rr * 5.f;
 			el->fallend = 220.f + float(count) * 0.5f + rr * 5.f;
@@ -589,10 +589,10 @@ void MagFX(const Vec3f & pos, float size) {
 		return;
 	}
 	
-	pd->ov = pos + Vec3f(Random::getf(0.f, 6.f) - Random::getf(0.f, 12.f), Random::getf(0.f, 6.f) - Random::getf(0.f, 12.f), 0.f);
-	pd->move = Vec3f(Random::getf(-6.f, 6.f), Random::getf(-8.f, 8.f), 0.f);
+	pd->ov = pos + Vec3f(g_rand.getf(0.f, 6.f) - g_rand.getf(0.f, 12.f), g_rand.getf(0.f, 6.f) - g_rand.getf(0.f, 12.f), 0.f);
+	pd->move = Vec3f(g_rand.getf(-6.f, 6.f), g_rand.getf(-8.f, 8.f), 0.f);
 	pd->scale = Vec3f(4.4f, 4.4f, 1.f);
-	pd->tolive = Random::getu(1500, 2400);
+	pd->tolive = g_rand.getu(1500, 2400);
 	pd->tc = healing;
 	pd->rgb = Color3f::magenta;
 	pd->siz = 56.f * size;
@@ -626,7 +626,7 @@ void ARX_PARTICLES_Spawn_Splat(const Vec3f & pos, float dmgs, Color col) {
 
 void ARX_PARTICLES_SpawnWaterSplash(const Vec3f & _ePos) {
 	
-	long nbParticles = Random::get(15, 35);
+	long nbParticles = g_rand.get(15, 35);
 	for(long kk=0; kk < nbParticles; kk++) {
 		
 		PARTICLE_DEF * pd = createParticle(true);
@@ -638,12 +638,12 @@ void ARX_PARTICLES_SpawnWaterSplash(const Vec3f & _ePos) {
 		pd->m_rotation = 0.f; // TODO maybe remove ROTATING
 		pd->ov = _ePos + Vec3f(30.f, -20.f, 30.f) * arx::randomVec3f();
 		pd->move = arx::linearRand(Vec3f(-6.5f, -11.5f, -6.5f), Vec3f(6.5f, 0.f, 6.5f));
-		pd->tolive = Random::getu(1000, 1300);
+		pd->tolive = g_rand.getu(1000, 1300);
 		
-		int t = Random::get(0, 2);
+		int t = g_rand.get(0, 2);
 		pd->tc = water_drop[t];
 		pd->siz = 0.4f;
-		float s = Random::getf();
+		float s = g_rand.getf();
 		pd->zdec = true;
 		pd->rgb = Color3f::gray(s);
 	}
@@ -663,26 +663,26 @@ void SpawnFireballTail(const Vec3f & poss, const Vec3f & vecto, float level, lon
 		}
 		
 		pd->m_flags = FIRE_TO_SMOKE | FADE_IN_AND_OUT | PARTICLE_ANIMATED | ROTATING;
-		pd->m_rotation = Random::getf(0.f, 0.02f);
-		pd->move = Vec3f(0.f, Random::getf(-3.f, 0.f), 0.f);
+		pd->m_rotation = g_rand.getf(0.f, 0.02f);
+		pd->move = Vec3f(0.f, g_rand.getf(-3.f, 0.f), 0.f);
 		pd->tc = explo[0];
 		pd->rgb = Color3f::gray(.7f);
-		pd->siz = (level + Random::getf()) * 2.f;
+		pd->siz = (level + g_rand.getf()) * 2.f;
 		
 		if(flags & 1) {
-			pd->tolive = Random::getu(400, 500);
+			pd->tolive = g_rand.getu(400, 500);
 			pd->siz *= 0.7f;
 			pd->scale = Vec3f(level * 1.4f);
 		} else {
 			pd->scale = Vec3f(level * 2.f);
-			pd->tolive = Random::getu(800, 900);
+			pd->tolive = g_rand.getu(800, 900);
 		}
 		
 		pd->cval1 = 0;
 		pd->cval2 = MAX_EXPLO - 1;
 		
 		if(nn == 1) {
-			pd->delay = Random::getu(150, 250);
+			pd->delay = g_rand.getu(150, 250);
 			pd->ov = poss + vecto * Vec3f(pd->delay);
 		} else {
 			pd->ov = poss;
@@ -705,10 +705,10 @@ void LaunchFireballBoom(const Vec3f & poss, float level, Vec3f * direction, Colo
 	
 	pd->m_flags = FIRE_TO_SMOKE | FADE_IN_AND_OUT | PARTICLE_ANIMATED;
 	pd->ov = poss;
-	pd->move = (direction) ? *direction : Vec3f(0.f, Random::getf(-5.f, 0.f), 0.f);
-	pd->tolive = Random::getu(1600, 2200);
+	pd->move = (direction) ? *direction : Vec3f(0.f, g_rand.getf(-5.f, 0.f), 0.f);
+	pd->tolive = g_rand.getu(1600, 2200);
 	pd->tc = explo[0];
-	pd->siz = level * 3.f + Random::getf(0.f, 2.f);
+	pd->siz = level * 3.f + g_rand.getf(0.f, 2.f);
 	pd->scale = Vec3f(level * 3.f);
 	pd->zdec = true;
 	pd->cval1 = 0;
@@ -728,9 +728,9 @@ void spawnFireHitParticle(const Vec3f & poss, long type) {
 		
 		pd->ov = poss;
 		pd->move = Vec3f(3.f, 4.f, 3.f) - Vec3f(6.f, 12.f, 6.f) * arx::randomVec3f();
-		pd->tolive = Random::getu(600, 700);
+		pd->tolive = g_rand.getu(600, 700);
 		pd->tc = tc1;
-		pd->siz = Random::getf(100.f, 110.f) * ((type == 1) ? 2.f : 1.f);
+		pd->siz = g_rand.getf(100.f, 110.f) * ((type == 1) ? 2.f : 1.f);
 		pd->zdec = true;
 		if(type == 1) {
 			pd->rgb = Color3f(.4f, .4f, 1.f);
@@ -740,9 +740,9 @@ void spawnFireHitParticle(const Vec3f & poss, long type) {
 		if(pd) {
 			pd->ov = poss;
 			pd->move = Vec3f(3.f , 4.f, 3.f) - Vec3f(6.f, 12.f, 6.f) * arx::randomVec3f();
-			pd->tolive = Random::getu(600, 700);
+			pd->tolive = g_rand.getu(600, 700);
 			pd->tc = tc1;
-			pd->siz = Random::getf(40.f, 70.f) * ((type == 1) ? 2.f : 1.f);
+			pd->siz = g_rand.getf(40.f, 70.f) * ((type == 1) ? 2.f : 1.f);
 			pd->zdec = true;
 			if(type == 1) {
 				pd->rgb = Color3f(.4f, .4f, 1.f);
@@ -761,9 +761,9 @@ void spawn2DFireParticle(const Vec2f & pos, float scale) {
 	
 	pd->m_flags = FIRE_TO_SMOKE;
 	pd->ov = Vec3f(pos, 0.0000001f);
-	pd->move = Vec3f(Random::getf(-1.5f, 1.5f), Random::getf(-6.f, -5.f), 0.f) * scale;
+	pd->move = Vec3f(g_rand.getf(-1.5f, 1.5f), g_rand.getf(-6.f, -5.f), 0.f) * scale;
 	pd->scale = Vec3f(1.8f, 1.8f, 1.f);
-	pd->tolive = Random::getu(500, 900);
+	pd->tolive = g_rand.getu(500, 900);
 	pd->tc = fire2;
 	pd->rgb = Color3f(1.f, .6f, .5f);
 	pd->siz = 14.f * scale;
@@ -830,7 +830,7 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 		}
 		
 		if(framediff <= 0) {
-			if((part->m_flags & FIRE_TO_SMOKE) && Random::getf() > 0.7f) {
+			if((part->m_flags & FIRE_TO_SMOKE) && g_rand.getf() > 0.7f) {
 				
 				part->ov += part->move;
 				part->tolive = part->tolive * 1.375f;
@@ -887,7 +887,7 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 				float siz = part->siz + part->scale.x * fd;
 				sp.radius = siz * 10.f;
 				if(CheckAnythingInSphere(sp, EntityHandle_Player, CAS_NO_NPC_COL)) {
-					if(Random::getf() < 0.9f) {
+					if(g_rand.getf() < 0.9f) {
 						Color3f rgb = part->rgb;
 						PolyBoomAddSplat(sp, rgb, 0);
 					}
@@ -899,9 +899,9 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 			
 			if(part->m_flags & SPLAT_WATER) {
 				float siz = part->siz + part->scale.x * fd;
-				sp.radius = siz * Random::getf(10.f, 30.f);
+				sp.radius = siz * g_rand.getf(10.f, 30.f);
 				if(CheckAnythingInSphere(sp, EntityHandle_Player, CAS_NO_NPC_COL)) {
-					if(Random::getf() < 0.9f) {
+					if(g_rand.getf() < 0.9f) {
 						Color3f rgb = part->rgb * 0.5f;
 						PolyBoomAddSplat(sp, rgb, 2);
 					}
@@ -923,7 +923,7 @@ void ARX_PARTICLES_Update(EERIE_CAMERA * cam)  {
 		}
 		
 		if(part->m_flags & PARTICLE_GOLDRAIN) {
-			float v = Random::getf(-0.1f, 0.1f);
+			float v = g_rand.getf(-0.1f, 0.1f);
 			if(part->rgb.r + v <= 1.f && part->rgb.r + v > 0.f
 				&& part->rgb.g + v <= 1.f && part->rgb.g + v > 0.f
 				&& part->rgb.b + v <= 1.f && part->rgb.b + v > 0.f) {
@@ -1040,7 +1040,7 @@ void TreatBackgroundActions() {
 		
 		if(gl->sample == audio::INVALID_ID) {
 			gl->sample = SND_FIREPLACE;
-			ARX_SOUND_PlaySFX(gl->sample, &gl->pos, Random::getf(0.95f, 1.05f), ARX_SOUND_PLAY_LOOPED);
+			ARX_SOUND_PlaySFX(gl->sample, &gl->pos, g_rand.getf(0.95f, 1.05f), ARX_SOUND_PLAY_LOOPED);
 		} else {
 			ARX_SOUND_RefreshPosition(gl->sample, gl->pos);
 		}
@@ -1057,45 +1057,45 @@ void TreatBackgroundActions() {
 		
 		for(long n = 0; n < count; n++) {
 			
-			if(Random::getf() < gl->ex_frequency) {
+			if(g_rand.getf() < gl->ex_frequency) {
 				PARTICLE_DEF * pd = createParticle();
 				if(pd) {
-					float t = Random::getf() * glm::pi<float>();
+					float t = g_rand.getf() * glm::pi<float>();
 					Vec3f s = Vec3f(std::sin(t), std::sin(t), std::cos(t)) * arx::randomVec();
 					pd->ov = gl->pos + s * gl->ex_radius;
 					pd->move = Vec3f(2.f, 2.f, 2.f) - Vec3f(4.f, 22.f, 4.f) * arx::randomVec3f();
 					pd->move *= gl->ex_speed;
 					pd->siz = 7.f * gl->ex_size;
-					pd->tolive = 500 + Random::getu(0, 1000 * gl->ex_speed);
+					pd->tolive = 500 + g_rand.getu(0, 1000 * gl->ex_speed);
 					if((gl->extras & EXTRAS_SPAWNFIRE) && (gl->extras & EXTRAS_SPAWNSMOKE)) {
 						pd->m_flags = FIRE_TO_SMOKE;
 					}
 					pd->tc = (gl->extras & EXTRAS_SPAWNFIRE) ? fire2 : smokeparticle;
 					pd->m_flags |= ROTATING;
-					pd->m_rotation = 0.1f - Random::getf(0.f, 0.2f) * gl->ex_speed;
+					pd->m_rotation = 0.1f - g_rand.getf(0.f, 0.2f) * gl->ex_speed;
 					pd->scale = Vec3f(-8.f);
 					pd->rgb = (gl->extras & EXTRAS_COLORLEGACY) ? gl->rgb : Color3f::white;
 				}
 			}
 			
-			if(!(gl->extras & EXTRAS_SPAWNFIRE) || Random::getf() <= 0.95f) {
+			if(!(gl->extras & EXTRAS_SPAWNFIRE) || g_rand.getf() <= 0.95f) {
 				continue;
 			}
 			
-			if(Random::getf() < gl->ex_frequency) {
+			if(g_rand.getf() < gl->ex_frequency) {
 				PARTICLE_DEF * pd = createParticle();
 				if(pd) {
-					float t = Random::getf() * (glm::pi<float>() * 2.f) - glm::pi<float>();
+					float t = g_rand.getf() * (glm::pi<float>() * 2.f) - glm::pi<float>();
 					Vec3f s = Vec3f(std::sin(t), std::sin(t), std::cos(t)) * arx::randomVec();
 					pd->ov = gl->pos + s * gl->ex_radius;
 					Vec3f vect = glm::normalize(pd->ov - gl->pos);
 					float d = (gl->extras & EXTRAS_FIREPLACE) ? 6.f : 4.f;
-					pd->move = Vec3f(vect.x * d, Random::getf(-18.f, -10.f), vect.z * d) * gl->ex_speed;
+					pd->move = Vec3f(vect.x * d, g_rand.getf(-18.f, -10.f), vect.z * d) * gl->ex_speed;
 					pd->siz = 4.f * gl->ex_size * 0.3f;
-					pd->tolive = 1200 + Random::getu(0, 500 * gl->ex_speed);
+					pd->tolive = 1200 + g_rand.getu(0, 500 * gl->ex_speed);
 					pd->tc = fire2;
 					pd->m_flags |= ROTATING | GRAVITY;
-					pd->m_rotation = 0.1f - Random::getf(0.f, 0.2f) * gl->ex_speed;
+					pd->m_rotation = 0.1f - g_rand.getf(0.f, 0.2f) * gl->ex_speed;
 					pd->scale = Vec3f(-3.f);
 					pd->rgb = (gl->extras & EXTRAS_COLORLEGACY) ? gl->rgb : Color3f::white;
 				}

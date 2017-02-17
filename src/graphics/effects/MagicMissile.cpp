@@ -147,7 +147,7 @@ void CMagicMissile::Update(ArxDuration timeDelta)
 	if(m_elapsed >= m_duration)
 		lightIntensityFactor = 0.f;
 	else
-		lightIntensityFactor = Random::getf(0.5f, 1.0f);
+		lightIntensityFactor = g_rand.getf(0.5f, 1.0f);
 }
 
 void CMagicMissile::Render()
@@ -205,7 +205,7 @@ void CMagicMissile::Render()
 				if(alpha < 0.2f)
 					alpha = 0.2f;
 
-				c += Random::getf(-0.1f, 0.1f);
+				c += g_rand.getf(-0.1f, 0.1f);
 				
 				c = glm::clamp(c, 0.f, 1.f);
 				
@@ -216,8 +216,8 @@ void CMagicMissile::Render()
 				else
 					fsize = (1.0f - fsize + 0.5f) * 2 * (3 * 0.5f);
 
-				float fs = fsize * 6 + Random::getf(0.f, 0.3f);
-				float fe = fsize * 6 + Random::getf(0.f, 0.3f);
+				float fs = fsize * 6 + g_rand.getf(0.f, 0.3f);
+				float fe = fsize * 6 + g_rand.getf(0.f, 0.3f);
 				Draw3DLineTexNew(mat, lastpos, newpos, color, color, fs, fe);
 			}
 

@@ -827,7 +827,7 @@ static void ARX_NPC_ManagePoison(Entity * io) {
 	if(faster < 0.f)
 		faster = 0.f;
 
-	if(Random::getf(0.f, 100.f) > io->_npcdata->resist_poison + faster) {
+	if(g_rand.getf(0.f, 100.f) > io->_npcdata->resist_poison + faster) {
 		float dmg = cp * ( 1.0f / 3 );
 
 		if(io->_npcdata->lifePool.current > 0 && io->_npcdata->lifePool.current - dmg <= 0.f) {
@@ -931,7 +931,7 @@ void ARX_PHYSICS_Apply() {
 			cnt = glm::clamp(cnt, 2l, 10l);
 
 			for(long nn = 0; nn < cnt; nn++) {
-				std::vector<EERIE_VERTEX>::iterator it = Random::getIterator(io->obj->vertexlist);
+				std::vector<EERIE_VERTEX>::iterator it = g_rand.getIterator(io->obj->vertexlist);
 				
 				ARX_PARTICLES_Spawn_Splat(it->v, 20.f, Color::red);
 				ARX_PARTICLES_Spawn_Blood(it->v, 20.f, io->index());
@@ -1520,11 +1520,11 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 	// Manage combat movement
 	
 	if((io->_npcdata->behavior & BEHAVIOUR_FIGHT) && tdist <= square(TOLERANCE + 10)
-	   && (tdist <= square(TOLERANCE - 20) || Random::getf() > 0.97f)
+	   && (tdist <= square(TOLERANCE - 20) || g_rand.getf() > 0.97f)
 	   && isCurrentAnimation(io, ANIM_FIGHT_WAIT)) {
 		// Evade during combat
 		
-		float r = (tdist < square(TOLERANCE - 20)) ? 0.f : Random::getf();
+		float r = (tdist < square(TOLERANCE - 20)) ? 0.f : g_rand.getf();
 		if(r < 0.1f) {
 			TryAndCheckAnim(io, ANIM_FIGHT_WALK_BACKWARD, 0);
 		} else if(r < 0.55f) {
@@ -1535,12 +1535,12 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 		
 	} else if(((io->_npcdata->behavior & (BEHAVIOUR_MAGIC | BEHAVIOUR_DISTANT))
 	           || io->spellcast_data.castingspell != SPELL_NONE)
-	          && Random::getf() > 0.85f && isCurrentAnimation(io, ANIM_FIGHT_WAIT) ) {
+	          && g_rand.getf() > 0.85f && isCurrentAnimation(io, ANIM_FIGHT_WAIT) ) {
 		// Evade while (not) casting
 		
 		AcquireLastAnim(io);
 		FinishAnim(io, layer0.cur_anim);
-		float r = (tdist < square(340)) ? 0.f : Random::getf();
+		float r = (tdist < square(340)) ? 0.f : g_rand.getf();
 		if(r < 0.33f) {
 			TryAndCheckAnim(io, ANIM_FIGHT_WALK_BACKWARD, 0);
 		} else if(r < 0.66f) {
@@ -1554,7 +1554,7 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 	if(IsPlayerStriking() && isCurrentAnimation(io, ANIM_FIGHT_WAIT)) {
 		AcquireLastAnim(io);
 		FinishAnim(io, layer0.cur_anim);
-		float r = Random::getf();
+		float r = g_rand.getf();
 		if(r < 0.2f) {
 			TryAndCheckAnim(io, ANIM_FIGHT_WALK_BACKWARD, 0);
 		} else if(r < 0.6f) {
@@ -1604,7 +1604,7 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 		if(isCurrentAnimation(io, 1, ANIM_BARE_WAIT)
 			 && (io->_npcdata->behavior & BEHAVIOUR_FIGHT)
 			 && tdist < square(STRIKE_DISTANCE) && io->_npcdata->strike_time > 0) {
-			size_t j = Random::getu(0, 3); // Choose a random attack move
+			size_t j = g_rand.getu(0, 3); // Choose a random attack move
 			changeAnimation(io, 1, AnimationNumber(ANIM_BARE_STRIKE_LEFT_START + j * 3));
 		}
 		
@@ -1624,7 +1624,7 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 				
 				ArxDuration elapsed = arxtime.now() - io->_npcdata->aiming_start;
 				ArxDuration aimtime = io->_npcdata->aimtime;
-				if((elapsed > aimtime || (elapsed > aimtime * 0.5f && Random::getf() > 0.9f))
+				if((elapsed > aimtime || (elapsed > aimtime * 0.5f && g_rand.getf() > 0.9f))
 				    && tdist < square(STRIKE_DISTANCE)) {
 					changeAnimation(io, 1, strike);
 					SendIOScriptEvent(io, SM_STRIKE, "bare");
@@ -1706,7 +1706,7 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 			
 			if(isCurrentAnimation(io, 1, ready) && (io->_npcdata->behavior & BEHAVIOUR_FIGHT)
 				 && tdist < square(STRIKE_DISTANCE) && io->_npcdata->strike_time > 0) {
-				size_t j = Random::getu(0, 3); // Choose a random attack move
+				size_t j = g_rand.getu(0, 3); // Choose a random attack move
 				changeAnimation(io, 1, AnimationNumber(ANIM_1H_STRIKE_LEFT_START + j * 3 + wtype));
 			}
 			
@@ -1725,7 +1725,7 @@ static void ARX_NPC_Manage_Anims(Entity * io, float TOLERANCE) {
 					
 					ArxDuration elapsed = arxtime.now() - io->_npcdata->aiming_start;
 					ArxDuration aimtime = io->_npcdata->aimtime;
-					if((elapsed > aimtime || (elapsed > aimtime * 0.5f && Random::getf() > 0.9f))
+					if((elapsed > aimtime || (elapsed > aimtime * 0.5f && g_rand.getf() > 0.9f))
 					   && tdist < square(STRIKE_DISTANCE)) {
 						changeAnimation(io, 1, strike);
 						if(io->_npcdata->weapontype & OBJECT_TYPE_1H) {
@@ -2036,7 +2036,7 @@ static void ManageNPCMovement(Entity * io)
 				}
 			} else {
 				if(io->_npcdata->look_around_inc == 0.f) {
-					io->_npcdata->look_around_inc = Random::getf(-0.04f, 0.04f);
+					io->_npcdata->look_around_inc = g_rand.getf(-0.04f, 0.04f);
 				}
 
 				for(long n = 0; n < 4; n++) {
@@ -2972,12 +2972,12 @@ void ManageIgnition_2(Entity * io) {
 
 		if(io->ignit_sound == audio::INVALID_ID) {
 			io->ignit_sound = SND_FIREPLACE;
-			ARX_SOUND_PlaySFX(io->ignit_sound, &position, Random::getf(0.95f, 1.05f), ARX_SOUND_PLAY_LOOPED);
+			ARX_SOUND_PlaySFX(io->ignit_sound, &position, g_rand.getf(0.95f, 1.05f), ARX_SOUND_PLAY_LOOPED);
 		} else {
 			ARX_SOUND_RefreshPosition(io->ignit_sound, position);
 		}
 
-		if(Random::getf() > 0.9f)
+		if(g_rand.getf() > 0.9f)
 			CheckForIgnition(Sphere(position, io->ignition), 1, 0);
 	} else {
 		lightHandleDestroy(io->ignit_light);

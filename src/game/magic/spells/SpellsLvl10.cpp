@@ -81,7 +81,7 @@ void MassLightningStrikeSpell::Launch() {
 	
 	for(int i = 0; i < number; i++) {
 		Vec3f target = m_pos + angleToVectorXZ(i * ft) * 500.0f;
-		ArxDuration duration = minDuration + ArxDurationMs(Random::getu(0, 5000));
+		ArxDuration duration = minDuration + ArxDurationMs(g_rand.getu(0, 5000));
 		maxDuration = std::max(maxDuration, duration);
 		
 		CLightning * lightning = new CLightning();
@@ -146,26 +146,26 @@ void MassLightningStrikeSpell::Update() {
 	position = m_pos + arx::randomVec(-250.f, 250.f);
 	ARX_SOUND_RefreshPosition(m_snd_loop, position);
 	ARX_SOUND_RefreshVolume(m_snd_loop, 1.f);
-	ARX_SOUND_RefreshPitch(m_snd_loop, Random::getf(0.8f, 1.2f));
+	ARX_SOUND_RefreshPitch(m_snd_loop, g_rand.getf(0.8f, 1.2f));
 	
-	if(Random::getf() > 0.62f) {
+	if(g_rand.getf() > 0.62f) {
 		position = m_pos + arx::randomVec(-250.f, 250.f);
-		ARX_SOUND_PlaySFX(SND_SPELL_SPARK, &position, Random::getf(0.8f, 1.2f));
+		ARX_SOUND_PlaySFX(SND_SPELL_SPARK, &position, g_rand.getf(0.8f, 1.2f));
 	}
 	
-	if(Random::getf() > 0.82f) {
+	if(g_rand.getf() > 0.82f) {
 		position = m_pos + arx::randomVec(-250.f, 250.f);
-		ARX_SOUND_PlaySFX(SND_SPELL_ELECTRIC, &position, Random::getf(0.8f, 1.2f));
+		ARX_SOUND_PlaySFX(SND_SPELL_ELECTRIC, &position, g_rand.getf(0.8f, 1.2f));
 	}
 	
 	if(0 > (long(m_duration) - 1800) && !m_soundEffectPlayed) {
 		m_soundEffectPlayed = true;
-		ARX_SOUND_PlaySFX(SND_SPELL_ELECTRIC, NULL, Random::getf(0.8f, 1.2f));
+		ARX_SOUND_PlaySFX(SND_SPELL_ELECTRIC, NULL, g_rand.getf(0.8f, 1.2f));
 	}
 	
 	EERIE_LIGHT * light = lightHandleGet(m_light);
 	if(light) {
-		light->intensity = Random::getf(1.3f, 2.3f);
+		light->intensity = g_rand.getf(1.3f, 2.3f);
 	}	
 }
 
@@ -324,7 +324,7 @@ void ControlTargetSpell::Update() {
 				if(pd) {
 					pd->ov = lastpos;
 					pd->siz = 5 * c;
-					pd->tolive = Random::getu(10, 110);
+					pd->tolive = g_rand.getu(10, 110);
 					pd->tc = tex_mm;
 					pd->m_flags = FADE_IN_AND_OUT | ROTATING | DISSIPATING;
 					pd->m_rotation = 0.0000001f;
@@ -338,7 +338,7 @@ void ControlTargetSpell::Update() {
 			if(pd) {
 				pd->ov = lastpos;
 				pd->siz = 5;
-				pd->tolive = Random::getu(10, 110);
+				pd->tolive = g_rand.getu(10, 110);
 				pd->tc = tex_mm;
 				pd->m_flags = FADE_IN_AND_OUT | ROTATING | DISSIPATING;
 				pd->m_rotation = 0.0000001f;

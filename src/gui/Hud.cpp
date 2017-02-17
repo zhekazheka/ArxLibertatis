@@ -205,7 +205,7 @@ void BookIconGui::MakeBookFX() {
 		pd->ov = Vec3f(m_rect.topLeft() - Vec2f(s * 2, s * 2), z);
 		pd->move = Vec3f(s * -0.5f, s * -0.5f, 0.f);
 		pd->scale = Vec3f(s * 10, s * 10, 0.f);
-		pd->tolive = Random::getu(1200, 1600);
+		pd->tolive = g_rand.getu(1200, 1600);
 		pd->tc = m_tex;
 		pd->rgb = Color3f(1.f - i * 0.1f, i * 0.1f, 0.5f - i * 0.1f);
 		pd->siz = m_rect.width() + s * 4.f;
@@ -296,7 +296,7 @@ void BackpackIconGui::updateInput() {
 		
 		
 		if(eeMouseDoubleClick1()) {
-			ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+			ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 			
 			playerInventory.optimize();
 			
@@ -314,7 +314,7 @@ void BackpackIconGui::updateInput() {
 			}
 			
 			if(player.Interface & INTER_INVENTORYALL) {
-				ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+				ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 				bInventoryClosing = true;
 			} else {
 				bInverseInventory=!bInverseInventory;
@@ -328,11 +328,11 @@ void BackpackIconGui::updateInput() {
 				bInventoryClosing = true;
 			} else {
 				if(player.Interface & INTER_INVENTORY) {
-					ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+					ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 					bInventoryClosing = true;
 					bInventorySwitch = true;
 				} else {
-					ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+					ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 					player.Interface |= INTER_INVENTORYALL;
 					
 					InventoryY = 121 * player.bag;
@@ -383,7 +383,7 @@ void StealIconGui::updateInput() {
 				ARX_INVENTORY_OpenClose(ioSteal);
 				
 				if(player.Interface&(INTER_INVENTORY | INTER_INVENTORYALL)) {
-					ARX_SOUND_PlayInterface(SND_BACKPACK, Random::getf(0.9f, 1.1f));
+					ARX_SOUND_PlayInterface(SND_BACKPACK, g_rand.getf(0.9f, 1.1f));
 				}
 				
 				if(SecondaryInventory) {
@@ -591,7 +591,7 @@ void CurrentTorchIconGui::update() {
 	m_tex = player.torch->m_icon;
 	arx_assert(m_tex);
 	
-	if(Random::getf() <= 0.2f) {
+	if(g_rand.getf() <= 0.2f) {
 		return;
 	}
 	
@@ -631,7 +631,7 @@ bool ChangeLevelIconGui::isVisible() {
 void ChangeLevelIconGui::update(const Rectf & parent) {
 	m_rect = createChild(parent, Anchor_TopRight, m_size * m_scale, Anchor_TopRight);
 	
-	m_intensity = 0.9f - std::sin(arxtime.get_frame_time() * 0.02f) * 0.5f + Random::getf(0.f, 0.1f);
+	m_intensity = 0.9f - std::sin(arxtime.get_frame_time() * 0.02f) * 0.5f + g_rand.getf(0.f, 0.1f);
 	m_intensity = glm::clamp(m_intensity, 0.f, 1.f);
 }
 

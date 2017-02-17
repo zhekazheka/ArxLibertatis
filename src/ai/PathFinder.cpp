@@ -340,17 +340,17 @@ bool PathFinder::wanderAround(NodeId from, float rad, Result & rlist, bool steal
 	
 	NodeId last = from;
 	
-	unsigned int step_c = Random::getu(4, 9);
+	unsigned int step_c = g_rand.getu(4, 9);
 	for(unsigned int i = 0; i < step_c; i++) {
 		
 		NodeId next = from;
 		
 		// Select the next node.
-		unsigned int nb = Random::getu(0, rad / 50);
+		unsigned int nb = g_rand.getu(0, rad / 50);
 		for(unsigned int j = 0; j < nb && map_d[next].nblinked; j++) {
 			for(int notfinished = 0; notfinished < 4; notfinished++) {
 				
-				size_t r = Random::get(0, map_d[next].nblinked - 1);
+				size_t r = g_rand.get(0, map_d[next].nblinked - 1);
 				arx_assert(r < (size_t)map_d[next].nblinked);
 				
 				arx_assert(map_d[next].linked[r] >= 0);
@@ -411,7 +411,7 @@ bool PathFinder::lookFor(NodeId from, const Vec3f & pos, float radius, Result & 
 	
 	NodeId last = from;
 	
-	unsigned long step_c = Random::getu(4, 9);
+	unsigned long step_c = g_rand.getu(4, 9);
 	for(unsigned long i = 0; i < step_c; i++) {
 		
 		Vec3f pos = map_d[to].pos + arx::randomVec(-1.f, 1.f) * radius;

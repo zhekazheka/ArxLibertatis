@@ -110,8 +110,8 @@ void CRiseDead::Create(Vec3f aeSrc, float afBeta)
 	bIntro = true;
 
 	for(int i = 0; i < 40; i++) {
-		tfRaysa[i] = Random::getf(0.f, 0.4f);
-		tfRaysb[i] = Random::getf(0.f, 0.4f);
+		tfRaysa[i] = g_rand.getf(0.f, 0.4f);
+		tfRaysb[i] = g_rand.getf(0.f, 0.4f);
 	}
 	
 	v1a[0].x = m_eSrc.x - fBetaRadSin * 100;
@@ -154,9 +154,9 @@ void CRiseDead::Split(Vec3f * v, int a, int b, float yo)
 		int i = (int)((a + b) * 0.5f);
 
 		if(i != a && i != b) {
-			v[i].x = (v[a].x + v[b].x) * 0.5f + yo * Random::getf(-1.f, 1.f) * fBetaRadCos;
+			v[i].x = (v[a].x + v[b].x) * 0.5f + yo * g_rand.getf(-1.f, 1.f) * fBetaRadCos;
 			v[i].y = v[0].y;// + (i+1)*5;
-			v[i].z = (v[a].z + v[b].z) * 0.5f + yo * Random::getf(-1.f, 1.f) * fBetaRadSin;
+			v[i].z = (v[a].z + v[b].z) * 0.5f + yo * g_rand.getf(-1.f, 1.f) * fBetaRadSin;
 			Split(v, a, i, yo * 0.8f);
 			Split(v, i, b, yo * 0.8f);
 		}
@@ -199,10 +199,10 @@ void CRiseDead::RenderFissure() {
 		vb[i].y   = v1b[i].y;
 		vb[i].z   = v1b[i].z   - sizeF * fTempSin;
 
-		va[i].x += Random::getf(0.f, 0.5f) * fTempCos;
-		va[i].z += Random::getf(0.f, 0.5f) * fTempSin;
-		vb[i].x -= Random::getf(0.f, 0.5f) * fTempCos;
-		vb[i].z -= Random::getf(0.f, 0.5f) * fTempSin;
+		va[i].x += g_rand.getf(0.f, 0.5f) * fTempCos;
+		va[i].z += g_rand.getf(0.f, 0.5f) * fTempSin;
+		vb[i].x -= g_rand.getf(0.f, 0.5f) * fTempCos;
+		vb[i].z -= g_rand.getf(0.f, 0.5f) * fTempSin;
 	}
 
 	//-------------------------------------------------------------------------
@@ -279,7 +279,7 @@ void CRiseDead::RenderFissure() {
 	vr[3].uv = Vec2f(1, 0);
 
 	for(int i = 0; i < end - 1; i++) {
-		float t = Random::getf();
+		float t = g_rand.getf();
 
 		if(t <= 0.15f) {
 			if(tfRaysa[i] < 1.0f)
@@ -309,7 +309,7 @@ void CRiseDead::RenderFissure() {
 				tfRaysa[i+1] = 0.0f;
 		}
 
-		float t2 = Random::getf();
+		float t2 = g_rand.getf();
 
 		if(t2 <= 0.15f) {
 			if(tfRaysb[i] < 1.0f)
@@ -471,8 +471,8 @@ void CSummonCreature::Create(Vec3f aeSrc, float afBeta)
 	bIntro = true;
 
 	for(int i = 0; i < 40; i++) {
-		tfRaysa[i] = Random::getf(0.f, 0.4f);
-		tfRaysb[i] = Random::getf(0.f, 0.4f);
+		tfRaysa[i] = g_rand.getf(0.f, 0.4f);
+		tfRaysb[i] = g_rand.getf(0.f, 0.4f);
 	}
 	
 	v1a[0] = m_eSrc - Vec3f(0.f, 100.f, 0.f);
@@ -505,11 +505,11 @@ void CSummonCreature::Create(Vec3f aeSrc, float afBeta)
 		}
 
 		if((v1b[i].x - v1a[i].x) > 20) {
-			v1b[i].x = v1a[i].x + Random::getf(0.f, 20.0f);
+			v1b[i].x = v1a[i].x + g_rand.getf(0.f, 20.0f);
 		}
 
 		if((v1b[i].z - v1a[i].z) > 20) {
-			v1b[i].z = v1a[i].z + Random::getf(0.f, 20.0f);
+			v1b[i].z = v1a[i].z + g_rand.getf(0.f, 20.0f);
 		}
 	}
 	
@@ -526,9 +526,9 @@ void CSummonCreature::Split(Vec3f * v, int a, int b, float yo)
 		int i = (int)((a + b) * 0.5f);
 
 		if((i != a) && (i != b)) {
-			v[i].x = (v[a].x + v[b].x) * 0.5f + yo * Random::getf(-1.f, 1.f) * (sizeF * 0.005f) * fBetaRadCos;
+			v[i].x = (v[a].x + v[b].x) * 0.5f + yo * g_rand.getf(-1.f, 1.f) * (sizeF * 0.005f) * fBetaRadCos;
 			v[i].y = v[0].y + (i + 1) * 5;
-			v[i].z = (v[a].z + v[b].z) * 0.5f + yo * Random::getf(-1.f, 1.f) * (sizeF * 0.005f) * fBetaRadSin;
+			v[i].z = (v[a].z + v[b].z) * 0.5f + yo * g_rand.getf(-1.f, 1.f) * (sizeF * 0.005f) * fBetaRadSin;
 			Split(v, a, i, yo * 0.8f);
 			Split(v, i, b, yo * 0.8f);
 		}
@@ -577,10 +577,10 @@ void CSummonCreature::RenderFissure() {
 		vb[i].y   = v1b[i].y;
 		vb[i].z   = v1b[i].z   - sizeF * fTempSin;
 
-		va[i].x += Random::getf(0.f, 0.5f) * fTempCos;
-		va[i].z += Random::getf(0.f, 0.5f) * fTempSin;
-		vb[i].x -= Random::getf(0.f, 0.5f) * fTempCos;
-		vb[i].z -= Random::getf(0.f, 0.5f) * fTempSin;
+		va[i].x += g_rand.getf(0.f, 0.5f) * fTempCos;
+		va[i].z += g_rand.getf(0.f, 0.5f) * fTempSin;
+		vb[i].x -= g_rand.getf(0.f, 0.5f) * fTempCos;
+		vb[i].z -= g_rand.getf(0.f, 0.5f) * fTempSin;
 	}
 
 	//-------------------------------------------------------------------------

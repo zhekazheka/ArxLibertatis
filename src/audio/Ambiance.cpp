@@ -113,7 +113,7 @@ struct KeySetting {
 	void reset() {
 		tupdate = 0;
 		if(min != max && flags & FLAG_RANDOM) {
-			cur = Random::getf(min, max);
+			cur = g_rand.getf(min, max);
 		} else {
 			cur = min;
 		}
@@ -133,7 +133,7 @@ struct KeySetting {
 			tupdate += interval;
 			if(flags & FLAG_RANDOM) {
 				from = to;
-				to = Random::getf(min, max);
+				to = g_rand.getf(min, max);
 			} else {
 				if(from == min) {
 					from = max, to = min;
@@ -195,7 +195,7 @@ struct TrackKey {
 	void updateSynch() {
 		if(delay_min != delay_max) {
 			delay = delay_max - delay;
-			delay += Random::get(delay_min, delay_max);
+			delay += g_rand.get(delay_min, delay_max);
 		} else {
 			delay = delay_min;
 		}

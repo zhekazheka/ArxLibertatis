@@ -598,30 +598,30 @@ void ARX_PLAYER_ComputePlayerFullStats() {
 	}
 	if(player.m_cheatPnuxActive) {
 		PlayerAttribute attributeMod;
-		attributeMod.strength = Random::get(0, 5);
-		attributeMod.mind = Random::get(0, 5);
-		attributeMod.constitution = Random::get(0, 5);
-		attributeMod.dexterity = Random::get(0, 5);
+		attributeMod.strength = g_rand.get(0, 5);
+		attributeMod.mind = g_rand.get(0, 5);
+		attributeMod.constitution = g_rand.get(0, 5);
+		attributeMod.dexterity = g_rand.get(0, 5);
 		player.m_attributeMod.add(attributeMod);
 		
 		PlayerSkill skillMod;
-		skillMod.stealth = Random::get(0, 20);
-		skillMod.mecanism = Random::get(0, 20);
-		skillMod.intuition = Random::get(0, 20);
-		skillMod.etheralLink = Random::get(0, 20);
-		skillMod.objectKnowledge = Random::get(0, 20);
-		skillMod.casting = Random::get(0, 20);
-		skillMod.projectile = Random::get(0, 20);
-		skillMod.closeCombat = Random::get(0, 20);
-		skillMod.defense = Random::get(0, 30);
+		skillMod.stealth = g_rand.get(0, 20);
+		skillMod.mecanism = g_rand.get(0, 20);
+		skillMod.intuition = g_rand.get(0, 20);
+		skillMod.etheralLink = g_rand.get(0, 20);
+		skillMod.objectKnowledge = g_rand.get(0, 20);
+		skillMod.casting = g_rand.get(0, 20);
+		skillMod.projectile = g_rand.get(0, 20);
+		skillMod.closeCombat = g_rand.get(0, 20);
+		skillMod.defense = g_rand.get(0, 30);
 		player.m_skillMod.add(skillMod);
 		
 		PlayerMisc miscMod;
-		miscMod.resistMagic = Random::get(0, 20);
-		miscMod.resistPoison = Random::get(0, 20);
-		miscMod.criticalHit = Random::get(0, 20);
-		miscMod.damages = Random::get(0, 20);
-		miscMod.armorClass = Random::get(0, 20);
+		miscMod.resistMagic = g_rand.get(0, 20);
+		miscMod.resistPoison = g_rand.get(0, 20);
+		miscMod.criticalHit = g_rand.get(0, 20);
+		miscMod.damages = g_rand.get(0, 20);
+		miscMod.armorClass = g_rand.get(0, 20);
 		player.m_miscMod.add(miscMod);
 	}
 	if(cur_rf == 3) {
@@ -921,7 +921,7 @@ void ARX_PLAYER_QuickGeneration() {
 	player.skin = old_skin;
 
 	while(player.Attribute_Redistribute) {
-		float rn = Random::getf();
+		float rn = g_rand.getf();
 
 		if(rn < 0.25f && player.m_attribute.strength < 18) {
 			player.m_attribute.strength++;
@@ -939,7 +939,7 @@ void ARX_PLAYER_QuickGeneration() {
 	}
 
 	while(player.Skill_Redistribute) {
-		float rn = Random::getf();
+		float rn = g_rand.getf();
 
 		if(rn < 0.1f && player.m_skill.stealth < 18) {
 			player.m_skill.stealth++;
@@ -1047,7 +1047,7 @@ void ARX_PLAYER_Modify_XP(long val) {
  */
 void ARX_PLAYER_Poison(float val) {
 	// Make a poison saving throw to see if player is affected
-	if(Random::getf(0.f, 100.f) > player.m_misc.resistPoison) {
+	if(g_rand.getf(0.f, 100.f) > player.m_misc.resistPoison) {
 		player.poison += val;
 		ARX_SOUND_PlayInterface(SND_PLAYER_POISONED);
 	}
@@ -1127,7 +1127,7 @@ void ARX_PLAYER_FrameCheck(PlatformDuration delta)
 				if(faster < 0.f)
 					faster = 0.f;
 
-				if(Random::getf(0.f, 100.f) > player.m_misc.resistPoison + faster) {
+				if(g_rand.getf(0.f, 100.f) > player.m_misc.resistPoison + faster) {
 					float dmg = cp * ( 1.0f / 3 );
 
 					if(player.lifePool.current - dmg <= 0.f)

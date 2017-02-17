@@ -80,9 +80,9 @@ void SpeedSpell::Launch() {
 			continue;
 		}
 		
-		float col = Random::getf(0.05f, 0.1f);
-		float size = Random::getf(1.f, 1.5f);
-		int taille = Random::get(130, 260);
+		float col = g_rand.getf(0.05f, 0.1f);
+		float size = g_rand.getf(1.f, 1.5f);
+		int taille = g_rand.get(130, 260);
 		
 		SpeedTrail trail;
 		trail.vertexIndex = itr->origin;
@@ -303,7 +303,7 @@ void FireballSpell::Update() {
 	if(ulCurrentTime > m_createBallDuration) {
 		SpawnFireballTail(eCurPos, eMove, m_level, 0);
 	} else {
-		if(Random::getf() < 0.9f) {
+		if(g_rand.getf() < 0.9f) {
 			Vec3f move = Vec3f_ZERO;
 			float dd=(float)ulCurrentTime / (float)m_createBallDuration*10;
 			
@@ -465,7 +465,7 @@ void IceProjectileSpell::Launch() {
 	for(int i = 0; i < iNumber; i++) {
 		Icicle & icicle = m_icicles[i];
 		
-		float t = Random::getf();
+		float t = g_rand.getf();
 		
 		Vec3f minSize;
 		int randomRange;
@@ -551,7 +551,7 @@ void IceProjectileSpell::Update() {
 	for(int i = 0; i < std::min(iNumber, iMax + 1); i++) {
 		Icicle & icicle = m_icicles[i];
 		
-		float t = Random::getf();
+		float t = g_rand.getf();
 		if(t < 0.01f) {
 			
 			PARTICLE_DEF * pd = createParticle();
@@ -559,8 +559,8 @@ void IceProjectileSpell::Update() {
 				pd->ov = icicle.pos + arx::randomVec(-5.f, 5.f);
 				pd->move = arx::randomVec(-2.f, 2.f);
 				pd->siz = 20.f;
-				float t = std::min(Random::getf(2000.f, 4000.f),
-				                   m_duration - ulCurrentTime + Random::getf(0.f, 500.0f));
+				float t = std::min(g_rand.getf(2000.f, 4000.f),
+				                   m_duration - ulCurrentTime + g_rand.getf(0.f, 500.0f));
 				pd->tolive = checked_range_cast<u32>(t);
 				pd->tc = tex_p2;
 				pd->m_flags = FADE_IN_AND_OUT | ROTATING | DISSIPATING;
@@ -573,10 +573,10 @@ void IceProjectileSpell::Update() {
 			PARTICLE_DEF * pd = createParticle();
 			if(pd) {
 				pd->ov = icicle.pos + arx::randomVec(-5.f, 5.f) - Vec3f(0.f, 50.f, 0.f);
-				pd->move = Vec3f(0.f, Random::getf(-2.f, 2.f), 0.f);
+				pd->move = Vec3f(0.f, g_rand.getf(-2.f, 2.f), 0.f);
 				pd->siz = 0.5f;
-				float t = std::min(Random::getf(2000.f, 3000.f),
-				              m_duration - ulCurrentTime + Random::getf(0.f, 500.0f));
+				float t = std::min(g_rand.getf(2000.f, 3000.f),
+				              m_duration - ulCurrentTime + g_rand.getf(0.f, 500.0f));
 				pd->tolive = checked_range_cast<u32>(t);
 				pd->tc = tex_p1;
 				pd->m_flags = FADE_IN_AND_OUT | ROTATING | DISSIPATING;

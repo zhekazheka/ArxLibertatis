@@ -69,17 +69,17 @@ Color3f CabalFx::randomizeLightColor() {
 	Color3f color;
 	
 	if(m_colorRangeLower.r < m_colorRangeUpper.r) {
-		color.r = Random::getf(m_colorRangeLower.r, m_colorRangeUpper.r);
+		color.r = g_rand.getf(m_colorRangeLower.r, m_colorRangeUpper.r);
 	} else {
 		color.r = m_colorRangeLower.r;
 	}
 	if(m_colorRangeLower.b < m_colorRangeUpper.b) {
-		color.b = Random::getf(m_colorRangeLower.b, m_colorRangeUpper.b);
+		color.b = g_rand.getf(m_colorRangeLower.b, m_colorRangeUpper.b);
 	} else {
 		color.b = m_colorRangeLower.b;
 	}
 	if(m_colorRangeLower.g < m_colorRangeUpper.g) {
-		color.g = Random::getf(m_colorRangeLower.g, m_colorRangeUpper.g);
+		color.g = g_rand.getf(m_colorRangeLower.g, m_colorRangeUpper.g);
 	} else {
 		color.g = m_colorRangeLower.g;
 	}

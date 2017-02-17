@@ -91,10 +91,10 @@ void Trail::Render()
 
 
 ArrowTrail::ArrowTrail()
-	: Trail(Random::get(130, 260),
-			Color4f::gray(Random::getf(0.1f, 0.2f)),
+	: Trail(g_rand.get(130, 260),
+			Color4f::gray(g_rand.getf(0.1f, 0.2f)),
 			Color4f::black,
-			Random::getf(2.f, 4.f),
+			g_rand.getf(2.f, 4.f),
 			0.f)
 {}
 

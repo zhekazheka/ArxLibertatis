@@ -130,7 +130,7 @@ static ExitStatus parseCommandLine(int argc, char ** argv) {
 int utf8_main(int argc, char ** argv) {
 	
 	// Initialize Random now so that the crash handler can use it
-	Random::seed();
+	g_rand.seed();
 	
 	// Initialize the crash handler
 	{

@@ -260,8 +260,8 @@ static void ARX_NPC_SpawnMember(Entity * ioo, ObjSelection num) {
 	io->gameFlags = ioo->gameFlags;
 	io->halo = ioo->halo;
 	
-	io->angle.setPitch(Random::getf(340.f, 380.f));
-	io->angle.setYaw(Random::getf(0.f, 360.f));
+	io->angle.setPitch(g_rand.getf(340.f, 380.f));
+	io->angle.setYaw(g_rand.getf(0.f, 360.f));
 	io->angle.setRoll(0);
 	io->obj->pbox->active = 1;
 	io->obj->pbox->stopcount = 0;

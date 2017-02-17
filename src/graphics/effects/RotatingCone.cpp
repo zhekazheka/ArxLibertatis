@@ -100,7 +100,7 @@ void RotatingCone::Render() {
 		d3dvs.z = m_pos.z + (vertex + 1)->z + ((vertex->z - (vertex + 1)->z) * m_coneScale);
 		
 		d3dv->p = d3dvs;
-		int col = Random::get(0, 80);
+		int col = g_rand.get(0, 80);
 		
 		if(!arxtime.is_paused())
 			d3dv->color = Color::grayb(col).toRGB(col);
@@ -115,7 +115,7 @@ void RotatingCone::Render() {
 		d3dvs.z = m_pos.z + vertex->z;
 		
 		d3dv->p = d3dvs;
-		col = Random::get(0, 80);
+		col = g_rand.get(0, 80);
 		
 		if(!arxtime.is_paused())
 			d3dv->color = Color::black.toRGB(col);

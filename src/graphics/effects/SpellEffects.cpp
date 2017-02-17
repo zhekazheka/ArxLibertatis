@@ -124,9 +124,9 @@ void Split(Vec3f * v, int a, int b, Vec3f f)
 
 		if ((i != a) && (i != b))
 		{
-			v[i].x = (v[a].x + v[b].x) * 0.5f + f.x * Random::getf(-1.f, 1.f);
-			v[i].y = (v[a].y + v[b].y) * 0.5f + f.y * Random::getf(-1.f, 1.f);
-			v[i].z = (v[a].z + v[b].z) * 0.5f + f.z * Random::getf(-1.f, 1.f);
+			v[i].x = (v[a].x + v[b].x) * 0.5f + f.x * g_rand.getf(-1.f, 1.f);
+			v[i].y = (v[a].y + v[b].y) * 0.5f + f.y * g_rand.getf(-1.f, 1.f);
+			v[i].z = (v[a].z + v[b].z) * 0.5f + f.z * g_rand.getf(-1.f, 1.f);
 			Split(v, a, i, f);
 			Split(v, i, b, f);
 		}

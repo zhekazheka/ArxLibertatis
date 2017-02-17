@@ -45,7 +45,7 @@ void FloatingStones::Update(float timeDelta, Vec3f pos) {
 	m_currframetime = timeDelta;
 	
 	if(m_timestone <= 0) {
-		m_timestone = Random::get(50, 150);
+		m_timestone = g_rand.get(50, 150);
 		
 		AddStone(pos + arx::randomOffsetXZ(m_baseRadius));
 	}
@@ -64,13 +64,13 @@ void FloatingStones::AddStone(const Vec3f & pos) {
 		if(!s.actif) {
 			m_nbstone++;
 			s.actif = 1;
-			s.numstone = Random::get(0, 1);
+			s.numstone = g_rand.get(0, 1);
 			s.pos = pos;
-			s.yvel = Random::getf(-5.f, 0.f);
-			s.ang = Anglef(Random::getf(), Random::getf(), Random::getf()) * Anglef(360.f, 360.f, 360.f);
-			s.angvel = Anglef(Random::getf(), Random::getf(), Random::getf()) * Anglef(5.f, 6.f, 3.f);
-			s.scale = Vec3f(Random::getf(0.2f, 0.5f));
-			s.time = Random::get(2000, 2500);
+			s.yvel = g_rand.getf(-5.f, 0.f);
+			s.ang = Anglef(g_rand.getf(), g_rand.getf(), g_rand.getf()) * Anglef(360.f, 360.f, 360.f);
+			s.angvel = Anglef(g_rand.getf(), g_rand.getf(), g_rand.getf()) * Anglef(5.f, 6.f, 3.f);
+			s.scale = Vec3f(g_rand.getf(0.2f, 0.5f));
+			s.time = g_rand.get(2000, 2500);
 			s.currtime = 0;
 			break;
 		}
@@ -102,8 +102,8 @@ void FloatingStones::DrawStone()
 			PARTICLE_DEF * pd = createParticle();
 			if(pd) {
 				pd->ov = s.pos;
-				pd->move = Vec3f(0.f, Random::getf(0.f, 3.f), 0.f);
-				pd->siz = Random::getf(3.f, 6.f);
+				pd->move = Vec3f(0.f, g_rand.getf(0.f, 3.f), 0.f);
+				pd->siz = g_rand.getf(3.f, 6.f);
 				pd->tolive = 1000;
 				pd->timcreation = -(long(arxtime.now()) + 1000l); // TODO WTF
 				pd->m_flags = FIRE_TO_SMOKE | FADE_IN_AND_OUT | ROTATING | DISSIPATING;

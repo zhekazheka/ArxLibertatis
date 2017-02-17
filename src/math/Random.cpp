@@ -21,7 +21,7 @@
 
 #include <ctime>
 
-Random::Generator Random::rng;
+Random g_rand;
 
 void Random::seed() {
 	rng.seed((size_t)std::time(NULL));

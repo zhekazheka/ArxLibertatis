@@ -60,7 +60,7 @@ Particle::Particle()
 	, iTexNum(0)
 {
 	
-	m_timeToLive = Random::get(2000, 5000);
+	m_timeToLive = g_rand.get(2000, 5000);
 	fOneOnTTL = 1.0f / float(m_timeToLive);
 	
 	fColorStart = Color4f(1, 1, 1, 0.5f);
