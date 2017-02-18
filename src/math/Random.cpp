@@ -21,6 +21,7 @@
 
 #include <ctime>
 
+Lock Random::lock;
 Random::Generator Random::rng;
 
 void Random::seed() {
