@@ -15,6 +15,7 @@ addons:
     - mesa-common-dev
     - libgl1-mesa-dev
     - libboost1.54-dev
+    - libboost1.54-tools-dev
     - libsdl1.2-dev
     - libglew-dev
     - qt-sdk
