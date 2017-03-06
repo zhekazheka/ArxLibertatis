@@ -66,20 +66,20 @@ static void FadeInOut(float _fVal) {
 	d3dvertex[3].rhw=1.f;
 	d3dvertex[3].color=iColor;
 
-	GRenderer->ResetTexture(0);
-	GRenderer->SetBlendFunc(BlendZero, BlendInvSrcColor);
+	//GRenderer->ResetTexture(0);
+	//GRenderer->SetBlendFunc(BlendZero, BlendInvSrcColor);
 
-	GRenderer->SetRenderState(Renderer::AlphaBlending, true);
-	GRenderer->SetRenderState(Renderer::DepthWrite, false);
-	GRenderer->SetRenderState(Renderer::DepthTest, false);
-	GRenderer->SetCulling(CullNone);
+	//GRenderer->SetRenderState(Renderer::AlphaBlending, true);
+	//GRenderer->SetRenderState(Renderer::DepthWrite, false);
+	//GRenderer->SetRenderState(Renderer::DepthTest, false);
+	//GRenderer->SetCulling(CullNone);
 
-	EERIEDRAWPRIM(Renderer::TriangleStrip, d3dvertex, 4, true);
+	//EERIEDRAWPRIM(Renderer::TriangleStrip, d3dvertex, 4, true);
 
-	GRenderer->SetRenderState(Renderer::AlphaBlending, false);
-	GRenderer->SetRenderState(Renderer::DepthWrite, true);
-	GRenderer->SetRenderState(Renderer::DepthTest, true);
-	GRenderer->SetCulling(CullCCW);
+	//GRenderer->SetRenderState(Renderer::AlphaBlending, false);
+	//GRenderer->SetRenderState(Renderer::DepthWrite, true);
+	//GRenderer->SetRenderState(Renderer::DepthTest, true);
+	//GRenderer->SetCulling(CullCCW);
 }
 
 bool MenuFader_process(bool _bFadeIn) {
