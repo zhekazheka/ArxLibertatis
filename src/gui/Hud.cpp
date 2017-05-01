@@ -649,7 +649,7 @@ void ChangeLevelIconGui::draw() {
 
 
 QuickSaveIconGui::QuickSaveIconGui()
-	: m_duration(1000)
+	: m_duration(ArxDurationMs(1000))
 	, m_remainingTime(ArxDuration_ZERO)
 {}
 
