@@ -18,12 +18,12 @@ if(MSVC)
 		
 		# TODO TEMP - disable warning caused by the F2L removal
 		# Conversion from 'float' to 'long', possible loss of data
-		add_definitions(/wd4244)
+		#add_definitions(/wd4244)
 		
 		# TODO TEMP - disable warning caused by conversion from a 64-bit type to a 32-bit one...
 		if(CMAKE_CL_64)
 			# Conversion from 'size_t' to 'xxx', possible loss of data
-			add_definitions(/wd4267)
+			#add_definitions(/wd4267)
 		endif()
 		
 		# warning C4127: conditional expression is constant
