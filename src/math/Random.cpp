@@ -21,7 +21,7 @@
 
 #include <ctime>
 
-Random::Generator Random::rng;
+ARX_THREAD_LOCAL Random::Generator Random::rng;
 
 void Random::seed() {
 	rng.seed((size_t)std::time(NULL));

@@ -43,6 +43,8 @@
 
 #include <boost/static_assert.hpp>
 
+#include "math/Random.h"
+
 #include "platform/Alignment.h"
 #include "platform/CrashHandler.h"
 #include "platform/Platform.h"
@@ -124,6 +126,7 @@ void * Thread::entryPoint(void * param) {
 	
 	// Denormals must be disabled for each thread separately
 	disableFloatDenormals();
+	Random::seed();
 	
 	Thread & thread = *((Thread *)param);
 	
@@ -240,6 +243,7 @@ DWORD WINAPI Thread::entryPoint(LPVOID param) {
 	
 	// Denormals must be disabled for each thread separately
 	disableFloatDenormals();
+	Random::seed();
 	
 	SetCurrentThreadName(((Thread*)param)->threadName);
 	
